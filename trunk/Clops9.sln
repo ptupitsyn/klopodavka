@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.drawing.win32", "clops.drawing.win32\clops.drawing.win32.csproj", "{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clops_", "Clops_\Clops_.csproj", "{1DFC72C0-F320-4657-B2F7-950F75F6F221}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.ai", "clops.ai\clops.ai.csproj", "{7D0FE55B-CC30-4B1F-9CF1-D3806AC31CA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.drawing", "clops.drawing\clops.drawing.csproj", "{E58F12E2-6255-4E0F-B1EA-717EF37E8354}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.ui.wpf", "clops.ui.wpf\clops.ui.wpf.csproj", "{5CCF5B54-CB08-46E0-9A7E-4D14BE4C6888}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.ifaces", "clops.ifaces\clops.ifaces.csproj", "{32136F56-AB96-4D63-9806-3CE47CDFE9C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.drawing.wpf", "clops.drawing.wpf\clops.drawing.wpf.csproj", "{BCDD414E-6FBE-4218-9027-35152E573A57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DFC72C0-F320-4657-B2F7-950F75F6F221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DFC72C0-F320-4657-B2F7-950F75F6F221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DFC72C0-F320-4657-B2F7-950F75F6F221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DFC72C0-F320-4657-B2F7-950F75F6F221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D0FE55B-CC30-4B1F-9CF1-D3806AC31CA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D0FE55B-CC30-4B1F-9CF1-D3806AC31CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D0FE55B-CC30-4B1F-9CF1-D3806AC31CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D0FE55B-CC30-4B1F-9CF1-D3806AC31CA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58F12E2-6255-4E0F-B1EA-717EF37E8354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58F12E2-6255-4E0F-B1EA-717EF37E8354}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58F12E2-6255-4E0F-B1EA-717EF37E8354}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58F12E2-6255-4E0F-B1EA-717EF37E8354}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CCF5B54-CB08-46E0-9A7E-4D14BE4C6888}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CCF5B54-CB08-46E0-9A7E-4D14BE4C6888}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CCF5B54-CB08-46E0-9A7E-4D14BE4C6888}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CCF5B54-CB08-46E0-9A7E-4D14BE4C6888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32136F56-AB96-4D63-9806-3CE47CDFE9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32136F56-AB96-4D63-9806-3CE47CDFE9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32136F56-AB96-4D63-9806-3CE47CDFE9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32136F56-AB96-4D63-9806-3CE47CDFE9C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCDD414E-6FBE-4218-9027-35152E573A57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCDD414E-6FBE-4218-9027-35152E573A57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCDD414E-6FBE-4218-9027-35152E573A57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCDD414E-6FBE-4218-9027-35152E573A57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

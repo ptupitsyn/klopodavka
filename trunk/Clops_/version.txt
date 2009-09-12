@@ -1,0 +1,78 @@
+nAXAHsoft
+Клоподавка
+Version History
+
+[1.5] 15.07.07
+* Significant AI speed optimization
+* Clop count fix
+
+[1.4.23 release]
+* Bugfixes
+
+[1.4.22 release]
+* Interface improvement (Graphically shown left clops)
+
+[1.4.2 release]
+* Slightly improved drawing speed
+* Several bugfixes
+* Release version 15.01.2005 22.00
+
+[1.4.1 debug]
+* Improved CPU Player logic (logic cycle: each stage is checked before turn)
+* Hard & Impossible levels are now more difficult
+
+[1.3.3 release]
+* Critical bugfix (recorded saving)
+
+[1.3.2 release]
+* Added pictures (replacement for vector circles)
+
+[1.3.0 release]
+* Release version 13.01.2005 15.00
+
+[1.2.03 debug]
+* Hold shift while pressing arrow keys to move cursor & make a turn
+
+[1.2.02 debug]
+* AI Fix: Path cutting improved
+
+[1.2.01 debug]
+* AI Fix: Better path cutting (count path cost, not length)
+* AI Speed-Up (~1! sec/clop on Impossible level (Celeron3200) )
+* Critical Bugfixes
+
+[1.1.01 debug]
+* Several fixes in AI
+* Added difficulty level selection
+* Path finding speed up (still ~4-5 sec/clop on my Celeron 3200 when trying to cut your path (on my Celeron 466 ~10 sec/clop))
+* Added strategy loading & usage (some bugs are present...)
+* Strategy tool: added strategy preview
+
+[1.0.0 release]
+(Almost like 0.7, only several bugfixes & Some tweaks in AI)
+
+[0.7]
+* ADDED Advanced Defence Tactics! very slow (~10 sec/clop) but very intelligent (rush tactics no longer gives result. only rigth strategy and right moment for attack gives you a chance to win)
+
+[0.6]
+* Added strategy tool (used to compare strategies)
+* Interface improvements
+
+[0.5]
+* ADDED A-Star Advanced Path finding (first AI that was interesting to play with, but still rather easy to defeat)
+
+[0.4]
+* Added pre-battle arrays (strategies) handling.
+* Added installer
+
+[0.3]
+* Improved AI - Cell evaluating (Still very stupid)
+
+[0.2]
+* Added AI (very, very stupid... simply closest-to-enemy moves)
+
+[0.1]
+* First working version!
+* Human vs Human games (no CPU opponent)
+* Valid move calculation
+* Winner detection

@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clops_", "Clops_.csproj", "{1DFC72C0-F320-4657-B2F7-950F75F6F221}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Clop Battles", "setup\Битвы Клопов.vdproj", "{3D7760C7-7D01-472A-B10B-59C1809BC2C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.drawing", "..\clops.drawing\clops.drawing.csproj", "{54A6668E-B158-4669-A665-7D3A8A536149}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.ai", "..\clops.ai\clops.ai.csproj", "{A762534D-BB6E-4736-B796-5B7493FB931B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clops.drawing.win32", "..\clops.drawing.win32\clops.drawing.win32.csproj", "{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DFC72C0-F320-4657-B2F7-950F75F6F221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DFC72C0-F320-4657-B2F7-950F75F6F221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DFC72C0-F320-4657-B2F7-950F75F6F221}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DFC72C0-F320-4657-B2F7-950F75F6F221}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{3D7760C7-7D01-472A-B10B-59C1809BC2C1}.Debug|Any CPU.ActiveCfg = Debug
+		{3D7760C7-7D01-472A-B10B-59C1809BC2C1}.Release|Any CPU.ActiveCfg = Release
+		{3D7760C7-7D01-472A-B10B-59C1809BC2C1}.Release|Any CPU.Build.0 = Release
+		{54A6668E-B158-4669-A665-7D3A8A536149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54A6668E-B158-4669-A665-7D3A8A536149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54A6668E-B158-4669-A665-7D3A8A536149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54A6668E-B158-4669-A665-7D3A8A536149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A762534D-BB6E-4736-B796-5B7493FB931B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A762534D-BB6E-4736-B796-5B7493FB931B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A762534D-BB6E-4736-B796-5B7493FB931B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A762534D-BB6E-4736-B796-5B7493FB931B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4858C8D9-EEF0-459C-82EF-7C4CDF41E5F1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

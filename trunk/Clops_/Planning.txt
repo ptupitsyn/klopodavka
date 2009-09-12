@@ -1,0 +1,37 @@
+== PLANNING ==
+
+[+] Create ClopWar class that controls Field and all shit. (Main class)
+[+] Create ClopDraw class that interacts with ClopWar and draws Field (?who is master/slave?)
+[+] Create ClopCPU class that sends commands to ClopWar and plays game
+[-] Prepare for porting to .NET Compact Framework
+[+] In CPU turn: parse base, eat available to eat, rush
+[+] Prepare different attack/defence tactics
+[+] НЕАДЕКВАТНОЕ ПОВЕДЕНИЕ (глюки на поле? попробуй отследить статус клеток)
+[+] Расставить ЦЕНУ КЛЕТОК и ходить по этому принципу
+	Potom - path price! YEAH!
+	
+[ ] Battle graph
+[+] Sizeable window
+[+-] Strategy tool (benchmark...)
+
+[+] ПРАВИЛЬНОЕ ОТРЕЗАНИЕ СОПЕРНИКА! как?
+
+[+] DIRECTORY BUG!
+
+[ ] Create campaign mode (try to defeat all standart strategies - to become mega Otec!)
+
+[+] Учитывает длину пути, а не общую стоимость!
+
+[+] В режиме боя Перед постановкой каждого клопа проверять: отрезаем (если можем кушать) или рвем к базе (если кушать нечего)
+
+[ ] Add REPLAYS (watch&save - > send to me & analyse)
+
+[+] BUG IN RECORDING (when using UNDO)
+
+[ ] Сделать статус слева и справа (для красных и синих)
+
+[ ] Reorganise projects (no mobile projects.. use common source files only)
+
+[ ] Сделать определение "живых" ответвлений у противника (путем анализа его пути к базе) ClopCPU:299 не проверять Avail - найдем самую жирную клетку, потом ищем длину пути, если приемлемая - ебашим. И если жирнее, чем "обычные" (разницу длин учесть)
+
+[ ] Многопоточность!
