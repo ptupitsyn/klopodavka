@@ -1,0 +1,16 @@
+A:link   {
+	Text-Decoration:none;
+	Color: #006633;
+}
+A:visited{
+	Text-Decoration:none;
+	Color: #006633;
+}
+A:active {
+	Text-Decoration:none;
+	Color: #006633;
+}
+A:hOver  {
+	Text-Decoration:underline;
+	Color: #006633;
+}

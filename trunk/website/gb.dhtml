@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<LINK href="page.css" rel=stylesheet type="text/css">
+<Meta name="Keywords" content="Клоподавка клопы игра клоп листок клетка клоп клоподавка">
+<meta name="description" content="Сайт игры Клоподавка - ваше мнение">
+<title>Клоподавка - отзывы</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<script language="javascript" src="page.js"></script>
+
+<STYLE TYPE="text/css"> 
+.forum_hr { color: #EFEFEF; height: 0; } 
+.forum_title { font-weight: bold; text-decoration: underline; color: #002952; } 
+</STYLE>
+
+</head>
+
+<body>
+	<font color="#FFFFFF" size="-6"> клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп </font>
+	<!-- Menu initialization -->
+	<script language="JavaScript1.2">dqm__codebase = "menu/" //script folder location</script>
+	<script language="JavaScript1.2" src="menu/set.js"></script>
+	<script language="JavaScript1.2" src="menu/tdqm_loader.js"></script>
+	<!-- Structure initialization -->
+	<script language="javascript">header();</script>
+	<!-- PAGE CONTENT -->
+	<strong>Книга отзывов</strong>
+	<p>
+	<!--#include virtual=forum.cgi?fid=50593-->
+	</p>
+	<!-- END OF PAGE CONTENT -->
+	<script language="javascript">footer();</script>
+	<font color="#FFFFFF" size="-6"> клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп клопы клоподавка клоп </font>
+</body>
+
+</html>
