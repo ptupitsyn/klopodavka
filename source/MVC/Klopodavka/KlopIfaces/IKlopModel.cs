@@ -1,5 +1,6 @@
 #region Usings
 
+using System;
 using System.Collections.Generic;
 
 #endregion
@@ -27,7 +28,7 @@ namespace KlopIfaces
       /// Gets the players.
       /// </summary>
       /// <value>The players.</value>
-      ICollection<IKlopPlayer> Players { get; }
+      IList<IKlopPlayer> Players { get; }
 
       /// <summary>
       /// Gets the current player.
@@ -64,5 +65,20 @@ namespace KlopIfaces
       /// <param name="x">The x.</param>
       /// <param name="y">The y.</param>
       void MakeTurn(int x, int y);
+
+      /// <summary>
+      /// Undoes the previous turn.
+      /// </summary>
+      void UndoTurn();
+
+      /// <summary>
+      /// Occurs when [current player changed].
+      /// </summary>
+      event EventHandler CurrentPlayerChanged;
+
+      /// <summary>
+      /// Occurs when [cells changed].
+      /// </summary>
+      event EventHandler CellsChanged;
    }
 }
