@@ -8,7 +8,6 @@ namespace KlopIfaces
       Free,
       Base,
       Alive,
-      Dead,
-      Available
+      Dead
    }
 }

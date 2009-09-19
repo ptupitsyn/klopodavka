@@ -28,5 +28,11 @@ namespace KlopIfaces
       /// </summary>
       /// <value>The owner.</value>
       IKlopPlayer Owner { get; }
+
+      /// <summary>
+      /// Gets a value indicating whether this <see cref="IKlopCell"/> is available for turn.
+      /// </summary>
+      /// <value><c>true</c> if available; otherwise, <c>false</c>.</value>
+      bool Available { get; }
    }
 }
