@@ -1,0 +1,5 @@
+Code style must conform to Lance Hunt C# Coding Standards.
+Use of ReSharper with Agent Smith plugin is recommended.
+Type members must be grouped into regions - see resharper_type_member_layout.xml
+
+Indentation: Insert Spaces, size = 3
