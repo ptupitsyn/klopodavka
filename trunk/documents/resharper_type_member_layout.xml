@@ -3,7 +3,7 @@
 <!--
 I. Overall
 
-I.1 Each pattern can have <Match>....</Match> element. For the given type declaration, the pattern with the match, evaluated to 'true' with the largest weight, will be used 
+I.1 Each pattern can have <Match>....</Match> element. For the given type declaration, the pattern with the match, evaluated to 'true' with the largest weight, will be used
 I.2 Each pattern consists of the sequence of <Entry>...</Entry> elements. Type member declarations are distributed between entries
 I.3 If pattern has RemoveAllRegions="true" attribute, then all regions will be cleared prior to reordering. Otherwise, only auto-generated regions will be cleared
 I.4 The contents of each entry is sorted by given keys (First key is primary,  next key is secondary, etc). Then the declarations are grouped and en-regioned by given property
@@ -41,7 +41,10 @@ II.2.12 <HandlesEvent />
       <Or Weight="100">
         <And>
           <Kind Is="interface"/>
-          <HasAttribute CLRName="System.Runtime.InteropServices.InterfaceTypeAttribute"/>
+          <Or>
+            <HasAttribute CLRName="System.Runtime.InteropServices.InterfaceTypeAttribute"/>
+            <HasAttribute CLRName="System.Runtime.InteropServices.ComImport"/>
+          </Or>
         </And>
         <HasAttribute CLRName="System.Runtime.InteropServices.StructLayoutAttribute"/>
       </Or>
@@ -92,6 +95,19 @@ II.2.12 <HandlesEvent />
 
   <!--Default pattern-->
   <Pattern>
+  
+    <!--nested types-->
+    <Entry>
+      <Match>
+        <Kind Is="type"/>
+      </Match>
+      <Sort>
+        <Name/>
+      </Sort>
+      <Group>
+        <Name Region="Nested type: ${Name}"/>
+      </Group>
+    </Entry>  
 
     <!--public delegate-->
     <Entry>
@@ -137,9 +153,7 @@ II.2.12 <HandlesEvent />
         <Readonly/>
         <Name/>
       </Sort>
-      <Group>
-        <Name Region="Fields and constants"/>
-      </Group>
+          <Group Region="Fields and Constants"/>
     </Entry>
 
     <!--Constructors. Place static one first-->
@@ -150,52 +164,7 @@ II.2.12 <HandlesEvent />
       <Sort>
         <Static/>
       </Sort>
-      <Group>
-        <Name Region="Constructors"/>
-      </Group>
-    </Entry>
-    
-    <!--properties, indexers-->
-    <Entry>
-      <Match>
-        <Or>
-          <Kind Is="property"/>
-          <Kind Is="indexer"/>
-        </Or>
-      </Match>
-      <Group>
-        <Name Region="Properties and indexers"/>
-      </Group>
-    </Entry>
-    
-    <!--public methods-->
-    <Entry>
-      <Match>
-        <And>
-          <Kind Is="method"/>
-		  <Access Is="public"/>
-        </And>
-      </Match>
-      <Group>
-        <Name Region="Public methods"/>
-      </Group>
-    </Entry>
-    
-    <!--other methods-->
-    <Entry>
-      <Match>
-        <And>
-          <Kind Is="method"/>
-		  <Or>
-			<Access Is="private"/>
-			<Access Is="internal"/>
-			<Access Is="protected"/>
-		  </Or>
-        </And>
-      </Match>
-      <Group>
-        <Name Region="Private/protected/internal methods"/>
-      </Group>
+          <Group Region="Constructors"/>
     </Entry>
     
     <!--interface implementations-->
@@ -210,29 +179,88 @@ II.2.12 <HandlesEvent />
         <ImplementsInterface Immediate="true"/>
       </Sort>
       <Group>
-        <ImplementsInterface Immediate="true" Region="${ImplementsInterface} Members"/>
+        <ImplementsInterface Immediate="true" Region="${ImplementsInterface} implementation"/>
       </Group>
+    </Entry>
+    
+    <!--Public properties, indexers-->
+    <Entry>
+      <Match>
+                <And>
+          <Or>
+            <Kind Is="property"/>
+            <Kind Is="indexer"/>
+          </Or>
+                  <Access Is="public"/>
+                </And>
+      </Match>
+          <Group Region="Public properties and indexers"/>
+    </Entry>
+
+    <!--Public methods-->
+    <Entry>
+      <Match>
+                <And>
+          <Kind Is="method"/>
+                  <Access Is="public"/>
+                </And>
+      </Match>
+          <Group Region="Public methods"/>
+    </Entry>
+        
+    <!--Private and protected properties, indexers-->
+    <Entry>
+      <Match>
+                <And>
+          <Or>
+            <Kind Is="property"/>
+            <Kind Is="indexer"/>
+          </Or>
+                  <Or>
+                        <Access Is="private"/>
+                        <Access Is="protected"/>
+                  </Or>
+                </And>
+      </Match>
+          <Group Region="Private and protected properties and indexers"/>
+    </Entry>
+
+    <!--Private and protected methods-->
+    <Entry>
+      <Match>
+                <And>
+          <Kind Is="method"/>
+                  <Not>
+                        <HandlesEvent/>
+                  </Not>
+                  <Or>
+                        <Access Is="private"/>
+                        <Access Is="protected"/>
+                  </Or>
+                </And>
+      </Match>
+          <Group Region="Private and protected methods"/>
+    </Entry>    
+        
+    <!--Events-->
+    <Entry>
+      <Match>
+            <Kind Is="event"/>
+          </Match>
+          <Group Region="Events"/>
+    </Entry>
+    
+    <!--Event handlers-->
+    <Entry>
+      <Match>
+            <HandlesEvent/>      
+          </Match>
+          <Group Region="Event handlers"/>
     </Entry>
     
     <!--all other members-->
-    <Entry>
-      <Group>
-        <Name Region="Other members"/>
-      </Group>	
-	</Entry>
+    <Entry/>
     
-    <!--nested types-->
-    <Entry>
-      <Match>
-        <Kind Is="type"/>
-      </Match>
-      <Sort>
-        <Name/>
-      </Sort>
-      <Group>
-        <Name Region="Nested type: ${Name}"/>
-      </Group>
-    </Entry>
   </Pattern>
   
 </Patterns>
