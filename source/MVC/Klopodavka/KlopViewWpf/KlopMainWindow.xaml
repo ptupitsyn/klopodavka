@@ -1,0 +1,41 @@
+﻿<Window x:Class="KlopViewWpf.KlopMainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:k="clr-namespace:KlopViewWpf"
+    Title="KlopMainWindow" Height="496" Width="573" Loaded="Window_Loaded">
+    <UniformGrid Name="MainGrid" Rows="3" Columns="3">
+        <UniformGrid.Effect>
+            <DropShadowEffect BlurRadius="9" Opacity="0.665" ShadowDepth="7"/>
+        </UniformGrid.Effect>
+
+        <k:RedClop>
+            <k:RedClop.RenderTransform>
+                <ScaleTransform ScaleX="1" ScaleY="1"></ScaleTransform>
+            </k:RedClop.RenderTransform>
+            <k:RedClop.Triggers>
+                <EventTrigger RoutedEvent="k:RedClop.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard Duration="0:0:0.1">
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="2" />
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="2" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="k:RedClop.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </k:RedClop.Triggers>
+        </k:RedClop>
+
+        
+    </UniformGrid>
+</Window>

@@ -5,6 +5,9 @@ namespace KlopIfaces
    /// </summary>
    public interface IKlopController
    {
-      
+      #region Public methods
+
+
+      #endregion
    }
 }
