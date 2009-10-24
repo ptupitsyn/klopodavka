@@ -1,4 +1,8 @@
+#region Usings
+
 using System.Windows.Media;
+
+#endregion
 
 namespace KlopIfaces
 {
@@ -7,6 +11,8 @@ namespace KlopIfaces
    /// </summary>
    public interface IKlopPlayer
    {
+      #region Public properties and indexers
+
       /// <summary>
       /// Gets the name.
       /// </summary>
@@ -36,5 +42,7 @@ namespace KlopIfaces
       /// </summary>
       /// <value>The color.</value>
       Color Color { get; }
+
+      #endregion
    }
 }

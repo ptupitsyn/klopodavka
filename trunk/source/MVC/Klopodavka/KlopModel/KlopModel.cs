@@ -16,8 +16,10 @@ namespace KlopModel
       #region Fields and constants
 
       private readonly KlopCell[,] _cells;
-      private Stack<KlopCell> _history;
+      private readonly Stack<KlopCell> _history;
       private int _currentPlayerIndex;
+      private object _syncroot = new object();
+      //TODO: progressStarted, progressEnded, progressStatus
 
       #endregion
 
@@ -77,9 +79,9 @@ namespace KlopModel
                _currentPlayerIndex = 0;
             }
 
-            CurrentPlayerChanged(this, new EventArgs());
-
             _history.Clear(); // cannot undo after turn switch
+
+            CurrentPlayerChanged(this, new EventArgs()); //deadlock?
          }
       }
 
@@ -142,8 +144,8 @@ namespace KlopModel
       /// <returns></returns>
       private IEnumerable<KlopCell> GetNeighborCells(IKlopCell cell)
       {
-         var dx = new [] { -1, -1, -1, 1, 1, 1, 0, 0 };
-         var dy = new [] { -1, 0, 1, -1, 0, 1, -1, 1 };
+         var dx = new[] {-1, -1, -1, 1, 1, 1, 0, 0};
+         var dy = new[] {-1, 0, 1, -1, 0, 1, -1, 1};
 
          for (int i = 0; i < dx.Length; i++)
          {
@@ -153,7 +155,6 @@ namespace KlopModel
                yield return _cells[x, y];
          }
       }
-
 
       #endregion
 
@@ -183,10 +184,7 @@ namespace KlopModel
       /// <value>The current player.</value>
       public IKlopPlayer CurrentPlayer
       {
-         get
-         {
-            return Players[_currentPlayerIndex];
-         }
+         get { return Players[_currentPlayerIndex]; }
       }
 
       /// <summary>
@@ -223,27 +221,30 @@ namespace KlopModel
       /// </summary>
       public void Reset()
       {
-         for (int x = 0; x < FieldWidth; x++)
+         lock (_syncroot)
          {
-            for (int y = 0; y < FieldHeight; y++)
+            for (int x = 0; x < FieldWidth; x++)
             {
-               _cells[x, y] = new KlopCell(x, y);
-               CellsChanged(_cells[x, y], new EventArgs()); //TODO: think
+               for (int y = 0; y < FieldHeight; y++)
+               {
+                  _cells[x, y] = new KlopCell(x, y);
+                  CellsChanged(_cells[x, y], new EventArgs()); //TODO: think
+               }
             }
-         }
 
-         foreach(IKlopPlayer player in Players)
-         {
-            var cell = _cells[player.BasePosX, player.BasePosY];
-            cell.Owner = player;
-            cell.State = ECellState.Base;
-            CellsChanged(cell, new EventArgs()); //TODO: think
-         }
+            foreach (IKlopPlayer player in Players)
+            {
+               var cell = _cells[player.BasePosX, player.BasePosY];
+               cell.Owner = player;
+               cell.State = ECellState.Base;
+               CellsChanged(cell, new EventArgs()); //TODO: think
+            }
 
-         _currentPlayerIndex = 0;
-         RemainingKlops = TurnLength;
-         FindAvailableCells();
-         CurrentPlayerChanged(this, new EventArgs());
+            _currentPlayerIndex = 0;
+            RemainingKlops = TurnLength;
+            FindAvailableCells();
+            CurrentPlayerChanged(this, new EventArgs());
+         }
       }
 
       /// <summary>
@@ -253,31 +254,34 @@ namespace KlopModel
       /// <param name="y">The y.</param>
       public void MakeTurn(int x, int y)
       {
-         if (!CheckCoord(x, y))
-            return;
-
-         var cell = _cells[x, y];
-
-         if (!cell.Available)
-            return;
-
-         _history.Push(cell.Clone());
-
-         cell.Owner = CurrentPlayer;
-
-         switch(cell.State)
+         lock (_syncroot)
          {
-            case ECellState.Alive:
-               cell.State = ECellState.Dead;
-               break;
-            case ECellState.Free:
-               cell.State = ECellState.Alive;
-               break;
-         }
+            if (!CheckCoord(x, y))
+               return;
 
-         RemainingKlops--;
-         SwitchTurn();
-         FindAvailableCells();
+            var cell = _cells[x, y];
+
+            if (!cell.Available)
+               return;
+
+            _history.Push(cell.Clone());
+
+            cell.Owner = CurrentPlayer;
+
+            switch (cell.State)
+            {
+               case ECellState.Alive:
+                  cell.State = ECellState.Dead;
+                  break;
+               case ECellState.Free:
+                  cell.State = ECellState.Alive;
+                  break;
+            }
+
+            RemainingKlops--;
+            SwitchTurn();
+            FindAvailableCells();
+         }
       }
 
       /// <summary>
@@ -285,17 +289,20 @@ namespace KlopModel
       /// </summary>
       public void UndoTurn()
       {
-         if (_history.Count == 0)
-            return;
+         lock (_syncroot)
+         {
+            if (_history.Count == 0)
+               return;
 
-         var oldCell = _history.Pop();
-         var cell = _cells[oldCell.X, oldCell.Y];
+            var oldCell = _history.Pop();
+            var cell = _cells[oldCell.X, oldCell.Y];
 
-         cell.State = oldCell.State;
-         cell.Owner = oldCell.Owner;
+            cell.State = oldCell.State;
+            cell.Owner = oldCell.Owner;
 
-         RemainingKlops++;
-         FindAvailableCells();
+            RemainingKlops++;
+            FindAvailableCells();
+         }
       }
 
       /// <summary>
@@ -309,7 +316,5 @@ namespace KlopModel
       public event EventHandler CellsChanged;
 
       #endregion
-
-
    }
 }
