@@ -2,23 +2,19 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Clop battles" Height="342" Width="378">
-  <Grid>
-    <Canvas Name="cnvBattle">
-      <Canvas.Background>
-        <ImageBrush>
-          <ImageBrush.ImageSource>
-            <BitmapImage UriSource="bg.bmp">
-            </BitmapImage>
-          </ImageBrush.ImageSource>
-        </ImageBrush>
-      </Canvas.Background>
-    </Canvas>
-    <Menu Name="menu1" VerticalAlignment="Top" >
-      <MenuItem Header="_Edit">
-        <MenuItem Command="ApplicationCommands.Copy"/>
-        <MenuItem Command="ApplicationCommands.Cut"/>
-        <MenuItem Command="ApplicationCommands.Paste"/>
-      </MenuItem>
-    </Menu>
-  </Grid>
+<!--    <Window.Resources>
+        <ResourceDictionary Source="clop_red.xaml"/>
+    </Window.Resources>-->
+    <UniformGrid Rows="20" Columns="40" Name="gridClops" >
+        <UniformGrid.Background>
+            <ImageBrush>
+                <ImageBrush.ImageSource>
+                    <BitmapImage UriSource="bg.bmp">
+                    </BitmapImage>
+                </ImageBrush.ImageSource>
+            </ImageBrush>
+        </UniformGrid.Background>
+
+        <Frame Source="clop_red.xaml" Name="clopRed"/>
+    </UniformGrid>
 </Window>
