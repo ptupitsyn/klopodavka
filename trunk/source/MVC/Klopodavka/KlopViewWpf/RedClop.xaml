@@ -4,7 +4,7 @@
 	x:Class="KlopViewWpf.RedClop"
 	x:Name="UserControl" BorderBrush="Black" BorderThickness="0.5">
     <Viewbox>
-        <Canvas Width="314.892" Height="304.444">
+        <Canvas Width="314.892" Height="304.444" Background="#00000000">
 
             <Canvas.RenderTransform>
                 <ScaleTransform ScaleX="1" ScaleY="1" CenterX="157" CenterY="152" x:Name="scaleTr" />
