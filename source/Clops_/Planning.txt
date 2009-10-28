@@ -1,5 +1,11 @@
 == PLANNING ==
 
+!! MVC !!
+Model = ClopField
+View = ClopForm (WPF)
+Controller = ClopController
+Events: OnModelChange -> FormDraw...
+
 [+] Create ClopWar class that controls Field and all shit. (Main class)
 [+] Create ClopDraw class that interacts with ClopWar and draws Field (?who is master/slave?)
 [+] Create ClopCPU class that sends commands to ClopWar and plays game

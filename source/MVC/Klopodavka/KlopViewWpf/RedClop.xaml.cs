@@ -28,13 +28,13 @@ namespace KlopViewWpf
       void RedClop_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
       {
          //Background = Brushes.White;
-         ClopCanvas.Effect = null;
+         //ClopCanvas.Effect = null;
       }
 
       void RedClop_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
       {
          //Background = Brushes.Red;
-         ClopCanvas.Effect = effect;
+         //ClopCanvas.Effect = effect;
       }
 
       #endregion
