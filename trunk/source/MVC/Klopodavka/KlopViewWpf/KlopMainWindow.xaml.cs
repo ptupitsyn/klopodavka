@@ -56,11 +56,9 @@ namespace KlopViewWpf
       /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
       private void Window_Loaded(object sender, RoutedEventArgs e)
       {
-         for (int i = 0; i < 0; i++)
+         for (int i = 0; i < MainGrid.Rows * MainGrid.Columns - 2; i++)
          {
             var c = new RedClop();
-            c.Width = 100;
-            c.Height = 100;
             MainGrid.Children.Add(c);
          }
 

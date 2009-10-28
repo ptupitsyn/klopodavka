@@ -32,6 +32,39 @@
          </Canvas.Triggers>-->
 
          <Canvas Name="ClopCanvas">
+
+
+            <Canvas.RenderTransform>
+               <RotateTransform Angle="0" x:Name="rotateTr" CenterX="157" CenterY="152"    />
+            </Canvas.RenderTransform>
+            <Canvas.Triggers>
+               <EventTrigger RoutedEvent="Canvas.MouseEnter">
+                  <BeginStoryboard>
+                     <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="rotateTr" 
+                                         Storyboard.TargetProperty="Angle"
+                                         By="360" 
+                                         AutoReverse="False" 
+                                         SpeedRatio="2"
+                                         RepeatBehavior="Forever" />
+                     </Storyboard>
+                  </BeginStoryboard>
+               </EventTrigger>
+               <EventTrigger RoutedEvent="Canvas.MouseLeave">
+                  <BeginStoryboard>
+                     <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="rotateTr" 
+                                         Storyboard.TargetProperty="Angle"
+                                         By="360"
+                                         AutoReverse="False" 
+                                         DecelerationRatio="1"
+                                         SpeedRatio="1" />
+                     </Storyboard>
+                  </BeginStoryboard>
+               </EventTrigger>
+            </Canvas.Triggers>
+
+
             <!-- Layer 1/<Path> -->
             <Path Fill="#ffffa54c" Data=" M 206.029,80.528 L 196.008,96.945 L 207.206,111.592 L 217.438,90.015 L 206.029,80.528 L 206.029,80.528 L 206.029,80.528 Z"/>
 
