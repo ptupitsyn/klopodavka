@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
@@ -38,5 +39,17 @@ namespace KlopViewWpf
       }
 
       #endregion
+
+      protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
+      {
+         //Point pt = hitTestParameters.HitGeometry.;
+
+         // Perform custom actions during the hit test processing,
+         // which may include verifying that the point actually
+         // falls within the rendered content of the visual.
+
+         // Return hit on bounding rectangle of visual object.
+         return new GeometryHitTestResult(this, IntersectionDetail.FullyContains);
+      }
    }
 }
