@@ -5,16 +5,23 @@
     Title="KlopMainWindow" Height="496" Width="573">
    <Border BorderBrush="Black" BorderThickness="2" Name="gridBorder"  
            Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}" ClipToBounds="True">
+      <Border.Background>
+         <LinearGradientBrush StartPoint ="0,1" EndPoint ="1,0" Opacity="0.1">
+            <LinearGradientBrush.GradientStops>
+               <GradientStop Color="#FF0000" Offset="0"/>
+               <GradientStop Color="White" Offset="0.5"/>
+               <GradientStop Color="#0000FF" Offset="1"/>
+            </LinearGradientBrush.GradientStops>
+         </LinearGradientBrush>
+      </Border.Background>
       <UniformGrid Name="MainGrid" Rows="15" Columns="15" >
 
          <UniformGrid.Background>
-            <LinearGradientBrush StartPoint ="0,1" EndPoint ="1,0">
-               <LinearGradientBrush.GradientStops>
-                  <GradientStop Color="#33FF0000" Offset="0"/>
-                  <GradientStop Color="White" Offset="0.5"/>
-                  <GradientStop Color="#330000FF" Offset="1"/>
-               </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
+            <ImageBrush Opacity="0.2">
+               <ImageBrush.ImageSource>
+                  <BitmapImage UriSource="Bedbug.png" />
+               </ImageBrush.ImageSource>
+            </ImageBrush>
          </UniformGrid.Background>
 
          <k:RedClop/>
