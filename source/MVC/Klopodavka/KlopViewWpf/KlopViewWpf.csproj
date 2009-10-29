@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B1BC10B4-2D13-4A57-846C-DF507AB4A311}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -63,14 +63,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="BitmapClop.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="KlopCell.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="KlopMainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -89,12 +81,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitmapClop.xaml.cs">
-      <DependentUpon>BitmapClop.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="KlopCell.xaml.cs">
-      <DependentUpon>KlopCell.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="HitTestCanvas.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -127,9 +114,6 @@
       <Project>{A2E756E0-6FDA-4463-9516-33DA651CC060}</Project>
       <Name>KlopIfaces</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="rclop.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
