@@ -3,9 +3,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:k="clr-namespace:KlopViewWpf"
     Title="KlopMainWindow" Height="496" Width="573">
-   <UniformGrid Name="MainGrid" Rows="15" Columns="15">
-      
-      <k:RedClop/>
-      
-   </UniformGrid>
+   <Border BorderBrush="Black" BorderThickness="2" Name="gridBorder"  
+           Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}" ClipToBounds="True">
+      <UniformGrid Name="MainGrid" Rows="15" Columns="15" >
+
+         <UniformGrid.Background>
+            <LinearGradientBrush StartPoint ="0,1" EndPoint ="1,0">
+               <LinearGradientBrush.GradientStops>
+                  <GradientStop Color="#33FF0000" Offset="0"/>
+                  <GradientStop Color="White" Offset="0.5"/>
+                  <GradientStop Color="#330000FF" Offset="1"/>
+               </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+         </UniformGrid.Background>
+
+         <k:RedClop/>
+         <k:RedClop/>
+      </UniformGrid>
+   </Border>
 </Window>
