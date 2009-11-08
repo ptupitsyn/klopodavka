@@ -1,34 +1,31 @@
 ﻿<Window x:Class="KlopViewWpf.KlopMainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:k="clr-namespace:KlopViewWpf"
     Title="KlopMainWindow" Height="496" Width="573"
     WindowStyle="None" WindowState="Maximized">
-   <Grid Background="WhiteSmoke">
-      <Border BorderBrush="Black" BorderThickness="2" Name="gridBorder"  
+    <Grid Background="WhiteSmoke">
+        <Border BorderBrush="Black" BorderThickness="2" Name="gridBorder"  
            Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}" ClipToBounds="True">
-         <Border.Background>
-            <LinearGradientBrush StartPoint ="0,1" EndPoint ="1,0" Opacity="0.1">
-               <LinearGradientBrush.GradientStops>
-                  <GradientStop Color="#FF0000" Offset="0"/>
-                  <GradientStop Color="White" Offset="0.5"/>
-                  <GradientStop Color="#0000FF" Offset="1"/>
-               </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
-         </Border.Background>
+            <Border.Background>
+                <LinearGradientBrush StartPoint ="0,1" EndPoint ="1,0" Opacity="0.1">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="#FF0000" Offset="0"/>
+                        <GradientStop Color="White" Offset="0.5"/>
+                        <GradientStop Color="#0000FF" Offset="1"/>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Border.Background>
 
-         <UniformGrid Name="MainGrid" Rows="30" Columns="30" >
-            <UniformGrid.Background>
-               <ImageBrush Opacity="0.2">
-                  <ImageBrush.ImageSource>
-                     <BitmapImage UriSource="Bedbug.png" />
-                  </ImageBrush.ImageSource>
-               </ImageBrush>
-            </UniformGrid.Background>
-            <k:RedClop/>
-            <k:RedClop/>
-         </UniformGrid>
+            <UniformGrid Name="MainGrid" Rows="30" Columns="30" >
+                <UniformGrid.Background>
+                    <ImageBrush Opacity="0.1">
+                        <ImageBrush.ImageSource>
+                            <BitmapImage UriSource="Bedbug.png" />
+                        </ImageBrush.ImageSource>
+                    </ImageBrush>
+                </UniformGrid.Background>
+            </UniformGrid>
 
-      </Border>
-   </Grid>
+        </Border>
+    </Grid>
 </Window>

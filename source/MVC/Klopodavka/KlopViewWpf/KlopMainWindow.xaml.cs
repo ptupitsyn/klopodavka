@@ -1,9 +1,9 @@
 ﻿#region Usings
 
-using System.IO;
+using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Markup;
+using System.Windows.Input;
 using KlopIfaces;
 
 #endregion
@@ -15,16 +15,19 @@ namespace KlopViewWpf
    /// </summary>
    public partial class KlopMainWindow : Window, IKlopView
    {
+      #region Fields and Constants
+
+      private readonly List<UIElement> _clopCells = new List<UIElement>();
+      private AutoResetEvent _cellsCreated = new AutoResetEvent(false);
+
+      #endregion
+
       #region Constructors
 
       public KlopMainWindow()
       {
          InitializeComponent();
-         for (int i = 0; i < MainGrid.Rows*MainGrid.Columns - 2; i++)
-         {
-            var c = new RedClop();
-            MainGrid.Children.Add(c);
-         }
+         PopulateGrid();
       }
 
       #endregion
@@ -43,15 +46,26 @@ namespace KlopViewWpf
 
       #endregion
 
-      #region Public methods
+      #region Private and protected methods
 
-      public Canvas LoadSpriteCanvas(string xamlPath)
+      /// <summary>
+      /// Populates the grid.
+      /// </summary>
+      private void PopulateGrid()
       {
-         Stream s = GetType().Assembly.GetManifestResourceStream(xamlPath);
-         //var r = new System.IO.StreamReader(s).ReadToEnd();
-         return (Canvas) XamlReader.Load(s);
+         for (int i = 0; i < MainGrid.Rows * MainGrid.Columns; i++)
+         {
+            AddClop();
+         }
       }
 
+      private void AddClop()
+      {
+         MainGrid.Children.Add(new KlopCell());
+      }
+
+
       #endregion
+
    }
 }
