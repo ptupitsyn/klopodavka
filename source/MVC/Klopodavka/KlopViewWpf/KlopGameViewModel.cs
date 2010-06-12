@@ -16,10 +16,12 @@ namespace KlopViewWpf
    {
       #region Fields and Constants
 
+      private DispatcherTimer _demoTimer;
+      private bool _isDemoRunning;
       private IKlopModel _klopModel;
       private DelegateCommand<IKlopCell> _makeTurnCommand;
       private DelegateCommand<object> _startDemoCommand;
-      private bool _isDemoRunning;
+      private DelegateCommand<object> _stopDemoCommand;
 
       #endregion
 
@@ -54,10 +56,7 @@ namespace KlopViewWpf
 
       public DelegateCommand<IKlopCell> MakeTurnCommand
       {
-         get
-         {
-            return _makeTurnCommand ?? (_makeTurnCommand = new DelegateCommand<IKlopCell>(cell => Model.MakeTurn(cell.X, cell.Y)));
-         }
+         get { return _makeTurnCommand ?? (_makeTurnCommand = new DelegateCommand<IKlopCell>(cell => Model.MakeTurn(cell.X, cell.Y))); }
       }
 
       public DelegateCommand<object> StartDemoCommand
@@ -70,27 +69,54 @@ namespace KlopViewWpf
                                                  {
                                                     _isDemoRunning = true;
                                                     _startDemoCommand.RaiseCanExecuteChanged();
-                                                    var timer = new DispatcherTimer() {Interval = TimeSpan.FromSeconds(0.5)};
-                                                    timer.Tick += (a, e) =>
-                                                                     {
-                                                                        var avail = Model.Cells.Where(c => c.Available).FirstOrDefault();
-                                                                        if (avail == null)
-                                                                        {
-                                                                           timer.Stop();
-                                                                           _isDemoRunning = false;
-                                                                           _startDemoCommand.RaiseCanExecuteChanged();
-                                                                           return;
-                                                                        }
-                                                                        Model.MakeTurn(avail);
-                                                                     };
-
+                                                    _stopDemoCommand.RaiseCanExecuteChanged();
+                                                    DemoTimer.Start();
                                                  }, o => !_isDemoRunning));
+         }
+      }
+
+      public DelegateCommand<object> StopDemoCommand
+      {
+         get
+         {
+            return _stopDemoCommand ?? (_stopDemoCommand = new DelegateCommand<object>(o =>
+                                                                                          {
+                                                                                             _demoTimer.Stop();
+                                                                                             _isDemoRunning = false;
+                                                                                             _startDemoCommand.RaiseCanExecuteChanged();
+                                                                                             _stopDemoCommand.RaiseCanExecuteChanged();
+                                                                                          }, o => _isDemoRunning));
          }
       }
 
       #endregion
 
       #region Private and protected properties and indexers
+
+      private DispatcherTimer DemoTimer
+      {
+         get
+         {
+            if (_demoTimer == null)
+            {
+               _demoTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(0.1)};
+               _demoTimer.Tick += (a, e) =>
+                                     {
+                                        var avail = Model.Cells.Where(c => c.Available).ToList();
+                                        if (avail.Count == 0)
+                                        {
+                                           _demoTimer.Stop();
+                                           _isDemoRunning = false;
+                                           _startDemoCommand.RaiseCanExecuteChanged();
+                                           _stopDemoCommand.RaiseCanExecuteChanged();
+                                           return;
+                                        }
+                                        Model.MakeTurn(avail[new Random().Next(avail.Count - 1)]);
+                                     };
+            }
+            return _demoTimer;
+         }
+      }
 
       private int FieldWidth { get; set; }
       private int FieldHeight { get; set; }

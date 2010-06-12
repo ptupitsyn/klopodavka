@@ -52,6 +52,9 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Border>
-        <Button Content="Start Demo" Command="{Binding StartDemoCommand}" Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" >
+        <Button Content="Start Demo" Command="{Binding StartDemoCommand}" Width="100" />
+        <Button Content="Stop Demo" Command="{Binding StopDemoCommand}" Width="100" />
+        </StackPanel>
     </Grid>
 </Window>

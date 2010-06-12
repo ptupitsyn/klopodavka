@@ -118,6 +118,8 @@ namespace KlopModel
             cell.Flag = false;
          }
 
+
+
          FindAvailableCells(_cells[CurrentPlayer.BasePosX, CurrentPlayer.BasePosY]);
       }
 

@@ -87,6 +87,7 @@ namespace KlopModel
          get { return _state; }
          set
          {
+            if (_state == value) return;
             _state = value;
             OnPropertyChanged("State");
          }
@@ -101,6 +102,7 @@ namespace KlopModel
          get { return _owner; }
          set
          {
+            if (_owner == value) return;
             _owner = value;
             OnPropertyChanged("Owner");
          }
@@ -115,6 +117,7 @@ namespace KlopModel
          get { return _available; }
          set
          {
+            if (_available == value) return;
             _available = value;
             OnPropertyChanged("Available");
          }
