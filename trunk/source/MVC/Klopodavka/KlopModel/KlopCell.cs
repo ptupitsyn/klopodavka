@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using System.ComponentModel;
 using KlopIfaces;
 
 #endregion
@@ -9,7 +10,7 @@ namespace KlopModel
    /// <summary>
    /// Implements field cell
    /// </summary>
-   internal class KlopCell : IKlopCell
+   public class KlopCell : IKlopCell
    {
       #region Constructors
 
@@ -36,6 +37,12 @@ namespace KlopModel
 
       #endregion
 
+      #region IKlopCell implementation
+
+      public event PropertyChangedEventHandler PropertyChanged;
+
+      #endregion
+
       #region Public methods
 
       /// <summary>
@@ -50,6 +57,14 @@ namespace KlopModel
       #endregion
 
       #region IKlopCell Members
+
+      #region Fields and Constants
+
+      private bool _available;
+      private IKlopPlayer _owner;
+      private ECellState _state;
+
+      #endregion
 
       /// <summary>
       /// Gets the horizontal cell position.
@@ -67,19 +82,55 @@ namespace KlopModel
       /// Gets the state.
       /// </summary>
       /// <value>The state.</value>
-      public ECellState State { get; set; }
+      public ECellState State
+      {
+         get { return _state; }
+         set
+         {
+            _state = value;
+            OnPropertyChanged("State");
+         }
+      }
 
       /// <summary>
       /// Gets the cell owner.
       /// </summary>
       /// <value>The owner.</value>
-      public IKlopPlayer Owner { get; set; }
+      public IKlopPlayer Owner
+      {
+         get { return _owner; }
+         set
+         {
+            _owner = value;
+            OnPropertyChanged("Owner");
+         }
+      }
 
       /// <summary>
       /// Gets a value indicating whether this <see cref="IKlopCell"/> is available for turn.
       /// </summary>
       /// <value><c>true</c> if available; otherwise, <c>false</c>.</value>
-      public bool Available { get; set; }
+      public bool Available
+      {
+         get { return _available; }
+         set
+         {
+            _available = value;
+            OnPropertyChanged("Available");
+         }
+      }
+
+      #endregion
+
+      #region Private and protected methods
+
+      protected void OnPropertyChanged(string propertyName)
+      {
+         if (PropertyChanged != null)
+         {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+         }
+      }
 
       #endregion
    }

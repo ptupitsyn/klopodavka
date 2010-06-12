@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 #endregion
 
@@ -10,7 +11,7 @@ namespace KlopIfaces
    /// <summary>
    /// Defines Model part of MVC pattern
    /// </summary>
-   public interface IKlopModel
+   public interface IKlopModel : INotifyPropertyChanged
    {
       /// <summary>
       /// Gets or sets the width of the field.
@@ -55,6 +56,12 @@ namespace KlopIfaces
       IKlopCell this[int x, int y] { get; }
 
       /// <summary>
+      /// Gets the cells.
+      /// </summary>
+      /// <value>The cells.</value>
+      IEnumerable<IKlopCell> Cells { get; }
+
+      /// <summary>
       /// Resets the game to initial state
       /// </summary>
       void Reset();
@@ -70,15 +77,5 @@ namespace KlopIfaces
       /// Undoes the previous turn.
       /// </summary>
       void UndoTurn();
-
-      /// <summary>
-      /// Occurs when [current player changed].
-      /// </summary>
-      event EventHandler CurrentPlayerChanged;
-
-      /// <summary>
-      /// Occurs when [cells changed].
-      /// </summary>
-      event EventHandler CellsChanged;
    }
 }

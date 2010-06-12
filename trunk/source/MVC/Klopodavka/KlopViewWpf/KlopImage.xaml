@@ -75,7 +75,6 @@
                     <RotateTransform Angle="0" x:Name="rotateTr" CenterX="157" CenterY="152"    />
                 </Canvas.RenderTransform>
 
-
                 <!-- Layer 1/<Path> -->
                 <Path Fill="#ffffa54c" Data=" M 206.029,80.528 L 196.008,96.945 L 207.206,111.592 L 217.438,90.015 L 206.029,80.528 L 206.029,80.528 L 206.029,80.528 Z"/>
 

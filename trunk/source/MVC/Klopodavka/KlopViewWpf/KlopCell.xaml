@@ -1,7 +1,33 @@
 ﻿<UserControl x:Class="KlopViewWpf.KlopCell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:KlopViewWpf="clr-namespace:KlopViewWpf"
-    BorderBrush="Black" BorderThickness="0.5">
-    <KlopViewWpf:HitTestViewbox x:Name="contentBox" />
+    xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:KlopIfaces="clr-namespace:KlopIfaces;assembly=KlopIfaces" >
+    <UserControl.Resources>
+        <KlopViewWpf:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
+    </UserControl.Resources>
+    <UserControl.Style>
+        <Style TargetType="Control">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Free}">
+                    <Setter Property="Background" Value="Transparent">
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Base}">
+                    <Setter Property="Background" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Alive}">
+                    <Setter Property="Background" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+    <!--<StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding X}" />
+                    <TextBlock Text="," />
+                    <TextBlock Text="{Binding Y}" />
+                </StackPanel>
+                <TextBlock Text="{Binding State}" />
+                <TextBlock Text="{Binding Owner.Color}" />
+    </StackPanel>-->
 </UserControl>

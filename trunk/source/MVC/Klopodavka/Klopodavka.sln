@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KlopIfaces", "KlopIfaces\KlopIfaces.csproj", "{A2E756E0-6FDA-4463-9516-33DA651CC060}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KlopModel", "KlopModel\KlopModel.csproj", "{74D8AB0B-B339-4974-BFCF-359E498F559A}"
