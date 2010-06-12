@@ -70,7 +70,6 @@
   <ItemGroup>
     <Compile Include="ECellState.cs" />
     <Compile Include="IKlopCell.cs" />
-    <Compile Include="IKlopController.cs" />
     <Compile Include="IKlopModel.cs" />
     <Compile Include="IKlopPlayer.cs" />
     <Compile Include="IKlopView.cs" />

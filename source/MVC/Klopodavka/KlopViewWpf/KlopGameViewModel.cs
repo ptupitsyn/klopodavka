@@ -14,6 +14,7 @@ namespace KlopViewWpf
       #region Fields and Constants
 
       private IKlopModel _klopModel;
+      private DelegateCommand<IKlopCell> _makeTurnCommand;
 
       #endregion
 
@@ -37,12 +38,20 @@ namespace KlopViewWpf
             {
                var players = new List<IKlopPlayer>
                                 {
-                                   new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Red, Human = true, Name = "Player 1"},
-                                   new KlopPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Blue, Human = true, Name = "Player 2"}
+                                   new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1"},
+                                   new KlopPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Red, Human = true, Name = "Player 2"}
                                 };
                _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players);
             }
             return _klopModel;
+         }
+      }
+
+      public DelegateCommand<IKlopCell> MakeTurnCommand
+      {
+         get
+         {
+            return _makeTurnCommand ?? (_makeTurnCommand = new DelegateCommand<IKlopCell>(cell => Model.MakeTurn(cell.X, cell.Y)));
          }
       }
 
