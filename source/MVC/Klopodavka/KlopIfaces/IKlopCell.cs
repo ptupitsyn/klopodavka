@@ -1,9 +1,11 @@
+using System.ComponentModel;
+
 namespace KlopIfaces
 {
    /// <summary>
    /// Represents one cell in Klop Model
    /// </summary>
-   public interface IKlopCell
+   public interface IKlopCell : INotifyPropertyChanged
    {
       /// <summary>
       /// Gets the horizontal cell position.

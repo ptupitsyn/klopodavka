@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using KlopIfaces;
 
 #endregion
@@ -13,13 +15,28 @@ namespace KlopModel
    /// </summary>
    public class KlopModel : IKlopModel
    {
-      #region Fields and constants
+      #region Fields and Constants
 
       private readonly KlopCell[,] _cells;
       private readonly Stack<KlopCell> _history;
+      private readonly object _syncroot = new object();
       private int _currentPlayerIndex;
-      private object _syncroot = new object();
-      //TODO: progressStarted, progressEnded, progressStatus
+      private int _remainingKlops;
+      private int _turnLength;
+
+      #endregion
+
+      #region Private and protected properties and indexers
+
+      private int CurrentPlayerIndex
+      {
+         get { return _currentPlayerIndex; }
+         set
+         {
+            _currentPlayerIndex = value;
+            OnPropertyChanged("CurrentPlayer");
+         }
+      }
 
       #endregion
 
@@ -33,6 +50,11 @@ namespace KlopModel
       /// <param name="players">The players.</param>
       public KlopModel(int width, int height, IList<IKlopPlayer> players)
       {
+         FieldWidth = width;
+         FieldHeight = height;
+         Players = players;
+         TurnLength = 10; // default
+
          if (width < 10 || height < 10)
          {
             throw new ArgumentException("Width and height must be greater than 9");
@@ -43,19 +65,10 @@ namespace KlopModel
             throw new ArgumentException("Need two or more players");
          }
 
-         foreach (IKlopPlayer player in Players)
+         if (players.Any(player => !CheckCoord(player.BasePosX, player.BasePosY)))
          {
-            if (!CheckCoord(player.BasePosX, player.BasePosY))
-            {
-               throw new ArgumentException("Player base is outside of field!");
-            }
+            throw new ArgumentException("Player base is outside of field!");
          }
-
-
-         FieldWidth = width;
-         FieldHeight = height;
-         Players = players;
-         TurnLength = 10; // default
 
          // initialize field
          _cells = new KlopCell[width,height];
@@ -72,16 +85,14 @@ namespace KlopModel
          if (RemainingKlops == 0)
          {
             RemainingKlops = TurnLength;
-            _currentPlayerIndex++;
+            CurrentPlayerIndex++;
 
-            if (_currentPlayerIndex >= Players.Count)
+            if (CurrentPlayerIndex >= Players.Count)
             {
-               _currentPlayerIndex = 0;
+               CurrentPlayerIndex = 0;
             }
 
             _history.Clear(); // cannot undo after turn switch
-
-            CurrentPlayerChanged(this, new EventArgs()); //deadlock?
          }
       }
 
@@ -160,6 +171,7 @@ namespace KlopModel
 
       #region IKlopModel Members
 
+
       /// <summary>
       /// Gets or sets the width of the field.
       /// </summary>
@@ -184,20 +196,36 @@ namespace KlopModel
       /// <value>The current player.</value>
       public IKlopPlayer CurrentPlayer
       {
-         get { return Players[_currentPlayerIndex]; }
+         get { return Players[CurrentPlayerIndex]; }
       }
 
       /// <summary>
       /// Gets the available klop count for each turn
       /// </summary>
       /// <value>The length of the turn.</value>
-      public int TurnLength { get; set; }
+      public int TurnLength
+      {
+         get { return _turnLength; }
+         set
+         {
+            _turnLength = value;
+            OnPropertyChanged("TurnLength");
+         }
+      }
 
       /// <summary>
       /// Gets the remaining klops.
       /// </summary>
       /// <value>The remaining klops.</value>
-      public int RemainingKlops { get; private set; }
+      public int RemainingKlops
+      {
+         get { return _remainingKlops; }
+         private set
+         {
+            _remainingKlops = value;
+            OnPropertyChanged("RemainingKlops");
+         }
+      }
 
       /// <summary>
       /// Gets the <see cref="KlopIfaces.IKlopCell"/> with the specified position
@@ -217,6 +245,25 @@ namespace KlopModel
       }
 
       /// <summary>
+      /// Gets the cells.
+      /// </summary>
+      /// <value>The cells.</value>
+      public IEnumerable<IKlopCell> Cells
+      {
+         get
+         {
+            //return _cells.OfType<IKlopCell>();
+            for (int y = 0; y < FieldHeight; y++)
+            {
+               for (int x = 0; x < FieldWidth; x++)
+               {
+                  yield return this[x, y];
+               }
+            }
+         }
+      }
+
+      /// <summary>
       /// Resets the game to initial state
       /// </summary>
       public void Reset()
@@ -227,8 +274,14 @@ namespace KlopModel
             {
                for (int y = 0; y < FieldHeight; y++)
                {
-                  _cells[x, y] = new KlopCell(x, y);
-                  CellsChanged(_cells[x, y], new EventArgs()); //TODO: think
+                  if (_cells[x, y] == null)
+                  {
+                     _cells[x, y] = new KlopCell(x, y);
+                  }
+                  var cell = _cells[x, y];
+                  cell.Available = false;
+                  cell.Flag = false;
+                  cell.Owner = null;
                }
             }
 
@@ -237,13 +290,11 @@ namespace KlopModel
                var cell = _cells[player.BasePosX, player.BasePosY];
                cell.Owner = player;
                cell.State = ECellState.Base;
-               CellsChanged(cell, new EventArgs()); //TODO: think
             }
 
-            _currentPlayerIndex = 0;
+            CurrentPlayerIndex = 0;
             RemainingKlops = TurnLength;
             FindAvailableCells();
-            CurrentPlayerChanged(this, new EventArgs());
          }
       }
 
@@ -304,16 +355,20 @@ namespace KlopModel
             FindAvailableCells();
          }
       }
+      
+      public event PropertyChangedEventHandler PropertyChanged;
 
-      /// <summary>
-      /// Occurs when [current player changed].
-      /// </summary>
-      public event EventHandler CurrentPlayerChanged;
+      #endregion
 
-      /// <summary>
-      /// Occurs when [cells changed].
-      /// </summary>
-      public event EventHandler CellsChanged;
+      #region Private and protected methods
+
+      protected void OnPropertyChanged(string propertyName)
+      {
+         if (PropertyChanged != null)
+         {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+         }
+      }
 
       #endregion
    }

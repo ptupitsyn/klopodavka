@@ -1,7 +1,12 @@
 ﻿#region Usings
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using KlopIfaces;
 
 #endregion
 
@@ -12,18 +17,12 @@ namespace KlopViewWpf
    /// </summary>
    public partial class KlopCell // : IKlopCell
    {
-      #region Fields and Constants
-
-      private bool _clopLoaded;
-
-      #endregion
 
       #region Constructors
 
       public KlopCell()
       {
          InitializeComponent();
-         MouseDown += KlopCell_MouseDown;
       }
 
       #endregion
@@ -35,24 +34,8 @@ namespace KlopViewWpf
          return new GeometryHitTestResult(this, IntersectionDetail.FullyContains);
       }
 
-      #endregion
-
-      #region Event handlers
-
-      /// <summary>
-      /// Handles the MouseDown event of the KlopCell control.
-      /// </summary>
-      /// <param name="sender">The source of the event.</param>
-      /// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
-      private void KlopCell_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         if (!_clopLoaded)
-         {
-            contentBox.Child = new KlopImage();
-            _clopLoaded = true;
-         }
-      }
 
       #endregion
+
    }
 }
