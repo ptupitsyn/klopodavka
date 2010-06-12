@@ -114,39 +114,46 @@ namespace KlopModel
       {
          foreach (KlopCell cell in _cells)
          {
-            cell.Available = false;
             cell.Flag = false;
          }
 
-
-
-         FindAvailableCells(_cells[CurrentPlayer.BasePosX, CurrentPlayer.BasePosY]);
+         var avail = FindAvailableCells(_cells[CurrentPlayer.BasePosX, CurrentPlayer.BasePosY]).ToDictionary(cell => cell);
+         foreach (KlopCell cell in _cells)
+         {
+            cell.Available = avail.ContainsKey(cell);
+         }
       }
 
       /// <summary>
       /// Mark cells where turn is possible as available
       /// </summary>
       /// <param name="baseCell">The base cell.</param>
-      private void FindAvailableCells(KlopCell baseCell)
+      private IEnumerable<IKlopCell> FindAvailableCells(KlopCell baseCell)
       {
          if (baseCell.Owner != CurrentPlayer || baseCell.Flag)
-            return;
+            yield break;
 
          baseCell.Flag = true;
 
          foreach (KlopCell cell in GetNeighborCells(baseCell))
          {
-            if (cell.State == ECellState.Free || (cell.State == ECellState.Alive && cell.Owner != CurrentPlayer))
-            {
-               // Can go to free cell or eat enemy klop
-               cell.Available = true;
-            }
+            if (cell.Flag) continue;
 
             if (cell.Owner == CurrentPlayer)
             {
                // Continue tree search
-               FindAvailableCells(cell);
+               foreach (var c in FindAvailableCells(cell))
+               {
+                  yield return c;
+               }
+               continue;
             }
+
+            if (cell.State != ECellState.Free && cell.State != ECellState.Alive) continue;
+            
+            // Can go to free cell or eat enemy klop
+            cell.Flag = true;
+            yield return cell;
          }
       }
 

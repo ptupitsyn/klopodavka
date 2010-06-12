@@ -1,7 +1,7 @@
 ﻿<Button x:Class="KlopViewWpf.KlopCell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:KlopIfaces="clr-namespace:KlopIfaces;assembly=KlopIfaces" xmlns:System="clr-namespace:System;assembly=mscorlib">
+    xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:KlopIfaces="clr-namespace:KlopIfaces;assembly=KlopIfaces">
     <Button.Resources>
         <KlopViewWpf:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
         <SolidColorBrush Color="Gray" Opacity="0.2" x:Key="availableBrush" />
@@ -12,8 +12,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Free}">
-                    <Setter Property="Foreground" Value="Transparent">
-                    </Setter>
+                    <Setter Property="Foreground" Value="Transparent" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Base}">
                     <Setter Property="Foreground" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
