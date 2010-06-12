@@ -74,6 +74,12 @@ namespace KlopIfaces
       void MakeTurn(int x, int y);
 
       /// <summary>
+      /// Makes the turn to the specified cell.
+      /// </summary>
+      /// <param name="cell">The cell.</param>
+      void MakeTurn(IKlopCell cell);
+
+      /// <summary>
       /// Undoes the previous turn.
       /// </summary>
       void UndoTurn();

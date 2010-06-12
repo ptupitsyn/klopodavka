@@ -7,7 +7,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KlopModel", "KlopModel\Klop
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KlopViewWpf", "KlopViewWpf\KlopViewWpf.csproj", "{B1BC10B4-2D13-4A57-846C-DF507AB4A311}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KlopModelTests", "KlopModelTests\KlopModelTests.csproj", "{0B5A150B-E0CC-4D70-B12D-1DFED8E04B7A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7BD8881-1E69-42C0-922F-2115338EE7FB}"
+	ProjectSection(SolutionItems) = preProject
+		Klopodavka.vsmdi = Klopodavka.vsmdi
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Klopodavka.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -25,6 +37,10 @@ Global
 		{B1BC10B4-2D13-4A57-846C-DF507AB4A311}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1BC10B4-2D13-4A57-846C-DF507AB4A311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1BC10B4-2D13-4A57-846C-DF507AB4A311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B5A150B-E0CC-4D70-B12D-1DFED8E04B7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B5A150B-E0CC-4D70-B12D-1DFED8E04B7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B5A150B-E0CC-4D70-B12D-1DFED8E04B7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B5A150B-E0CC-4D70-B12D-1DFED8E04B7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

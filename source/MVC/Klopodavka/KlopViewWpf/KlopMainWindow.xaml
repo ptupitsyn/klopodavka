@@ -4,7 +4,7 @@
     <Window.Resources>
         <KlopViewWpf:ClopGridWidthConverter x:Key="_clopGridWidthConverter" />
     </Window.Resources>
-        <Grid Background="WhiteSmoke">
+    <Grid Background="WhiteSmoke">
         <Border BorderBrush="Black" BorderThickness="2" Name="gridBorder" ClipToBounds="True">
             <Border.Width>
                 <MultiBinding Converter="{StaticResource _clopGridWidthConverter}">
@@ -21,9 +21,9 @@
                     </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </Border.Background>
-            
+
             <!-- TODO: PlayerInfo controls on left and right sides -->
-            
+
             <ItemsControl ItemsSource="{Binding Model.Cells}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -51,7 +51,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
         </Border>
+        <Button Content="Start Demo" Command="{Binding StartDemoCommand}" Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
     </Grid>
 </Window>

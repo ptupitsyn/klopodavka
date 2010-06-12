@@ -1,7 +1,10 @@
 ﻿#region Usings
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
+using System.Windows.Threading;
 using KlopIfaces;
 using KlopModel;
 
@@ -15,6 +18,8 @@ namespace KlopViewWpf
 
       private IKlopModel _klopModel;
       private DelegateCommand<IKlopCell> _makeTurnCommand;
+      private DelegateCommand<object> _startDemoCommand;
+      private bool _isDemoRunning;
 
       #endregion
 
@@ -22,8 +27,8 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 15;
-         FieldHeight = 20;
+         FieldWidth = 30;
+         FieldHeight = 30;
       }
 
       #endregion
@@ -39,7 +44,7 @@ namespace KlopViewWpf
                var players = new List<IKlopPlayer>
                                 {
                                    new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1"},
-                                   new KlopPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Red, Human = true, Name = "Player 2"}
+                                   new KlopPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Red, Human = false, Name = "Player 2"},
                                 };
                _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players);
             }
@@ -52,6 +57,34 @@ namespace KlopViewWpf
          get
          {
             return _makeTurnCommand ?? (_makeTurnCommand = new DelegateCommand<IKlopCell>(cell => Model.MakeTurn(cell.X, cell.Y)));
+         }
+      }
+
+      public DelegateCommand<object> StartDemoCommand
+      {
+         get
+         {
+            return _startDemoCommand ?? (_startDemoCommand
+                                         = new DelegateCommand<object>(
+                                              o =>
+                                                 {
+                                                    _isDemoRunning = true;
+                                                    _startDemoCommand.RaiseCanExecuteChanged();
+                                                    var timer = new DispatcherTimer() {Interval = TimeSpan.FromSeconds(0.5)};
+                                                    timer.Tick += (a, e) =>
+                                                                     {
+                                                                        var avail = Model.Cells.Where(c => c.Available).FirstOrDefault();
+                                                                        if (avail == null)
+                                                                        {
+                                                                           timer.Stop();
+                                                                           _isDemoRunning = false;
+                                                                           _startDemoCommand.RaiseCanExecuteChanged();
+                                                                           return;
+                                                                        }
+                                                                        Model.MakeTurn(avail);
+                                                                     };
+
+                                                 }, o => !_isDemoRunning));
          }
       }
 
