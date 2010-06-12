@@ -4,17 +4,24 @@
     xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:KlopIfaces="clr-namespace:KlopIfaces;assembly=KlopIfaces">
     <Button.Resources>
         <KlopViewWpf:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
-        <SolidColorBrush Color="Gray" Opacity="0.2" x:Key="availableBrush" />
+        <SolidColorBrush Color="Gray" Opacity="0.3" x:Key="availableBrush" />
         <SolidColorBrush Color="Gray" Opacity="0.1" x:Key="hoverBrush" />
     </Button.Resources>
     <Button.Style>
         <Style TargetType="Button">
             <Setter Property="Foreground" Value="Transparent" />
             <Setter Property="Background" Value="Transparent" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform x:Name="scale"  />
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Free}">
                     <Setter Property="Foreground" Value="Transparent" />
                 </DataTrigger>
+                
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Base}">
                     <Setter Property="Foreground" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
                     <Setter Property="Background" >
@@ -23,26 +30,63 @@
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
+                
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Alive}">
                     <Setter Property="Foreground" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="2" To="1" Duration="0:0:0.4" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <BounceEase Bounces="2" EasingMode="EaseIn" Bounciness="1.8" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="2" To="1" Duration="0:0:0.4" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <BounceEase Bounces="2" EasingMode="EaseIn" Bounciness="1.8" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
                 </DataTrigger>
+                
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Dead}">
                     <Setter Property="Foreground" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}, ConverterParameter=True}" />
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="0" To="1" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="0" To="1" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
                 </DataTrigger>
+                
                 <DataTrigger Binding="{Binding Available}" Value="True"> <!-- This trigger consumes a lot of CPU on large cell count! -->
                     <Setter Property="Background" Value="{StaticResource availableBrush}" />
                     <Setter Property="Cursor" Value="Hand" />
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Background.Opacity" From="0" To="0.3" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
                 </DataTrigger>
+                
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{StaticResource hoverBrush}" />
                 </Trigger>
+                
             </Style.Triggers>
         </Style>
     </Button.Style>
     <Button.Template>
         <ControlTemplate TargetType="Button">
             <Border Background="{TemplateBinding Background}" >
-                <Border Background="{TemplateBinding Foreground}" >
+                <Border Background="{TemplateBinding Foreground}"  >
                     <ContentPresenter Content="{TemplateBinding Content}" />
                 </Border>
             </Border>
