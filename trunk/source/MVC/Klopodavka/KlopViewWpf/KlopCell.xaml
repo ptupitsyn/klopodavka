@@ -5,6 +5,7 @@
     <Button.Resources>
         <KlopViewWpf:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
         <SolidColorBrush Color="Gray" Opacity="0.2" x:Key="availableBrush" />
+        <SolidColorBrush Color="Gray" Opacity="0.1" x:Key="hoverBrush" />
     </Button.Resources>
     <Button.Style>
         <Style TargetType="Button">
@@ -28,9 +29,13 @@
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Dead}">
                     <Setter Property="Foreground" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}, ConverterParameter=True}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Available}" Value="True">
+                <DataTrigger Binding="{Binding Available}" Value="True"> <!-- This trigger consumes a lot of CPU on large cell count! -->
                     <Setter Property="Background" Value="{StaticResource availableBrush}" />
+                    <Setter Property="Cursor" Value="Hand" />
                 </DataTrigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource hoverBrush}" />
+                </Trigger>
             </Style.Triggers>
         </Style>
     </Button.Style>
