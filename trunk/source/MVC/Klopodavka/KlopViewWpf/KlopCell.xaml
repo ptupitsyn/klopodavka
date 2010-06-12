@@ -17,6 +17,11 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Base}">
                     <Setter Property="Foreground" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
+                    <Setter Property="Background" >
+                        <Setter.Value>
+                            <SolidColorBrush Color="{Binding Owner.Color}" />
+                        </Setter.Value>
+                    </Setter>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Alive}">
                     <Setter Property="Foreground" Value="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
