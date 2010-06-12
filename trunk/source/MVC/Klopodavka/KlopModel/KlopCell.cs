@@ -10,7 +10,7 @@ namespace KlopModel
    /// <summary>
    /// Implements field cell
    /// </summary>
-   public class KlopCell : IKlopCell
+   internal class KlopCell : IKlopCell
    {
       #region Constructors
 

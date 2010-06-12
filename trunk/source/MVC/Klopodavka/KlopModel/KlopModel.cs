@@ -331,8 +331,18 @@ namespace KlopModel
 
             RemainingKlops--;
             SwitchTurn();
+            //TODO: GameOver condition
             FindAvailableCells();
          }
+      }
+
+      /// <summary>
+      /// Makes the turn to the specified cell.
+      /// </summary>
+      /// <param name="cell">The cell.</param>
+      public void MakeTurn(IKlopCell cell)
+      {
+         MakeTurn(cell.X, cell.Y);
       }
 
       /// <summary>
