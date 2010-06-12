@@ -15,7 +15,7 @@ namespace KlopViewWpf
    /// <summary>
    /// Interaction logic for KlopCell.xaml
    /// </summary>
-   public partial class KlopCell // : IKlopCell
+   public partial class KlopCell
    {
 
       #region Constructors

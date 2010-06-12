@@ -3,8 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 #endregion
 
@@ -14,7 +17,7 @@ namespace KlopViewWpf
    {
       #region Fields and Constants
 
-      private static readonly Dictionary<Color, Brush> ClopBrushes = new Dictionary<Color, Brush>();
+      private static readonly Dictionary<Tuple<Color, bool>, Brush> ClopBrushes = new Dictionary<Tuple<Color, bool>, Brush>();
 
       #endregion
 
@@ -33,19 +36,28 @@ namespace KlopViewWpf
       public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
       {
          var color = value is Color ? (Color) value : Colors.Transparent;
+         var dead = parameter != null;
+         var key = new Tuple<Color, bool>(color, dead);
 
-         if (ClopBrushes.ContainsKey(color))
-            return ClopBrushes[color];
+         if (ClopBrushes.ContainsKey(key))
+            return ClopBrushes[key];
 
-         var image = new KlopImage {KlopColor = color};
-         if (ClopBrushes.Count == 0)
+         FrameworkElement image = new KlopImage {KlopColor = color};
+         if (ClopBrushes.Count%2 == 0)
          {
             //Nice hack to orientate enemy image
             image.RenderTransform = new RotateTransform(180);
          }
 
+         if (dead)
+         {
+            image.Effect = new DropShadowEffect {ShadowDepth = 0, BlurRadius = 40, Color = Colors.Black, Opacity = 1};
+            var border = new Border { Child = image, Effect = new BlurEffect { Radius = 60 } };
+            image = border;
+         }
+
          var brush = new VisualBrush {Visual = image};
-         ClopBrushes[color] = brush;
+         ClopBrushes[key] = brush;
 
          return brush;
       }

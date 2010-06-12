@@ -127,7 +127,7 @@ namespace KlopModel
       /// <param name="baseCell">The base cell.</param>
       private void FindAvailableCells(KlopCell baseCell)
       {
-         if (baseCell.Owner != CurrentPlayer)
+         if (baseCell.Owner != CurrentPlayer || baseCell.Flag)
             return;
 
          baseCell.Flag = true;
@@ -140,7 +140,7 @@ namespace KlopModel
                cell.Available = true;
             }
 
-            if ((cell.State == ECellState.Alive && cell.Owner == CurrentPlayer))
+            if (cell.Owner == CurrentPlayer)
             {
                // Continue tree search
                FindAvailableCells(cell);

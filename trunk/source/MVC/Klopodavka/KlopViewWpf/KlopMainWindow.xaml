@@ -44,7 +44,9 @@
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="Black" Opacity="0.5" />
                             </Border.BorderBrush>
-                            <KlopViewWpf:KlopCell DataContext="{Binding}" />
+                            <KlopViewWpf:KlopCell DataContext="{Binding}" 
+                                                  Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.MakeTurnCommand}" 
+                                                  CommandParameter="{Binding}" />
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
