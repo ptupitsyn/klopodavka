@@ -61,6 +61,7 @@ namespace KlopModel
       #region Fields and Constants
 
       private bool _available;
+      private bool _highlighted;
       private IKlopPlayer _owner;
       private ECellState _state;
 
@@ -120,6 +121,21 @@ namespace KlopModel
             if (_available == value) return;
             _available = value;
             OnPropertyChanged("Available");
+         }
+      }
+
+      /// <summary>
+      /// Gets a value indicating whether this <see cref="IKlopCell"/> is highlighted. This can be used for turn suggestions.
+      /// </summary>
+      /// <value><c>true</c> if highlighted; otherwise, <c>false</c>.</value>
+      public bool Highlighted
+      {
+         get { return _highlighted; }
+         set
+         {
+            if (_highlighted == value) return;
+            _highlighted = value;
+            OnPropertyChanged("Highlighted");
          }
       }
 

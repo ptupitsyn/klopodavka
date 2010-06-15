@@ -36,5 +36,11 @@ namespace KlopIfaces
       /// </summary>
       /// <value><c>true</c> if available; otherwise, <c>false</c>.</value>
       bool Available { get; }
+
+      /// <summary>
+      /// Gets a value indicating whether this <see cref="IKlopCell"/> is highlighted. This can be used for turn suggestions.
+      /// </summary>
+      /// <value><c>true</c> if highlighted; otherwise, <c>false</c>.</value>
+      bool Highlighted { get; set; }
    }
 }

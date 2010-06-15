@@ -1,7 +1,8 @@
 ﻿<Button x:Class="KlopViewWpf.KlopCell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:KlopIfaces="clr-namespace:KlopIfaces;assembly=KlopIfaces">
+    xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:KlopIfaces="clr-namespace:KlopIfaces;assembly=KlopIfaces"
+        MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave">
     <Button.Resources>
         <KlopViewWpf:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
         <SolidColorBrush Color="Gray" Opacity="0.3" x:Key="availableBrush" />
@@ -75,10 +76,21 @@
                         </BeginStoryboard>
                     </DataTrigger.EnterActions>
                 </DataTrigger>
-                
-                <Trigger Property="IsMouseOver" Value="True">
+
+                <DataTrigger Binding="{Binding Highlighted}" Value="True"> <!-- This trigger consumes a lot of CPU on large cell count! -->
                     <Setter Property="Background" Value="{StaticResource hoverBrush}" />
-                </Trigger>
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Background.Opacity" From="0" To="0.3" Duration="0:0:0.1" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+
+                <!--<Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource hoverBrush}" />
+                </Trigger>-->
                 
             </Style.Triggers>
         </Style>
