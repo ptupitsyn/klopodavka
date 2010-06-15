@@ -20,6 +20,7 @@ namespace KlopViewWpf
       private bool _isDemoRunning;
       private IKlopModel _klopModel;
       private DelegateCommand<IKlopCell> _makeTurnCommand;
+      private HintPathHighlighter _pathHighlighter;
       private DelegateCommand<object> _startDemoCommand;
       private DelegateCommand<object> _stopDemoCommand;
 
@@ -29,13 +30,21 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 30;
-         FieldHeight = 30;
+         FieldWidth = 10;
+         FieldHeight = 10;
       }
 
       #endregion
 
       #region Public properties and indexers
+
+      public IKlopCell ActiveCell
+      {
+         set
+         {
+            PathHighlighter.HighlightPath(value);
+         }
+      }
 
       public IKlopModel Model
       {
@@ -52,6 +61,11 @@ namespace KlopViewWpf
             }
             return _klopModel;
          }
+      }
+
+      public HintPathHighlighter PathHighlighter
+      {
+         get { return _pathHighlighter ?? (_pathHighlighter = new HintPathHighlighter(Model)); }
       }
 
       public DelegateCommand<IKlopCell> MakeTurnCommand

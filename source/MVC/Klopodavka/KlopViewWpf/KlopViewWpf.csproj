@@ -117,6 +117,7 @@
     <Compile Include="ClopGridWidthConverter.cs" />
     <Compile Include="ColorToKlopBrushConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="HintPathHighlighter.cs" />
     <Compile Include="KlopGameViewModel.cs" />
     <Compile Include="KlopMainWindow.xaml.cs">
       <DependentUpon>KlopMainWindow.xaml</DependentUpon>
