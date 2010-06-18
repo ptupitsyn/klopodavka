@@ -1,25 +1,8 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-
-
-//---------------------------------------------------------------------------*
-//
-//    SelectableEnum.cs: SPECIFY COMMENT.
-//
-//---
-//
-//    Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 12/2009
-//
-//---------------------------------------------------------------------------*/
-
-
-#endregion
-
+﻿
 
 using System;
 using System.ComponentModel;
+using Common.Controls.SelectEnum;
 
 
 namespace Jnj.ThirdDimension.Workflow.WorkflowManagementControls.Controls

@@ -1,31 +1,11 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-
-
-//---------------------------------------------------------------------------*
-//
-//    EnumSelector.cs: Enum wrapper to allow multiple values selection.
-//
-//---
-//
-//    Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 12/2009
-//
-//---------------------------------------------------------------------------*/
-
-
-#endregion
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using Jnj.ThirdDimension.Workflow.WorkflowManagementControls.Controls;
 
-
-namespace Jnj.ThirdDimension.Workflow.WorkflowManagementControls.Controls
+namespace Common.Controls.SelectEnum
 {
    /// <summary>
    /// Enum wrapper to allow multiple values selection.

@@ -1,25 +1,7 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-
-//---------------------------------------------------------------------------*
-//
-//    ClosePopupCommand.cs: Helper command to close pop-ups from XAML by buttons, etc.
-//
-//---
-//
-//    Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 12/2009
-//
-//---------------------------------------------------------------------------*/
-
-#endregion
-
+﻿
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 
-
-namespace Jnj.ThirdDimension.WPFControls.Commands
+namespace Common.Commands
 {
    /// <summary>
    /// Helper command to close pop-ups from XAML by buttons, etc.

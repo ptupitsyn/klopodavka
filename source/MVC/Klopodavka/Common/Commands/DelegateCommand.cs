@@ -1,30 +1,8 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-
-
-//---------------------------------------------------------------------------*
-//
-//    DelegateCommand.cs: This class allows delegating the commanding logic to methods passed as parameters,
-//     and enables a View to bind commands to objects that are not part of the element tree.
-//
-//---
-//
-//    Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 11/2009
-//
-//---------------------------------------------------------------------------*/
-
-
-#endregion
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
-
-namespace Jnj.ThirdDimension.WPFControls.Commands
+namespace Common.Commands
 {
    /// <summary>
    ///     This class allows delegating the commanding logic to methods passed as parameters,

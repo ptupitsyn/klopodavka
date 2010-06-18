@@ -1,25 +1,7 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-
-//---------------------------------------------------------------------------*
-//
-//    ImageLinkButton.xaml.cs: Interaction logic for ImageLinkButton.xaml.
-//
-//---
-//
-//    Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 12/2009
-//
-//---------------------------------------------------------------------------*/
-
-#endregion
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
-
-namespace Jnj.ThirdDimension.WPFControls
+namespace Common.Controls
 {
    /// <summary>
    /// Interaction logic for ImageLinkButton.xaml

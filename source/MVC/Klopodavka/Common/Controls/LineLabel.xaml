@@ -1,4 +1,4 @@
-﻿<Label x:Class="Jnj.ThirdDimension.WPFControls.LineLabel"
+﻿<Label x:Class="Common.Controls.LineLabel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="thisLineLabel">
    <Label.Template>
