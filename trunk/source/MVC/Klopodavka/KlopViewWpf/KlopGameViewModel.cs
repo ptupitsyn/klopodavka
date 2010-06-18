@@ -32,8 +32,8 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 10;
-         FieldHeight = 10;
+         FieldWidth = 15;
+         FieldHeight = 18;
       }
 
       #endregion
