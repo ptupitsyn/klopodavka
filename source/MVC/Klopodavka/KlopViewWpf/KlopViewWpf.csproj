@@ -104,6 +104,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="PlayerInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -128,6 +132,9 @@
     <Compile Include="HitTestViewbox.cs" />
     <Compile Include="KlopCell.xaml.cs">
       <DependentUpon>KlopCell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PlayerInfo.xaml.cs">
+      <DependentUpon>PlayerInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
