@@ -1,0 +1,22 @@
+﻿<ComboBox x:Class="Jnj.ThirdDimension.Workflow.WorkflowManagementControls.Controls.MultiSelectComboBox"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          x:Name="thisControl"
+          IsEditable="True"
+          IsReadOnly="True"
+          MouseUp="thisControl_MouseUp"
+          Text="{Binding ElementName=thisControl, Path=EnumSelector.SelectedValuesString, Mode=OneWay}"
+          ItemsSource="{Binding ElementName=thisControl, Path=EnumSelector.Values}" >
+   <ComboBox.Resources>
+      <!-- Nice hack to hide selector -->
+      <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+   </ComboBox.Resources>
+   <ComboBox.ItemTemplate>
+      <DataTemplate>
+         <CheckBox IsChecked="{Binding IsSelected}" 
+                   Margin="0, 2, 0, 2" 
+                   Focusable="False"
+                   Content="{Binding Value}" />
+      </DataTemplate>
+   </ComboBox.ItemTemplate>
+</ComboBox>
