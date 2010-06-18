@@ -1,0 +1,58 @@
+﻿<Button x:Class="Jnj.ThirdDimension.WPFControls.ImageLinkButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    x:Name="thisImageLinkButton" 
+    FocusVisualStyle="{x:Null}" >
+   <Button.Template>
+      <ControlTemplate TargetType="Button">
+         <StackPanel Orientation="Horizontal" Background="Transparent">
+            <StackPanel Orientation="Horizontal" 
+                        VerticalAlignment="Center"
+                        MinWidth="{Binding ElementName=thisImageLinkButton, Path=ImageSpace}">
+               <Image Source="{Binding ElementName=thisImageLinkButton, Path=Image}" 
+                      SnapsToDevicePixels="True" 
+                      VerticalAlignment="Center" 
+                      HorizontalAlignment="Center"                      
+                      Name="ButtonImage"
+                      Margin="0">
+               </Image>
+            </StackPanel>            
+            <TextBlock Name="ButtonText"  VerticalAlignment="Center" Foreground="{Binding ElementName=thisImageLinkButton, Path=Foreground}">
+                        <ContentPresenter />
+            </TextBlock>
+         </StackPanel>
+         <ControlTemplate.Triggers>
+            <MultiTrigger>
+               <MultiTrigger.Conditions>
+                  <Condition Property="IsMouseOver" Value="True" />
+                  <Condition Property="IsEnabled" Value="True" />
+               </MultiTrigger.Conditions>
+               <Setter TargetName="ButtonText" Property="TextDecorations" Value="Underline"/>
+               <Setter TargetName="ButtonText" Property="Foreground" Value="{Binding ElementName=thisImageLinkButton, Path=ActiveForeground}"/>
+               <Setter TargetName="ButtonImage" Property="Effect" >
+                  <Setter.Value>
+                     <DropShadowEffect Opacity="0.3" ShadowDepth="0" />
+                  </Setter.Value>
+               </Setter>
+            </MultiTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+               <Setter TargetName="ButtonText" Property="Foreground" Value="Gray" />
+               <Setter TargetName="ButtonImage" Property="Opacity" Value="0.2" />
+               
+               <!--
+               <Setter TargetName="ButtonImage" Property="Source">
+                  <Setter.Value>
+                     <FormatConvertedBitmap DestinationFormat="Gray32Float">
+                        <FormatConvertedBitmap.Source>
+                           <BitmapImage UriSource="{Binding ElementName=thisImageLinkButton, Path=Image}" />
+                        </FormatConvertedBitmap.Source>
+                     </FormatConvertedBitmap>
+                  </Setter.Value>
+               </Setter>
+               -->
+               
+            </Trigger>
+         </ControlTemplate.Triggers>
+      </ControlTemplate>
+   </Button.Template>
+</Button>
