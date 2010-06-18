@@ -1,27 +1,6 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
+﻿using System.Windows;
 
-
-//---------------------------------------------------------------------------*
-//
-//    ProgressOverlay.xaml.cs: Interaction logic for ProgressOverlay.xaml
-//
-//---
-//
-//    Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 01/2010
-//
-//---------------------------------------------------------------------------*/
-
-
-#endregion
-
-
-using System.Windows;
-
-
-namespace Jnj.ThirdDimension.WPFControls
+namespace Common.Controls
 {
    /// <summary>
    /// Interaction logic for ProgressOverlay.xaml
@@ -30,15 +9,11 @@ namespace Jnj.ThirdDimension.WPFControls
    {
       #region Fields and Constants
 
-
       private static readonly DependencyProperty imageSizeProperty;
-
 
       #endregion
 
-
       #region Constructors
-
 
       static ProgressOverlay()
       {
@@ -55,12 +30,9 @@ namespace Jnj.ThirdDimension.WPFControls
          ImageSize = 30; // default value
       }
 
-
       #endregion
 
-
       #region Public properties and indexers
-
 
       /// <summary>
       /// Gets or sets the size of the image.
@@ -72,12 +44,9 @@ namespace Jnj.ThirdDimension.WPFControls
          set { SetValue(imageSizeProperty, value); }
       }
 
-
       #endregion
 
-
       #region Event handlers
-
 
       /// <summary>
       /// Handles the SizeChanged event of the thisControl control.
@@ -89,7 +58,6 @@ namespace Jnj.ThirdDimension.WPFControls
          refreshAnimation.CenterX = e.NewSize.Width/2;
          refreshAnimation.CenterY = e.NewSize.Height/2;
       }
-
 
       #endregion
    }

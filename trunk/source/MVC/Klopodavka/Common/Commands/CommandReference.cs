@@ -1,28 +1,8 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-
-
-//---------------------------------------------------------------------------*
-//
-//    CommandReference.cs: This class facilitates associating a key binding in XAML markup to a command
-//
-//---
-//
-//    Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 11/2009
-//
-//---------------------------------------------------------------------------*/
-
-
-#endregion
-
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 
-
-namespace Jnj.ThirdDimension.WPFControls.Commands
+namespace Common.Commands
 {
    /// <summary>
    /// This class facilitates associating a key binding in XAML markup to a command

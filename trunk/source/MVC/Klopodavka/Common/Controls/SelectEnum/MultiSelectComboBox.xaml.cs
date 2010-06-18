@@ -1,28 +1,10 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-
-
-//---------------------------------------------------------------------------*
-//
-//    MultiSelectComboBox.xaml.cs: Interaction logic for MultiSelectComboBox.xaml
-//
-//---
-//
-//    Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 12/2009
-//
-//---------------------------------------------------------------------------*/
-
-
-#endregion
-
+﻿
 
 using System.Windows;
 using System.Windows.Input;
 
 
-namespace Jnj.ThirdDimension.Workflow.WorkflowManagementControls.Controls
+namespace Controls
 {
    /// <summary>
    /// Interaction logic for MultiSelectComboBox.xaml

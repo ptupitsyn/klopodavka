@@ -1,27 +1,10 @@
-﻿#region Copyright (C) 1994-2009, Johnson & Johnson PRD, LLC.
-
-//---------------------------------------------------------------------------*
-//
-//    BooleanInversionConverter.cs: Inverts boolean value.
-//
-//---
-//
-//    Copyright (C) 1994-2010, Johnson & Johnson PRD, LLC.
-//    All Rights Reserved.
-//
-//    Pavel Tupitsin, 03/2010
-//
-//---------------------------------------------------------------------------*/
-
-#endregion
-
+﻿
 using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-
-namespace Jnj.ThirdDimension.WPFControls.Converters
+namespace Common.Converters
 {
    /// <summary>
    /// Inverts boolean value.

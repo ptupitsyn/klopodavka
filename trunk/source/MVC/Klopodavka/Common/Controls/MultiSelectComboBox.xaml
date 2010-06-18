@@ -1,4 +1,4 @@
-﻿<ComboBox x:Class="Jnj.ThirdDimension.Workflow.WorkflowManagementControls.Controls.MultiSelectComboBox"
+﻿<ComboBox x:Class="Common.Controls.MultiSelectComboBox"
           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
           x:Name="thisControl"
