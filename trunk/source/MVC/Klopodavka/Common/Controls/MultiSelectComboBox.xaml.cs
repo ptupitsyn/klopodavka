@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using Common.Controls.SelectEnum;
-using Jnj.ThirdDimension.Workflow.WorkflowManagementControls.Controls;
 
 namespace Common.Controls
 {
