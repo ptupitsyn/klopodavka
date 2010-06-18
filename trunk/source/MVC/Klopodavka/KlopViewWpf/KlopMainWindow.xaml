@@ -1,6 +1,6 @@
 ﻿<Window x:Class="KlopViewWpf.KlopMainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" Title="KlopMainWindow" Height="496" Width="573"    >
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:AttachedCommandBehavior="clr-namespace:AttachedCommandBehavior;assembly=Common" Title="KlopMainWindow" Height="496" Width="573"    >
     <Window.Resources>
         <KlopViewWpf:ClopGridWidthConverter x:Key="_clopGridWidthConverter" />
     </Window.Resources>
@@ -46,7 +46,9 @@
                             </Border.BorderBrush>
                             <KlopViewWpf:KlopCell DataContext="{Binding}" 
                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.MakeTurnCommand}" 
-                                                  CommandParameter="{Binding}" />
+                                                  CommandParameter="{Binding}"
+                                                  AttachedCommandBehavior:CommandBehavior.Event="MouseRightButtonDown" 
+                                                  AttachedCommandBehavior:CommandBehavior.Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.UndoCommand}"  />
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
