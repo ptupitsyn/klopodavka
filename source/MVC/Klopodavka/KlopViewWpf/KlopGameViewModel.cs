@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Common.Commands;
 using KlopIfaces;
 using KlopModel;
 
@@ -21,8 +22,9 @@ namespace KlopViewWpf
       private IKlopModel _klopModel;
       private DelegateCommand<IKlopCell> _makeTurnCommand;
       private HintPathHighlighter _pathHighlighter;
-      private DelegateCommand<object> _startDemoCommand;
-      private DelegateCommand<object> _stopDemoCommand;
+      private DelegateCommand _startDemoCommand;
+      private DelegateCommand _stopDemoCommand;
+      private DelegateCommand _undoCommand;
 
       #endregion
 
@@ -40,10 +42,7 @@ namespace KlopViewWpf
 
       public IKlopCell ActiveCell
       {
-         set
-         {
-            PathHighlighter.HighlightPath(value);
-         }
+         set { PathHighlighter.HighlightPath(value); }
       }
 
       public IKlopModel Model
@@ -73,34 +72,39 @@ namespace KlopViewWpf
          get { return _makeTurnCommand ?? (_makeTurnCommand = new DelegateCommand<IKlopCell>(cell => Model.MakeTurn(cell.X, cell.Y))); }
       }
 
-      public DelegateCommand<object> StartDemoCommand
+      public DelegateCommand StartDemoCommand
       {
          get
          {
             return _startDemoCommand ?? (_startDemoCommand
-                                         = new DelegateCommand<object>(
-                                              o =>
+                                         = new DelegateCommand(
+                                              () =>
                                                  {
                                                     _isDemoRunning = true;
                                                     _startDemoCommand.RaiseCanExecuteChanged();
                                                     _stopDemoCommand.RaiseCanExecuteChanged();
                                                     DemoTimer.Start();
-                                                 }, o => !_isDemoRunning));
+                                                 }, () => !_isDemoRunning));
          }
       }
 
-      public DelegateCommand<object> StopDemoCommand
+      public DelegateCommand StopDemoCommand
       {
          get
          {
-            return _stopDemoCommand ?? (_stopDemoCommand = new DelegateCommand<object>(o =>
-                                                                                          {
-                                                                                             _demoTimer.Stop();
-                                                                                             _isDemoRunning = false;
-                                                                                             _startDemoCommand.RaiseCanExecuteChanged();
-                                                                                             _stopDemoCommand.RaiseCanExecuteChanged();
-                                                                                          }, o => _isDemoRunning));
+            return _stopDemoCommand ?? (_stopDemoCommand = new DelegateCommand(() =>
+                                                                                  {
+                                                                                     _demoTimer.Stop();
+                                                                                     _isDemoRunning = false;
+                                                                                     _startDemoCommand.RaiseCanExecuteChanged();
+                                                                                     _stopDemoCommand.RaiseCanExecuteChanged();
+                                                                                  }, () => _isDemoRunning));
          }
+      }
+
+      public DelegateCommand UndoCommand
+      {
+         get { return _undoCommand ?? (_undoCommand = new DelegateCommand(() => Model.UndoTurn())); }
       }
 
       #endregion

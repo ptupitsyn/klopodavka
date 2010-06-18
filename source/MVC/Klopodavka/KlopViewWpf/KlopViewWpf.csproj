@@ -116,7 +116,6 @@
     </Compile>
     <Compile Include="ClopGridWidthConverter.cs" />
     <Compile Include="ColorToKlopBrushConverter.cs" />
-    <Compile Include="DelegateCommand.cs" />
     <Compile Include="HintPathHighlighter.cs" />
     <Compile Include="KlopGameViewModel.cs" />
     <Compile Include="KlopMainWindow.xaml.cs">
@@ -159,6 +158,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{E1FB3A42-B601-4817-BF82-08FB4EF4F771}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KlopIfaces\KlopIfaces.csproj">
       <Project>{A2E756E0-6FDA-4463-9516-33DA651CC060}</Project>
       <Name>KlopIfaces</Name>
