@@ -1,11 +1,7 @@
-﻿
-
-using System;
+﻿using System;
 using System.ComponentModel;
-using Common.Controls.SelectEnum;
 
-
-namespace Jnj.ThirdDimension.Workflow.WorkflowManagementControls.Controls
+namespace Common.Controls.SelectEnum
 {
    /// <summary>
    /// 
