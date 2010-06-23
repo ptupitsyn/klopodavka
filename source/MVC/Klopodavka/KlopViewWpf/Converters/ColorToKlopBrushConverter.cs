@@ -11,7 +11,7 @@ using System.Windows.Media.Effects;
 
 #endregion
 
-namespace KlopViewWpf
+namespace KlopViewWpf.Converters
 {
    public class ColorToKlopBrushConverter : IValueConverter
    {

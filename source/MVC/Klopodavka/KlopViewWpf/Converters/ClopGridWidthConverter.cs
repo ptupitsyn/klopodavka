@@ -7,7 +7,7 @@ using KlopIfaces;
 
 #endregion
 
-namespace KlopViewWpf
+namespace KlopViewWpf.Converters
 {
    /// <summary>
    /// Maintains grid cells aspect ratio.
