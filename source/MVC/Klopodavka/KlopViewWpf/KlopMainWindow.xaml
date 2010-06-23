@@ -46,7 +46,7 @@
                             <UniformGrid.Background>
                                 <ImageBrush Opacity="0.1">
                                     <ImageBrush.ImageSource>
-                                        <BitmapImage UriSource="Bedbug.png" />
+                                        <BitmapImage UriSource="Images\Bedbug.png" />
                                     </ImageBrush.ImageSource>
                                 </ImageBrush>
                             </UniformGrid.Background>
