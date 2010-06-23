@@ -122,7 +122,7 @@
     <Compile Include="Converters\ColorToKlopBrushConverter.cs" />
     <Compile Include="Converters\EqualityToVisibilityConverter.cs" />
     <Compile Include="Converters\NumberToArrayConverter.cs" />
-    <Compile Include="HintPathHighlighter.cs" />
+    <Compile Include="Controls\HintPathHighlighter.cs" />
     <Compile Include="KlopGameViewModel.cs" />
     <Compile Include="KlopMainWindow.xaml.cs">
       <DependentUpon>KlopMainWindow.xaml</DependentUpon>
@@ -130,8 +130,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HitTestCanvas.cs" />
-    <Compile Include="HitTestViewbox.cs" />
+    <Compile Include="Controls\HitTestCanvas.cs" />
+    <Compile Include="Controls\HitTestViewbox.cs" />
     <Compile Include="KlopCell.xaml.cs">
       <DependentUpon>KlopCell.xaml</DependentUpon>
     </Compile>
@@ -181,10 +181,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Bedbug.png" />
+    <Resource Include="Images\Bedbug.png" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="splash_screen.png" />
+    <SplashScreen Include="Images\splash_screen.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
