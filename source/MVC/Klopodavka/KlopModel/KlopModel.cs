@@ -85,11 +85,14 @@ namespace KlopModel
          if (RemainingKlops == 0)
          {
             RemainingKlops = TurnLength;
-            CurrentPlayerIndex++;
 
-            if (CurrentPlayerIndex >= Players.Count)
+            if (CurrentPlayerIndex == Players.Count - 1)
             {
                CurrentPlayerIndex = 0;
+            }
+            else
+            {
+               CurrentPlayerIndex++;
             }
 
             _history.Clear(); // cannot undo after turn switch

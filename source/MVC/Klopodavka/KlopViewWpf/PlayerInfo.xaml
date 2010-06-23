@@ -19,8 +19,10 @@
                     </MultiBinding>
                 </Border.Visibility>
             </Border>
+            
             <!-- Player Name & Picture -->
             <StackPanel Orientation="Vertical">
+                <!-- TODO: Human/CPU/Network icon -->
                 <TextBlock Text="{Binding ElementName=controlRoot, Path=Player.Name}" FontSize="15" Margin="10" HorizontalAlignment="Center" />
                 <Border Height="100" Width="100" Margin="10"
                     Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
