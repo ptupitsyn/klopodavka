@@ -171,6 +171,10 @@
       <Project>{E1FB3A42-B601-4817-BF82-08FB4EF4F771}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KlopAi\KlopAi.csproj">
+      <Project>{A09EB2F0-D527-4742-9878-955E9D744802}</Project>
+      <Name>KlopAi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KlopIfaces\KlopIfaces.csproj">
       <Project>{A2E756E0-6FDA-4463-9516-33DA651CC060}</Project>
       <Name>KlopIfaces</Name>

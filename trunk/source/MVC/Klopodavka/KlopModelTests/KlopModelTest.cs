@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using KlopIfaces;
 using KlopModel;
@@ -14,13 +12,6 @@ namespace KlopModelTests
    [TestClass]
    public class KlopModelTest
    {
-      public KlopModelTest()
-      {
-         //
-         // TODO: Add constructor logic here
-         //
-      }
-
       private TestContext testContextInstance;
 
       /// <summary>

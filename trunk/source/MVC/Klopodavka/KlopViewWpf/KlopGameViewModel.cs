@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Common.Commands;
+using KlopAi;
 using KlopIfaces;
 using KlopModel;
 
@@ -51,12 +52,11 @@ namespace KlopViewWpf
          {
             if (_klopModel == null)
             {
-               var players = new List<IKlopPlayer>
-                                {
-                                   new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1"},
-                                   new KlopPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Red, Human = false, Name = "Player 2"},
-                                };
+               var aiPlayer = new KlopAiPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Red, Name = "Луноход 1"};
+               var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1"};
+               var players = new List<IKlopPlayer> {humanPlayer, aiPlayer};
                _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players);
+               aiPlayer.SetModel(_klopModel);
             }
             return _klopModel;
          }
