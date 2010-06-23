@@ -2,16 +2,68 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" mc:Ignorable="d" x:Name="controlRoot" >
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:Converters="clr-namespace:KlopViewWpf.Converters" mc:Ignorable="d" x:Name="controlRoot" >
     <UserControl.Resources>
-        <KlopViewWpf:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
+        <Converters:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
+        <Converters:EqualityToVisibilityConverter x:Key="_equalityToVisibility" />
+        <Converters:NumberToArrayConverter x:Key="_numberToArray" />
     </UserControl.Resources>
     <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="8">
-        <!-- Player Name & Picture -->
-        <StackPanel Orientation="Vertical">
-            <TextBlock Text="{Binding ElementName=controlRoot, Path=Player.Name}" FontSize="15" Margin="10" HorizontalAlignment="Center" />
-            <Border Height="100" Width="100" Margin="10"
+        <Grid>
+            <Border Background="LightGray">
+                <!-- Visible when player is current -->
+                <Border.Visibility>
+                    <MultiBinding Converter="{StaticResource _equalityToVisibility}">
+                        <Binding ElementName="controlRoot" Path="Player" />
+                        <Binding ElementName="controlRoot" Path="Model.CurrentPlayer" />
+                    </MultiBinding>
+                </Border.Visibility>
+            </Border>
+            <!-- Player Name & Picture -->
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding ElementName=controlRoot, Path=Player.Name}" FontSize="15" Margin="10" HorizontalAlignment="Center" />
+                <Border Height="100" Width="100" Margin="10"
                     Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
-        </StackPanel>
+
+                <!-- Remaining clops -->
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding ElementName=controlRoot, Path=Model.RemainingKlops, Converter={StaticResource _numberToArray}}"
+                              Margin="10" VerticalAlignment="Top">
+                        <ItemsControl.Visibility>
+                            <MultiBinding Converter="{StaticResource _equalityToVisibility}">
+                                <Binding ElementName="controlRoot" Path="Player" />
+                                <Binding ElementName="controlRoot" Path="Model.CurrentPlayer" />
+                            </MultiBinding>
+                        </ItemsControl.Visibility>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Height="20" Width="20" Margin="1"                    
+                                Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="5"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding ElementName=controlRoot, Path=Model.TurnLength, Converter={StaticResource _numberToArray}}"
+                              Margin="10" Opacity="0.2">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Height="20" Width="20" Margin="1"                    
+                                Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="5"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+
+            </StackPanel>
+        </Grid>
     </Border>
 </UserControl>
