@@ -8,9 +8,9 @@
     </Window.Resources>
     <Grid Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
         <!-- TODO: Popup-based game menu! Center-screen, called by ESC or some button.. with blackjack and hookers -->
