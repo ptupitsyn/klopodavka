@@ -2,7 +2,7 @@
 
 namespace KlopModel
 {
-   internal class DisposableHelper : IDisposable
+   public class DisposableHelper : IDisposable
    {
       #region Fields and Constants
 
