@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using KlopIfaces;
 using KlopModel;
@@ -63,6 +64,9 @@ namespace KlopModelTests
                                    new KlopPlayer {BasePosX = 4, BasePosY = height - 5},
                                 };
          var model = new KlopModel.KlopModel(width, height, players);
+         var turns = 0;
+         var stopwatch = new Stopwatch();
+         stopwatch.Start();
 
          while (model.RemainingKlops > 0)  // Simulate one turn
          {
@@ -81,8 +85,12 @@ namespace KlopModelTests
                Assert.IsTrue(cell.Available || cell.Owner == model.CurrentPlayer, "Neighbor empty cell is not available for turn!");
             }
             model.MakeTurn(availableCells.Last());
+            turns++;
          }
+         stopwatch.Stop();
+         var execTime = stopwatch.ElapsedMilliseconds/turns;
 
+         Assert.IsTrue(execTime < 50);   // One function call should be less than 50 milliseconds
       }
 
       /// <summary>
