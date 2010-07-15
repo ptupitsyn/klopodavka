@@ -64,11 +64,14 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisposableHelper.cs" />
     <Compile Include="KlopCell.cs" />
     <Compile Include="KlopModel.cs" />
     <Compile Include="KlopPlayer.cs" />
+    <Compile Include="ModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
