@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using KlopIfaces;
 
@@ -13,7 +12,7 @@ namespace KlopModel
    /// <summary>
    /// Implements Model
    /// </summary>
-   public class KlopModel : IKlopModel
+   public class KlopModel : ModelBase, IKlopModel
    {
       #region Fields and Constants
 
@@ -378,19 +377,6 @@ namespace KlopModel
          }
       }
       
-      public event PropertyChangedEventHandler PropertyChanged;
-
-      #endregion
-
-      #region Private and protected methods
-
-      protected void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
 
       #endregion
    }

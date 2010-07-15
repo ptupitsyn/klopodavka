@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 
 namespace KlopModel
 {
-   internal class ModelBase
+   public class ModelBase
    {
       #region Fields and Constants
 
@@ -108,18 +105,19 @@ namespace KlopModel
       /// <param name="propertyName">Name of the property.</param>
       protected void OnPropertyChanged(string propertyName)
       {
-         PropertyChangedEventHandler handler = PropertyChanged;
-         if (handler != null)
-         {
-            if (uiDispatcher.CheckAccess())
-            {
-               handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-            else
-            {
-               UiDispatcherInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)));
-            }
-         }
+         DeferOnPropertyChanged(propertyName, DispatcherPriority.Background); 
+         //PropertyChangedEventHandler handler = PropertyChanged;
+         //if (handler != null)
+         //{
+         //   if (uiDispatcher.CheckAccess())
+         //   {
+         //      handler(this, new PropertyChangedEventArgs(propertyName));
+         //   }
+         //   else
+         //   {
+         //      UiDispatcherInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)));
+         //   }
+         //}
       }
 
 
@@ -130,7 +128,7 @@ namespace KlopModel
       /// <param name="priority">The priority.</param>
       protected void DeferOnPropertyChanged(string propertyName, DispatcherPriority priority)
       {
-         PropertyChangedEventHandler handler = PropertyChanged;
+         var handler = PropertyChanged;
          if (handler != null)
          {
             UiDispatcherBeginInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)), priority);
