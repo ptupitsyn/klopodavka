@@ -1,6 +1,6 @@
 ﻿#region Usings
 
-using System.ComponentModel;
+using System.Windows.Threading;
 using KlopIfaces;
 
 #endregion
@@ -10,7 +10,7 @@ namespace KlopModel
    /// <summary>
    /// Implements field cell
    /// </summary>
-   internal class KlopCell : IKlopCell
+   internal class KlopCell : ModelBase, IKlopCell
    {
       #region Constructors
 
@@ -34,12 +34,6 @@ namespace KlopModel
       /// </summary>
       /// <value><c>true</c> if flag; otherwise, <c>false</c>.</value>
       public bool Flag { get; set; }
-
-      #endregion
-
-      #region IKlopCell implementation
-
-      public event PropertyChangedEventHandler PropertyChanged;
 
       #endregion
 
@@ -120,7 +114,7 @@ namespace KlopModel
          {
             if (_available == value) return;
             _available = value;
-            OnPropertyChanged("Available");
+            DeferOnPropertyChanged("Available", DispatcherPriority.ApplicationIdle);
          }
       }
 
@@ -141,16 +135,5 @@ namespace KlopModel
 
       #endregion
 
-      #region Private and protected methods
-
-      protected void OnPropertyChanged(string propertyName)
-      {
-         if (PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-         }
-      }
-
-      #endregion
    }
 }
