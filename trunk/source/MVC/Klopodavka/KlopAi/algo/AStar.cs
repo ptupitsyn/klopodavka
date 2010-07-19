@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace KlopAi.algo
@@ -47,48 +48,38 @@ namespace KlopAi.algo
          startNode.Hdist = getDistance(startNode, finishNode);
          startNode.Parent = null;
          openNodes.Add(startNode);
-         Node currentNode = null;
 
          while (openNodes.Count > 0)
          {
-            currentNode = openNodes.Pop();
+            var currentNode = openNodes.Pop();
 
             if (currentNode.Equals(finishNode)) // if n is a goal node
             {
                return currentNode; // Return constructed path
             }
 
-            //for each successor n' of n
             foreach (Node nextNode in GetNeighborNodes(currentNode, getNodeByXy))
             {
                if (nextNode == null) continue;
 
-               //newg = n.g + cost(n,n')
                var newg = currentNode.Gdist + nextNode.Cost;
 
                //if n' is in openNodes or closedNodes, and n'.g <= newg {	skip }
-               //TODO: Think about closedNodes.Contains(nextNode)
-               if (((openNodes.Contains(nextNode) || closedNodes.Contains(nextNode)) && (nextNode.Gdist <= newg))) continue;
+               if (closedNodes.Contains(nextNode)) continue;  // TODO: think..
+               if (openNodes.Contains(nextNode) && nextNode.Gdist <= newg) continue;
 
-               //n'.Parent = n
                nextNode.Parent = currentNode;
-               //n'.g = newg
                nextNode.Gdist = newg;
-               //n'.h = GoalDistEstimate( n' )
                nextNode.Hdist = getDistance(nextNode, finishNode);
-               //n'.f = n'.g + n'.h
-               //OK
-               //if n' is in closedNodes	remove it from closedNodes
-               //nn.visited=false;
-               if (closedNodes.Contains(nextNode)) closedNodes.Remove(nextNode);
-               //if n' is not yet in openNodes  push n' on openNodes
+               //if (closedNodes.Contains(nextNode)) closedNodes.Remove(nextNode);
                if (!(openNodes.Contains(nextNode))) openNodes.Add(nextNode);
             }
 
             closedNodes.Add(currentNode, null);
          }
 
-         return currentNode; //	return failure if no path found			
+         Debug.Assert(false, "Path has not been found!");
+         return null; //	return failure if no path found			
       }
 
       #endregion

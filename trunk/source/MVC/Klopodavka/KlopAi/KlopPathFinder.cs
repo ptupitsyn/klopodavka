@@ -121,8 +121,10 @@ namespace KlopAi
          var dy = n1.Y - n2.Y;
 
          // Diagonal turn should cost 1
-         return Math.Max(Math.Abs(dx), Math.Abs(dy)); 
-         //return Math.Sqrt(dx*dx + dy*dy);
+         //return Math.Max(Math.Abs(dx), Math.Abs(dy)); 
+
+         // Use Sqrt for more natural-looking paths
+         return Math.Sqrt(dx*dx + dy*dy);
       }
 
       /// <summary>
@@ -133,7 +135,7 @@ namespace KlopAi
       /// <returns></returns>
       private Node GetNodeByCoordinates(int x, int y)
       {
-         if ((x >= 0) & (x < field.GetLength(0)) & (y >= 0) & (y < field.GetLength(1)))
+         if ((x >= 0) && (x < field.GetLength(0)) && (y >= 0) && (y < field.GetLength(1)))
             return field[x, y];
          return null;
       }
