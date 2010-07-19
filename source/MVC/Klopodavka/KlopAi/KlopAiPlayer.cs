@@ -130,7 +130,9 @@ namespace KlopAi
             while (path == null || path.Count == 0)
             {
                IKlopCell target;
-               if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 5)
+               var maxPathLength = int.MaxValue;
+
+               if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 7)
                {
                   // Fight started, rush to base
                   var enemy = model.Players.First(p => p != model.CurrentPlayer);
@@ -139,15 +141,16 @@ namespace KlopAi
                else
                {
                   // Fight not started, generate pattern
+                  maxPathLength = model.TurnLength/3;
                   target = model.Cells.Where(c =>
                                                 {
                                                    var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
-                                                   return d > 2 && d < (model.FieldHeight + model.FieldWidth)/4;
+                                                   return d > 2 && d < (model.FieldHeight + model.FieldWidth)/3.7;
                                                 }).Random();
                }
                
                // Find path FROM target to have correct ordered list
-               path = pathFinder.FindPath(target.X, target.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, model.CurrentPlayer);
+               path = pathFinder.FindPath(target.X, target.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, model.CurrentPlayer).Take(maxPathLength).ToList();
             }
             var cell = path.First();
             path.Remove(cell);
@@ -155,6 +158,7 @@ namespace KlopAi
             if (!cell.Available)
             {
                // Something went wrong, pathfinder returned unavailable cell. Use simple fallback logic:
+               // This can happen also when base reached. Need to switch strategy.
                cell = model.Cells.First(c => c.Available);
                path = null; // Invalidate path
             }

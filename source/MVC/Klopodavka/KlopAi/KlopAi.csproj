@@ -54,6 +54,10 @@
       <Project>{A2E756E0-6FDA-4463-9516-33DA651CC060}</Project>
       <Name>KlopIfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KlopModel\KlopModel.csproj">
+      <Project>{74D8AB0B-B339-4974-BFCF-359E498F559A}</Project>
+      <Name>KlopModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

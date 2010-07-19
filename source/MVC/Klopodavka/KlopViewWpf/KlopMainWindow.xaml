@@ -64,14 +64,14 @@
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="Black" Opacity="0.5" />
                             </Border.BorderBrush>
-                            <!--<Grid>-->                            
+                            <Grid>
                                 <KlopViewWpf:KlopCell DataContext="{Binding}" 
                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.MakeTurnCommand}" 
                                                   CommandParameter="{Binding}"
                                                   AttachedCommandBehavior:CommandBehavior.Event="MouseRightButtonDown" 
                                                   AttachedCommandBehavior:CommandBehavior.Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.UndoCommand}"  />
                                 <!--<TextBlock Text="{Binding Tag}" IsHitTestVisible="False" />-->
-                            <!--</Grid>-->
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

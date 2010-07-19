@@ -83,5 +83,10 @@ namespace KlopIfaces
       /// Undoes the previous turn.
       /// </summary>
       void UndoTurn();
+
+      /// <summary>
+      /// Gets the neighbor cells.
+      /// </summary>
+      IEnumerable<IKlopCell> GetNeighborCells(IKlopCell cell);
    }
 }
