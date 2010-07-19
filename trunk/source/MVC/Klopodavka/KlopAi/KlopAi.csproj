@@ -41,11 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="algo\a_star.cs" />
+    <Compile Include="algo\AStar.cs" />
     <Compile Include="algo\Node.cs" />
-    <Compile Include="algo\priority_queue.cs" />
+    <Compile Include="algo\PriorityQueue.cs" />
     <Compile Include="KlopAiPlayer.cs" />
-    <Compile Include="PathFinder.cs" />
+    <Compile Include="KlopPathFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -33,8 +33,8 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 15;
-         FieldHeight = 18;
+         FieldWidth = 25;
+         FieldHeight = 25;
       }
 
       #endregion
@@ -53,10 +53,15 @@ namespace KlopViewWpf
             if (_klopModel == null)
             {
                var aiPlayer = new KlopAiPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Red, Name = "Луноход 1"};
-               var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1"};
+               var aiPlayer2 = new KlopAiPlayer { BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Green, Name = "Луноход 2" };
+               var humanPlayer = new KlopPlayer { BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1" };
+
                var players = new List<IKlopPlayer> {humanPlayer, aiPlayer};
-               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players);
+               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, 1);
+
                aiPlayer.SetModel(_klopModel);
+               aiPlayer2.SetModel(_klopModel);
+
             }
             return _klopModel;
          }
