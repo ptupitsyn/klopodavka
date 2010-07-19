@@ -13,13 +13,11 @@ namespace KlopAi.algo
    {
       #region Fields and Constants
 
-      private static readonly int[] Dx = new[] {-1, -1, -1, 1, 1, 1, 0, 0};
-      private static readonly int[] Dy = new[] {-1, 0, 1, -1, 0, 1, -1, 1};
 
       /// <summary>
       /// List of closed nodes - these nodes does not require processing anymore.
       /// </summary>
-      private readonly Hashtable closedNodes = new Hashtable();
+      private readonly Hashtable closedNodes = new Hashtable();  // TODO: Can we replace this with IsVisited for optimization?
 
       /// <summary>
       /// List of open nodes - nodes that require processing.
@@ -58,7 +56,7 @@ namespace KlopAi.algo
                return currentNode; // Return constructed path
             }
 
-            foreach (Node nextNode in GetNeighborNodes(currentNode, getNodeByXy))
+            foreach (Node nextNode in currentNode.GetNeighborNodes(getNodeByXy))
             {
                if (nextNode == null) continue;
 
@@ -75,7 +73,7 @@ namespace KlopAi.algo
                if (!(openNodes.Contains(nextNode))) openNodes.Add(nextNode);
             }
 
-            closedNodes.Add(currentNode, null);
+            closedNodes.Add(currentNode, null); 
          }
 
          Debug.Assert(false, "Path has not been found!");
@@ -84,13 +82,5 @@ namespace KlopAi.algo
 
       #endregion
 
-      #region Private and protected methods
-
-      private static IEnumerable<Node> GetNeighborNodes(Node node, Func<int, int, Node> getNodeByXy)
-      {
-         return Dx.Select((t, i) => getNodeByXy(node.X + Dx[i], node.Y + Dy[i]));
-      }
-
-      #endregion
    }
 }

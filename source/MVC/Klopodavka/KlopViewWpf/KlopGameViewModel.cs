@@ -1,10 +1,8 @@
 ﻿#region Usings
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
-using System.Windows.Threading;
 using Common.Commands;
 using KlopAi;
 using KlopIfaces;
@@ -19,16 +17,12 @@ namespace KlopViewWpf
    {
       #region Fields and Constants
 
-      private readonly int turnLength;
-      private DispatcherTimer _demoTimer;
-      private bool _isDemoRunning;
+      private readonly int _turnLength;
       private IKlopModel _klopModel;
       private DelegateCommand<IKlopCell> _makeTurnCommand;
       private HintPathHighlighter _pathHighlighter;
-      private DelegateCommand _startDemoCommand;
-      private DelegateCommand _stopDemoCommand;
-      private DelegateCommand _undoCommand;
       private DelegateCommand<IKlopCell> _setCurrentCellCommand;
+      private DelegateCommand _undoCommand;
 
       #endregion
 
@@ -36,9 +30,9 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 15;
-         FieldHeight = 15;
-         turnLength = 3;
+         FieldWidth = 30;
+         FieldHeight = 34;
+         _turnLength = 10;
       }
 
       #endregion
@@ -61,7 +55,7 @@ namespace KlopViewWpf
                var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1"};
 
                var players = new List<IKlopPlayer> {humanPlayer, aiPlayer};
-               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, turnLength);
+               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, _turnLength);
 
                aiPlayer.SetModel(_klopModel);
                aiPlayer2.SetModel(_klopModel);
@@ -77,38 +71,9 @@ namespace KlopViewWpf
 
       public DelegateCommand<IKlopCell> MakeTurnCommand
       {
-         get { return _makeTurnCommand ?? (_makeTurnCommand = new DelegateCommand<IKlopCell>(cell => Model.MakeTurn(cell.X, cell.Y))); }
+         get { return _makeTurnCommand ?? (_makeTurnCommand = new DelegateCommand<IKlopCell>(MakeTurn)); }
       }
 
-      public DelegateCommand StartDemoCommand
-      {
-         get
-         {
-            return _startDemoCommand ?? (_startDemoCommand
-                                         = new DelegateCommand(
-                                              () =>
-                                                 {
-                                                    _isDemoRunning = true;
-                                                    _startDemoCommand.RaiseCanExecuteChanged();
-                                                    _stopDemoCommand.RaiseCanExecuteChanged();
-                                                    DemoTimer.Start();
-                                                 }, () => !_isDemoRunning));
-         }
-      }
-
-      public DelegateCommand StopDemoCommand
-      {
-         get
-         {
-            return _stopDemoCommand ?? (_stopDemoCommand = new DelegateCommand(() =>
-                                                                                  {
-                                                                                     _demoTimer.Stop();
-                                                                                     _isDemoRunning = false;
-                                                                                     _startDemoCommand.RaiseCanExecuteChanged();
-                                                                                     _stopDemoCommand.RaiseCanExecuteChanged();
-                                                                                  }, () => _isDemoRunning));
-         }
-      }
 
       public DelegateCommand UndoCommand
       {
@@ -118,43 +83,38 @@ namespace KlopViewWpf
 
       public DelegateCommand<IKlopCell> SetActiveCellCommand
       {
-         get
-         {
-            return _setCurrentCellCommand ?? (_setCurrentCellCommand = new DelegateCommand<IKlopCell>(c => ActiveCell = c));
-         }
+         get { return _setCurrentCellCommand ?? (_setCurrentCellCommand = new DelegateCommand<IKlopCell>(c => ActiveCell = c)); }
       }
 
       #endregion
 
       #region Private and protected properties and indexers
 
-      private DispatcherTimer DemoTimer
-      {
-         get
-         {
-            if (_demoTimer == null)
-            {
-               _demoTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(0.1)};
-               _demoTimer.Tick += (a, e) =>
-                                     {
-                                        var avail = Model.Cells.Where(c => c.Available).ToList();
-                                        if (avail.Count == 0)
-                                        {
-                                           _demoTimer.Stop();
-                                           _isDemoRunning = false;
-                                           _startDemoCommand.RaiseCanExecuteChanged();
-                                           _stopDemoCommand.RaiseCanExecuteChanged();
-                                           return;
-                                        }
-                                        Model.MakeTurn(avail[new Random().Next(avail.Count - 1)]);
-                                     };
-            }
-            return _demoTimer;
-         }
-      }
-
       private int FieldWidth { get; set; }
       private int FieldHeight { get; set; }
+
+      #endregion
+
+      #region Private and protected methods
+
+      private void MakeTurn(IKlopCell cell)
+      {
+         if (cell.Available)
+         {
+            Model.MakeTurn(cell);
+         }
+         else if (cell.Highlighted)
+         {
+            // Cell is highlighted - perform multiple turns:
+            while (Model.RemainingKlops > 1)  // Leave one turn available
+            {
+               var currentCell = Model.Cells.FirstOrDefault(c => c.Highlighted && c.Available);
+               if (currentCell == null) break;
+               Model.MakeTurn(currentCell);
+               if (currentCell == cell) break; // Destination reached
+            }
+         }
+      }
 
       #endregion
    }

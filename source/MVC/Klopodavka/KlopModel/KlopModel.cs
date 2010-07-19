@@ -65,7 +65,7 @@ namespace KlopModel
             throw new ArgumentException("Need two or more players");
          }
 
-         if (players.Any(player => !CheckCoord(player.BasePosX, player.BasePosY)))
+         if (players.Any(player => !CheckCoordinates(player.BasePosX, player.BasePosY)))
          {
             throw new ArgumentException("Player base is outside of field!");
          }
@@ -105,7 +105,7 @@ namespace KlopModel
       /// <param name="x">The x.</param>
       /// <param name="y">The y.</param>
       /// <returns></returns>
-      private bool CheckCoord(int x, int y)
+      private bool CheckCoordinates(int x, int y)
       {
          return x >= 0 && x < FieldWidth && y >= 0 && y < FieldHeight;
       }
@@ -174,7 +174,7 @@ namespace KlopModel
          {
             var x = cell.X + dx[i];
             var y = cell.Y + dy[i];
-            if (CheckCoord(x, y))
+            if (CheckCoordinates(x, y))
                yield return _cells[x, y];
          }
       }
@@ -247,12 +247,7 @@ namespace KlopModel
       {
          get
          {
-            if (!CheckCoord(x, y))
-            {
-               throw new ArgumentException("Coordinates must be within field");
-            }
-
-            return _cells[x, y];
+            return CheckCoordinates(x, y) ? _cells[x, y] : null;
          }
       }
 
@@ -319,7 +314,7 @@ namespace KlopModel
       {
          lock (_syncroot)
          {
-            if (!CheckCoord(x, y))
+            if (!CheckCoordinates(x, y))
                return;
 
             var cell = _cells[x, y];

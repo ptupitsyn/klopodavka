@@ -79,9 +79,9 @@
         </Border>
         
         <!-- Test buttons -->
-        <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Left" >
+        <!--<StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Left" >
             <Button Content="Start Demo" Command="{Binding StartDemoCommand}" Width="100" />
             <Button Content="Stop Demo" Command="{Binding StopDemoCommand}" Width="100" />
-        </StackPanel>
+        </StackPanel>-->
     </Grid>
 </Window>

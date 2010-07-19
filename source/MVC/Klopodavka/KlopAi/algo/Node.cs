@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KlopAi.algo
 {
@@ -7,6 +9,13 @@ namespace KlopAi.algo
    /// </summary>
    public class Node : IComparable
    {
+      #region Fields and Constants
+
+      private static readonly int[] Dx = new[] {-1, -1, -1, 1, 1, 1, 0, 0};
+      private static readonly int[] Dy = new[] {-1, 0, 1, -1, 0, 1, -1, 1};
+
+      #endregion
+
       #region Constructors
 
       public Node(int x, int y)
@@ -91,6 +100,22 @@ namespace KlopAi.algo
                       Gdist = Gdist,
                       Cost = Cost,
                    };
+      }
+
+      public IEnumerable<Tuple<int, int>> GetNeighborCoordinates()
+      {
+         return Dx.Select((t, i) => new Tuple<int, int>(X + Dx[i], Y + Dy[i]));
+      }
+
+
+      public IEnumerable<Node> GetNeighborNodes(Func<int, int, Node> getNodeByXy)
+      {
+         return Dx.Select((t, i) => getNodeByXy(X + Dx[i], Y + Dy[i]));
+      }
+
+      public static IEnumerable<Tuple<int, int>> GetNeighborCoordinates(int x, int y)
+      {
+         return Dx.Select((t, i) => new Tuple<int, int>(x + Dx[i], y + Dy[i]));
       }
 
       #endregion
