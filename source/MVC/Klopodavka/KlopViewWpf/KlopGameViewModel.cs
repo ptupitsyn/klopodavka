@@ -31,8 +31,8 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 40;
-         FieldHeight = 40;
+         FieldWidth = 20;
+         FieldHeight = 20;
          _turnLength = 10;
          _baseDist = 4;
       }

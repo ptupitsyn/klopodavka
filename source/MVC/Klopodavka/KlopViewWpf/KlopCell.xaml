@@ -1,13 +1,13 @@
-﻿<Button x:Class="KlopViewWpf.KlopCell" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave">
-    <Button.Resources>
+﻿<ButtonBase x:Class="KlopViewWpf.KlopCell" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave">
+    <ButtonBase.Resources>
         <ResourceDictionary Source="Themes\Generic.xaml" />
-    </Button.Resources>
-    <Button.Template>
-        <ControlTemplate TargetType="Button">
+    </ButtonBase.Resources>
+    <ButtonBase.Template>
+        <ControlTemplate TargetType="ButtonBase">
             <Border Background="{TemplateBinding Background}">
                 <Border Background="{TemplateBinding Foreground}">
                 </Border>
             </Border>
         </ControlTemplate>
-    </Button.Template>
-</Button>
+    </ButtonBase.Template>
+</ButtonBase>

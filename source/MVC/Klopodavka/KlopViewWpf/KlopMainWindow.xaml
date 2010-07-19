@@ -67,7 +67,8 @@
                             <!--<Grid>-->
                                 <KlopViewWpf:KlopCell DataContext="{Binding}" 
                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.MakeTurnCommand}" 
-                                                  CommandParameter="{Binding}"
+                                                  CommandParameter="{Binding}"                                                      
+                                                  FocusVisualStyle="{x:Null}"
                                                   AttachedCommandBehavior:CommandBehavior.Event="MouseRightButtonDown" 
                                                   AttachedCommandBehavior:CommandBehavior.Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.UndoCommand}"  />
                                 <!--<TextBlock Text="{Binding Tag}" IsHitTestVisible="False" FontSize="8" />-->
