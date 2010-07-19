@@ -135,7 +135,6 @@ namespace KlopAi
                if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 7)
                {
                   // Fight started, rush to base
-                  return;
                   var enemy = model.Players.First(p => p != model.CurrentPlayer);
                   target = model[enemy.BasePosX, enemy.BasePosY];
                }

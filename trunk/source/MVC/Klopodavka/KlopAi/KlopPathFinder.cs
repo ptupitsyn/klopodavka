@@ -11,15 +11,15 @@ namespace KlopAi
    {
       #region Fields and Constants
 
-      public const int TurnBlockedCost = int.MaxValue; // Цена хода в запрещенную клетку (->inf)
-      public const int TurnEatCost = 35; // Цена хода в занятую клетку
-      public const int TurnEatEnemyBaseCost = 8; // Цена съедания клопа около вражеской базы
-      public const int TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
-      public const int TurnEmptyCost = 100; // Цена хода в пустую клетку
-      public const int TurnNearBaseCost = 11000; // Цена хода около своей базы
-      public const int TurnNearEnemyEmptyCost = 140; // Цена хода в пустую клетку рядом с врагом
-      private readonly Node[,] field;
-      private readonly IKlopModel klopModel;
+      public const double TurnBlockedCost = int.MaxValue; // Цена хода в запрещенную клетку (->inf)
+      public const double TurnEatCost = 35; // Цена хода в занятую клетку
+      public const double TurnEatEnemyBaseCost = 8; // Цена съедания клопа около вражеской базы
+      public const double TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
+      public const double TurnEmptyCost = 100; // Цена хода в пустую клетку
+      public const double TurnNearBaseCost = 9000; // Цена хода около своей базы
+      public const double TurnNearEnemyEmptyCost = 140; // Цена хода в пустую клетку рядом с врагом
+      private readonly Node[,] _field;
+      private readonly IKlopModel _klopModel;
       private AStar _aStar;
 
       #endregion
@@ -30,14 +30,13 @@ namespace KlopAi
       /// Initializes a new instance of the <see cref="KlopPathFinder"/> class.
       /// </summary>
       /// <param name="model">The model.</param>
-      /// <param name="player">The player to find path for.</param>
       public KlopPathFinder(IKlopModel model)
       {
-         klopModel = model;
-         field = new Node[model.FieldWidth,model.FieldHeight];
-         foreach (IKlopCell cell in klopModel.Cells)
+         _klopModel = model;
+         _field = new Node[model.FieldWidth,model.FieldHeight];
+         foreach (IKlopCell cell in _klopModel.Cells)
          {
-            field[cell.X, cell.Y] = new Node(cell.X, cell.Y);
+            _field[cell.X, cell.Y] = new Node(cell.X, cell.Y);
          }
       }
 
@@ -59,9 +58,9 @@ namespace KlopAi
       public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer, bool inverted)
       {
          // Init field
-         foreach (IKlopCell cell in klopModel.Cells)
+         foreach (IKlopCell cell in _klopModel.Cells)
          {
-            var f = field[cell.X, cell.Y];
+            var f = _field[cell.X, cell.Y];
             f.Reset();
             f.Cost = GetCellCost(cell, klopPlayer);
             if (f.Cost != TurnEmptyCost)
@@ -75,7 +74,7 @@ namespace KlopAi
          var result = new List<IKlopCell>();
          while (lastNode != null)
          {
-            var node = klopModel[lastNode.X, lastNode.Y];
+            var node = _klopModel[lastNode.X, lastNode.Y];
             lastNode = lastNode.Parent;
 
             if (node.Owner == klopPlayer) continue;
@@ -149,7 +148,7 @@ namespace KlopAi
                return TurnEatOwnbaseCost;
             }
 
-            if (klopModel.Players.Where(p => p != klopPlayer).Any(enemy => IsCellNearBase(cell, enemy)))
+            if (_klopModel.Players.Where(p => p != klopPlayer).Any(enemy => IsCellNearBase(cell, enemy)))
             {
                return TurnEatEnemyBaseCost;
             }
@@ -162,12 +161,12 @@ namespace KlopAi
             return TurnNearBaseCost;
          }
 
-         if (klopModel.GetNeighborCells(cell).Any(c => c.Owner != null && c.Owner != klopPlayer))
+         if (_klopModel.GetNeighborCells(cell).Any(c => c.Owner != null && c.Owner != klopPlayer))
          {
             return TurnNearEnemyEmptyCost; // Turn near enemy klop costs a bit more.
          }
 
-         var neighborCount = klopModel.GetNeighborCells(cell).Sum(c => c.Owner == null ? 0 : 10 * GetDistance(c, cell));
+         var neighborCount = _klopModel.GetNeighborCells(cell).Sum(c => c.Owner == null ? 0 : 10 * GetDistance(c, cell));
 
          return TurnEmptyCost + neighborCount; // Default - turn into empty cell.
       }
@@ -185,8 +184,8 @@ namespace KlopAi
       /// <returns></returns>
       private Node GetNodeByCoordinates(int x, int y)
       {
-         if ((x >= 0) && (x < field.GetLength(0)) && (y >= 0) && (y < field.GetLength(1)))
-            return field[x, y];
+         if ((x >= 0) && (x < _field.GetLength(0)) && (y >= 0) && (y < _field.GetLength(1)))
+            return _field[x, y];
          return null;
       }
 
