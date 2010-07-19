@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Linq;
+﻿using System.Linq;
 using KlopAi;
 using KlopIfaces;
 
@@ -10,6 +9,7 @@ namespace KlopViewWpf.Controls
       #region Fields and Constants
 
       private readonly IKlopModel _model;
+      private KlopPathFinder _pathFinder;
 
       #endregion
 
@@ -18,10 +18,6 @@ namespace KlopViewWpf.Controls
       public HintPathHighlighter(IKlopModel model)
       {
          _model = model;
-         foreach (IKlopCell cell in _model.Cells)
-         {
-            cell.PropertyChanged += cell_PropertyChanged;
-         }
       }
 
       #endregion
@@ -30,9 +26,8 @@ namespace KlopViewWpf.Controls
 
       public void HighlightPath(IKlopCell cell)
       {
-         var pathFinder = new KlopPathFinder(_model, _model.CurrentPlayer);
-         var path = pathFinder.FindPath(_model.CurrentPlayer.BasePosX, _model.CurrentPlayer.BasePosY, cell.X, cell.Y);
-         
+         var path = PathFinder.FindPath(_model.CurrentPlayer.BasePosX, _model.CurrentPlayer.BasePosY, cell.X, cell.Y, _model.CurrentPlayer);
+
          foreach (var klopCell in _model.Cells.Where(c => !path.Contains(c)))
          {
             klopCell.Highlighted = false;
@@ -46,22 +41,14 @@ namespace KlopViewWpf.Controls
 
       #endregion
 
-      #region Event handlers
+      #region Private and protected properties and indexers
 
-      /// <summary>
-      /// Handles the PropertyChanged event of the cell control.
-      /// </summary>
-      /// <param name="sender">The source of the event.</param>
-      /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
-      private void cell_PropertyChanged(object sender, PropertyChangedEventArgs e)
+      private KlopPathFinder PathFinder
       {
-         var cell = sender as IKlopCell;
-         if (cell != null && e.PropertyName == "Highlighted")
-         {
-            //TODO: Highlight path
-         }
+         get { return _pathFinder ?? (_pathFinder = new KlopPathFinder(_model)); }
       }
 
       #endregion
+
    }
 }

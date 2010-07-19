@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace KlopAi.algo
 {
@@ -13,11 +11,10 @@ namespace KlopAi.algo
    {
       #region Fields and Constants
 
-
       /// <summary>
       /// List of closed nodes - these nodes does not require processing anymore.
       /// </summary>
-      private readonly Hashtable closedNodes = new Hashtable();  // TODO: Can we replace this with IsVisited for optimization?
+      private readonly Hashtable closedNodes = new Hashtable(); // TODO: Can we replace this with IsVisited for optimization?
 
       /// <summary>
       /// List of open nodes - nodes that require processing.
@@ -63,7 +60,7 @@ namespace KlopAi.algo
                var newg = currentNode.Gdist + nextNode.Cost;
 
                //if n' is in openNodes or closedNodes, and n'.g <= newg {	skip }
-               if (closedNodes.Contains(nextNode)) continue;  // TODO: think..
+               if (closedNodes.Contains(nextNode)) continue; // TODO: think..
                if (openNodes.Contains(nextNode) && nextNode.Gdist <= newg) continue;
 
                nextNode.Parent = currentNode;
@@ -73,7 +70,7 @@ namespace KlopAi.algo
                if (!(openNodes.Contains(nextNode))) openNodes.Add(nextNode);
             }
 
-            closedNodes.Add(currentNode, null); 
+            closedNodes.Add(currentNode, null);
          }
 
          Debug.Assert(false, "Path has not been found!");
@@ -81,6 +78,5 @@ namespace KlopAi.algo
       }
 
       #endregion
-
    }
 }
