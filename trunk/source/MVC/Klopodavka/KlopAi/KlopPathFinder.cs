@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KlopAi.algo;
 using KlopIfaces;
+using KlopModel;
 
 namespace KlopAi
 {
@@ -63,6 +64,10 @@ namespace KlopAi
             var f = field[cell.X, cell.Y];
             f.Reset();
             f.Cost = GetCellCost(cell, klopPlayer);
+            if (f.Cost != TurnEmptyCost)
+            {
+               ((KlopCell) cell).Tag = f.Cost;
+            }
          }
 
          // Get result
@@ -155,12 +160,12 @@ namespace KlopAi
             return TurnNearBaseCost;
          }
 
-         if (Node.GetNeighborCoordinates(cell.X, cell.Y).Select(c => klopModel[c.Item1, c.Item2]).Any(c => c != null && c.Owner != null && c.Owner != klopPlayer))
+         if (klopModel.GetNeighborCells(cell).Any(c => c.Owner != null && c.Owner != klopPlayer))
          {
             return TurnNearEnemyEmptyCost; // Turn near enemy klop costs a bit more.
          }
 
-         var neighborCount = Node.GetNeighborCoordinates(cell.X, cell.Y).Select(c => klopModel[c.Item1, c.Item2]).Count(c => c != null && c.Owner != null);
+         var neighborCount = klopModel.GetNeighborCells(cell).Sum(c => c.Owner == null ? 0 : 10 / GetDistance(c, cell));
 
          return TurnEmptyCost + neighborCount; // Default - turn into empty cell.
       }

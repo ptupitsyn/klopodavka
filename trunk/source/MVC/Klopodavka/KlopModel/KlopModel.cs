@@ -165,7 +165,7 @@ namespace KlopModel
       /// </summary>
       /// <param name="cell">The cell.</param>
       /// <returns></returns>
-      private IEnumerable<KlopCell> GetNeighborCells(IKlopCell cell)
+      public IEnumerable<IKlopCell> GetNeighborCells(IKlopCell cell)
       {
          var dx = new[] {-1, -1, -1, 1, 1, 1, 0, 0};
          var dy = new[] {-1, 0, 1, -1, 0, 1, -1, 1};
