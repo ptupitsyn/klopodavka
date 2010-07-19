@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Windows.Media;
 using KlopIfaces;
 
@@ -131,6 +130,14 @@ namespace KlopAi
             }
             var cell = path.First();
             path.Remove(cell);
+
+            if (!cell.Available)
+            {
+               // Something went wrong, pathfinder returned unavailable cell. Use simple fallback logic:
+               cell = model.Cells.First(c => c.Available);
+               path = null; // Invalidate path
+            }
+
             model.MakeTurn(cell);
          }
       }
