@@ -124,7 +124,7 @@ namespace KlopAi
          {
             if (path == null)
             {
-               var pathFinder = new KlopPathFinder(model);
+               var pathFinder = new KlopPathFinder(model, model.CurrentPlayer);
                var enemy = model.Players.First(p => p != model.CurrentPlayer);
                path = pathFinder.FindPath(enemy.BasePosX, enemy.BasePosY, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
             }

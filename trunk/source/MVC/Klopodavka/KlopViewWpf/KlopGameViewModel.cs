@@ -18,6 +18,7 @@ namespace KlopViewWpf
    {
       #region Fields and Constants
 
+      private readonly int turnLength;
       private DispatcherTimer _demoTimer;
       private bool _isDemoRunning;
       private IKlopModel _klopModel;
@@ -33,8 +34,9 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 25;
-         FieldHeight = 25;
+         FieldWidth = 15;
+         FieldHeight = 15;
+         turnLength = 3;
       }
 
       #endregion
@@ -53,15 +55,14 @@ namespace KlopViewWpf
             if (_klopModel == null)
             {
                var aiPlayer = new KlopAiPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Red, Name = "Луноход 1"};
-               var aiPlayer2 = new KlopAiPlayer { BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Green, Name = "Луноход 2" };
-               var humanPlayer = new KlopPlayer { BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1" };
+               var aiPlayer2 = new KlopAiPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Green, Name = "Луноход 2"};
+               var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1"};
 
                var players = new List<IKlopPlayer> {humanPlayer, aiPlayer};
-               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, 1);
+               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, turnLength);
 
                aiPlayer.SetModel(_klopModel);
                aiPlayer2.SetModel(_klopModel);
-
             }
             return _klopModel;
          }

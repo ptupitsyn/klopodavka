@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KlopAi.algo;
 using KlopIfaces;
 
@@ -9,8 +10,15 @@ namespace KlopAi
    {
       #region Fields and Constants
 
+      public const int TurnBlockedCost = int.MaxValue; // Цена хода в запрещенную клетку (->inf)
+      public const int TurnEatCost = 35; // Цена хода в занятую клетку
+      public const int TurnEatEnemyBaseCost = 8; // Цена съедания клопа около вражеской базы
+      public const int TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
+      public const int TurnEmptyCost = 100; // Цена хода в пустую клетку
+      public const int TurnNearBaseCost = 11000; // Цена хода около своей базы
       private readonly Node[,] field;
       private readonly IKlopModel klopModel;
+      private readonly IKlopPlayer klopPlayer;
 
       #endregion
 
@@ -20,14 +28,15 @@ namespace KlopAi
       /// Initializes a new instance of the <see cref="KlopPathFinder"/> class.
       /// </summary>
       /// <param name="model">The model.</param>
-      public KlopPathFinder(IKlopModel model)
+      /// <param name="player">The player to find path for.</param>
+      public KlopPathFinder(IKlopModel model, IKlopPlayer player)
       {
          klopModel = model;
+         klopPlayer = player;
          field = new Node[model.FieldWidth,model.FieldHeight];
          foreach (IKlopCell cell in model.Cells)
          {
-            //TODO: Compute cost
-            field[cell.X, cell.Y] = new Node(cell.X, cell.Y) {Cost = 1};
+            field[cell.X, cell.Y] = new Node(cell.X, cell.Y) {Cost = GetCellCost(cell)};
          }
       }
 
@@ -48,7 +57,7 @@ namespace KlopAi
             var node = klopModel[lastNode.X, lastNode.Y];
             lastNode = lastNode.Parent;
 
-            if (node.Owner == klopModel.CurrentPlayer) continue;
+            if (node.Owner == klopPlayer) continue;
             result.Add(node);
          }
          return result;
@@ -57,6 +66,38 @@ namespace KlopAi
       #endregion
 
       #region Private and protected methods
+
+      private double GetCellCost(IKlopCell cell)
+      {
+         if (cell.Owner == klopPlayer)
+         {
+            return 0; // Zero cost for owned cell
+         }
+         if (cell.State == ECellState.Dead)
+         {
+            return TurnBlockedCost; // Can't move into own dead cell or base cell
+         }
+         if (cell.Owner != null && cell.State == ECellState.Alive)
+         {
+            if (IsCellNearBase(cell, klopPlayer))
+            {
+               return TurnEatOwnbaseCost;
+            }
+
+            if (klopModel.Players.Where(p => p != klopPlayer).Any(enemy => IsCellNearBase(cell, enemy)))
+            {
+               return TurnEatEnemyBaseCost;
+            }
+
+            return TurnEatCost;
+         }
+         return TurnEmptyCost; // Default - turn into empty cell.
+      }
+
+      private bool IsCellNearBase(IKlopCell cell, IKlopPlayer baseOwner)
+      {
+         return Math.Max(Math.Abs(cell.X - baseOwner.BasePosX), Math.Abs(cell.Y - baseOwner.BasePosY)) == 1;
+      }
 
       /// <summary>
       /// Gets the distance between two nodes.
@@ -68,7 +109,9 @@ namespace KlopAi
       {
          var dx = n1.X - n2.X;
          var dy = n1.Y - n2.Y;
-         return Math.Sqrt(dx*dx + dy*dy);
+
+         // Diagonal turn should cost 1
+         return Math.Max(Math.Abs(dx), Math.Abs(dy)); //Math.Sqrt(dx*dx + dy*dy);
       }
 
       /// <summary>
