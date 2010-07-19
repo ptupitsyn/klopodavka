@@ -106,7 +106,7 @@ namespace KlopViewWpf
          else if (cell.Highlighted)
          {
             // Cell is highlighted - perform multiple turns:
-            while (Model.RemainingKlops > 1)  // Leave one turn available
+            while (Model.RemainingKlops > 0)  
             {
                var currentCell = Model.Cells.FirstOrDefault(c => c.Highlighted && c.Available);
                if (currentCell == null) break;

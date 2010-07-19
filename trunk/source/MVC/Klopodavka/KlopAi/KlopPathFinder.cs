@@ -49,6 +49,14 @@ namespace KlopAi
       /// </summary>
       public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
       {
+         return FindPath(startX, startY, finishX, finishY, klopPlayer, false);
+      }
+
+      /// <summary>
+      /// Finds the path betweed specified nodes for specified player.
+      /// </summary>
+      public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer, bool inverted)
+      {
          // Init field
          foreach (IKlopCell cell in klopModel.Cells)
          {
@@ -58,7 +66,7 @@ namespace KlopAi
          }
 
          // Get result
-         var lastNode = PathFinder.FindPath(GetNodeByCoordinates(startX, startY), GetNodeByCoordinates(finishX, finishY), GetDistance, GetNodeByCoordinates);
+         var lastNode = PathFinder.FindPath(GetNodeByCoordinates(startX, startY), GetNodeByCoordinates(finishX, finishY), GetDistance, GetNodeByCoordinates, inverted);
          var result = new List<IKlopCell>();
          while (lastNode != null)
          {
@@ -121,7 +129,9 @@ namespace KlopAi
             return TurnNearEnemyEmptyCost; // Turn near enemy klop costs a bit more.
          }
 
-         return TurnEmptyCost; // Default - turn into empty cell.
+         var neighborCount = Node.GetNeighborCoordinates(cell.X, cell.Y).Select(c => klopModel[c.Item1, c.Item2]).Count(c => c != null && c.Owner != null);
+
+         return TurnEmptyCost + neighborCount; // Default - turn into empty cell.
       }
 
       private static bool IsCellNearBase(IKlopCell cell, IKlopPlayer baseOwner)
