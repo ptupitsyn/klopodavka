@@ -11,9 +11,9 @@ namespace KlopModel
       #region Fields and Constants
 
 
-      private static readonly ObservableCollection<Exception> exceptions = new ObservableCollection<Exception>();
-      private static readonly Dispatcher uiDispatcher;
-      private int busyCount;
+      private static readonly ObservableCollection<Exception> _exceptions = new ObservableCollection<Exception>();
+      private static readonly Dispatcher _uiDispatcher;
+      private int _busyCount;
 
 
       #endregion
@@ -27,7 +27,7 @@ namespace KlopModel
       /// </summary>
       static ModelBase()
       {
-         uiDispatcher = Dispatcher.CurrentDispatcher;
+         _uiDispatcher = Dispatcher.CurrentDispatcher;
       }
 
 
@@ -36,7 +36,7 @@ namespace KlopModel
       /// </summary>
       public ModelBase()
       {
-         exceptions.CollectionChanged += (a, e) => OnPropertyChanged("Exceptions");
+         _exceptions.CollectionChanged += (a, e) => OnPropertyChanged("Exceptions");
       }
 
 
@@ -65,10 +65,10 @@ namespace KlopModel
       [XmlIgnore]
       public virtual bool IsBusy
       {
-         get { return busyCount > 0; }
+         get { return _busyCount > 0; }
          set
          {
-            busyCount += value ? 1 : -1;
+            _busyCount += value ? 1 : -1;
             OnPropertyChanged("IsBusy");
          }
       }
@@ -89,7 +89,7 @@ namespace KlopModel
       [XmlIgnore]
       public ObservableCollection<Exception> Exceptions
       {
-         get { return exceptions; }
+         get { return _exceptions; }
       }
 
 
@@ -105,19 +105,19 @@ namespace KlopModel
       /// <param name="propertyName">Name of the property.</param>
       protected void OnPropertyChanged(string propertyName)
       {
-         DeferOnPropertyChanged(propertyName, DispatcherPriority.Background); 
-         //PropertyChangedEventHandler handler = PropertyChanged;
-         //if (handler != null)
-         //{
-         //   if (uiDispatcher.CheckAccess())
-         //   {
-         //      handler(this, new PropertyChangedEventArgs(propertyName));
-         //   }
-         //   else
-         //   {
-         //      UiDispatcherInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)));
-         //   }
-         //}
+         //DeferOnPropertyChanged(propertyName, DispatcherPriority.Background); 
+         PropertyChangedEventHandler handler = PropertyChanged;
+         if (handler != null)
+         {
+            if (_uiDispatcher.CheckAccess())
+            {
+               handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+            else
+            {
+               UiDispatcherInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)));
+            }
+         }
       }
 
 
@@ -142,7 +142,7 @@ namespace KlopModel
       /// <param name="action">The action.</param>
       protected void UiDispatcherInvoke(Action action)
       {
-         uiDispatcher.Invoke(action);
+         _uiDispatcher.Invoke(action);
       }
 
 
@@ -152,7 +152,7 @@ namespace KlopModel
       /// <param name="action">The action.</param>
       protected void UiDispatcherBeginInvoke(Action action)
       {
-         uiDispatcher.BeginInvoke(action);
+         _uiDispatcher.BeginInvoke(action);
       }
 
 
@@ -163,7 +163,7 @@ namespace KlopModel
       /// <param name="priority">The priority.</param>
       protected void UiDispatcherBeginInvoke(Action action, DispatcherPriority priority)
       {
-         uiDispatcher.BeginInvoke(action, priority);
+         _uiDispatcher.BeginInvoke(action, priority);
       }
 
 

@@ -80,13 +80,13 @@
             <DataTrigger Binding="{Binding Highlighted}" Value="True">
                 <!-- This trigger consumes a lot of CPU on large cell count! -->
                 <Setter Property="Background" Value="{StaticResource hoverBrush}" />
-                <DataTrigger.EnterActions>
+                <!--<DataTrigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetProperty="Background.Opacity" From="0" To="0.4" Duration="0:0:0.2" />
                         </Storyboard>
                     </BeginStoryboard>
-                </DataTrigger.EnterActions>
+                </DataTrigger.EnterActions>-->
             </DataTrigger>
 
             <!--<Trigger Property="IsMouseOver" Value="True">

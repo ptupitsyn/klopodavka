@@ -41,7 +41,7 @@
                     </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </Border.Background>
-            <ItemsControl ItemsSource="{Binding Model.Cells}">
+            <ItemsControl ItemsSource="{Binding Model.Cells, IsAsync=True}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Rows="{Binding Model.FieldHeight}" Columns="{Binding Model.FieldWidth}">

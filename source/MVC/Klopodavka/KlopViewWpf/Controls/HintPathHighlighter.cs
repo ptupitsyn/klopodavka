@@ -18,6 +18,7 @@ namespace KlopViewWpf.Controls
       public HintPathHighlighter(IKlopModel model)
       {
          _model = model;
+         _model.PropertyChanged += (a, e) => { if (e.PropertyName == "CurrentPlayer") Unhighlight(); };
       }
 
       #endregion
@@ -29,10 +30,7 @@ namespace KlopViewWpf.Controls
          if (!_model.CurrentPlayer.Human)
          {
             // Deselect all
-            foreach (var klopCell in _model.Cells.Where(c => c.Highlighted))
-            {
-               klopCell.Highlighted = false;
-            }
+            Unhighlight();
             return;
          }
 
@@ -46,6 +44,14 @@ namespace KlopViewWpf.Controls
          foreach (var klopCell in path)
          {
             klopCell.Highlighted = true;
+         }
+      }
+
+      private void Unhighlight()
+      {
+         foreach (var klopCell in _model.Cells.Where(c => c.Highlighted))
+         {
+            klopCell.Highlighted = false;
          }
       }
 
