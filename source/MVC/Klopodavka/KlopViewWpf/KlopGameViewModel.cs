@@ -9,6 +9,7 @@ using Common.Commands;
 using KlopAi;
 using KlopIfaces;
 using KlopModel;
+using KlopViewWpf.Controls;
 
 #endregion
 
@@ -27,6 +28,7 @@ namespace KlopViewWpf
       private DelegateCommand _startDemoCommand;
       private DelegateCommand _stopDemoCommand;
       private DelegateCommand _undoCommand;
+      private DelegateCommand<IKlopCell> _setCurrentCellCommand;
 
       #endregion
 
@@ -111,6 +113,15 @@ namespace KlopViewWpf
       public DelegateCommand UndoCommand
       {
          get { return _undoCommand ?? (_undoCommand = new DelegateCommand(() => Model.UndoTurn())); }
+      }
+
+
+      public DelegateCommand<IKlopCell> SetActiveCellCommand
+      {
+         get
+         {
+            return _setCurrentCellCommand ?? (_setCurrentCellCommand = new DelegateCommand<IKlopCell>(c => ActiveCell = c));
+         }
       }
 
       #endregion

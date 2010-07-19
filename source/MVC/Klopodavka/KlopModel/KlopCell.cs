@@ -10,7 +10,7 @@ namespace KlopModel
    /// <summary>
    /// Implements field cell
    /// </summary>
-   internal class KlopCell : ModelBase, IKlopCell
+   public class KlopCell : ModelBase, IKlopCell
    {
       #region Constructors
 
@@ -58,6 +58,7 @@ namespace KlopModel
       private bool _highlighted;
       private IKlopPlayer _owner;
       private ECellState _state;
+      private object _tag;
 
       #endregion
 
@@ -133,7 +134,25 @@ namespace KlopModel
          }
       }
 
+      #region Public properties and indexers
+
+      /// <summary>
+      /// Gets or sets the tag. Any additional information about this cell.
+      /// </summary>
+      /// <value>The tag.</value>
+      public object Tag
+      {
+         get { return _tag; }
+         set
+         {
+            if (_tag == value) return;
+            _tag = value;
+            OnPropertyChanged("Tag");
+         }
+      }
+
       #endregion
 
+      #endregion
    }
 }

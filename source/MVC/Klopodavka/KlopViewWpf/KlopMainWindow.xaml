@@ -57,15 +57,21 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="0.5">
+                        <Border BorderThickness="0.5"                                                  
+                                AttachedCommandBehavior:CommandBehavior.Event="MouseEnter"
+                                AttachedCommandBehavior:CommandBehavior.Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.SetActiveCellCommand}"
+                                AttachedCommandBehavior:CommandBehavior.CommandParameter="{Binding}">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="Black" Opacity="0.5" />
                             </Border.BorderBrush>
-                            <KlopViewWpf:KlopCell DataContext="{Binding}" 
+                            <!--<Grid>-->                            
+                                <KlopViewWpf:KlopCell DataContext="{Binding}" 
                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.MakeTurnCommand}" 
                                                   CommandParameter="{Binding}"
                                                   AttachedCommandBehavior:CommandBehavior.Event="MouseRightButtonDown" 
                                                   AttachedCommandBehavior:CommandBehavior.Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.UndoCommand}"  />
+                                <!--<TextBlock Text="{Binding Tag}" IsHitTestVisible="False" />-->
+                            <!--</Grid>-->
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -47,10 +47,11 @@ namespace KlopAi.algo
          startNode.Hdist = getDistance(startNode, finishNode);
          startNode.Parent = null;
          openNodes.Add(startNode);
+         Node currentNode = null;
 
          while (openNodes.Count > 0)
          {
-            var currentNode = openNodes.Pop();
+            currentNode = openNodes.Pop();
 
             if (currentNode.Equals(finishNode)) // if n is a goal node
             {
@@ -87,7 +88,7 @@ namespace KlopAi.algo
             closedNodes.Add(currentNode, null);
          }
 
-         return null; //	return failure if no path found			
+         return currentNode; //	return failure if no path found			
       }
 
       #endregion
@@ -96,7 +97,7 @@ namespace KlopAi.algo
 
       private static IEnumerable<Node> GetNeighborNodes(Node node, Func<int, int, Node> getNodeByXy)
       {
-         return Dx.Select((t, i) => getNodeByXy(node.X + t, node.Y + Dy[i]));
+         return Dx.Select((t, i) => getNodeByXy(node.X + Dx[i], node.Y + Dy[i]));
       }
 
       #endregion
