@@ -118,6 +118,14 @@ namespace KlopAi.algo
          return Dx.Select((t, i) => new Tuple<int, int>(x + Dx[i], y + Dy[i]));
       }
 
+      public void Reset()
+      {
+         Parent = null;
+         Gdist = 0;
+         Hdist = 0;
+         Cost = 0;
+      }
+
       #endregion
    }
 }

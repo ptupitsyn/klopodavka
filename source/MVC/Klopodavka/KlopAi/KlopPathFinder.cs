@@ -15,11 +15,11 @@ namespace KlopAi
       public const int TurnEatEnemyBaseCost = 8; // Цена съедания клопа около вражеской базы
       public const int TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
       public const int TurnEmptyCost = 100; // Цена хода в пустую клетку
-      public const int TurnNearEnemyEmptyCost = 140; // Цена хода в пустую клетку рядом с врагом
       public const int TurnNearBaseCost = 11000; // Цена хода около своей базы
+      public const int TurnNearEnemyEmptyCost = 140; // Цена хода в пустую клетку рядом с врагом
       private readonly Node[,] field;
       private readonly IKlopModel klopModel;
-      private readonly IKlopPlayer klopPlayer;
+      private AStar _aStar;
 
       #endregion
 
@@ -30,16 +30,13 @@ namespace KlopAi
       /// </summary>
       /// <param name="model">The model.</param>
       /// <param name="player">The player to find path for.</param>
-      public KlopPathFinder(IKlopModel model, IKlopPlayer player)
+      public KlopPathFinder(IKlopModel model)
       {
          klopModel = model;
-         klopPlayer = player;
          field = new Node[model.FieldWidth,model.FieldHeight];
-         foreach (IKlopCell cell in model.Cells)
+         foreach (IKlopCell cell in klopModel.Cells)
          {
-            var cost = GetCellCost(cell);
-            //((KlopCell) cell).Tag = cost;
-            field[cell.X, cell.Y] = new Node(cell.X, cell.Y) {Cost = cost};
+            field[cell.X, cell.Y] = new Node(cell.X, cell.Y);
          }
       }
 
@@ -48,12 +45,20 @@ namespace KlopAi
       #region Public methods
 
       /// <summary>
-      /// Finds the path betweed specified nodes.
+      /// Finds the path betweed specified nodes for specified player.
       /// </summary>
-      /// <returns></returns>
-      public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY)
+      public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
       {
-         var lastNode = (new AStar()).FindPath(GetNodeByCoordinates(startX, startY), GetNodeByCoordinates(finishX, finishY), GetDistance, GetNodeByCoordinates);
+         // Init field
+         foreach (IKlopCell cell in klopModel.Cells)
+         {
+            var f = field[cell.X, cell.Y];
+            f.Reset();
+            f.Cost = GetCellCost(cell, klopPlayer);
+         }
+
+         // Get result
+         var lastNode = PathFinder.FindPath(GetNodeByCoordinates(startX, startY), GetNodeByCoordinates(finishX, finishY), GetDistance, GetNodeByCoordinates);
          var result = new List<IKlopCell>();
          while (lastNode != null)
          {
@@ -68,20 +73,29 @@ namespace KlopAi
 
       #endregion
 
+      #region Private and protected properties and indexers
+
+      private AStar PathFinder
+      {
+         get { return _aStar ?? (_aStar = new AStar()); }
+      }
+
+      #endregion
+
       #region Private and protected methods
 
-      private double GetCellCost(IKlopCell cell)
+      private double GetCellCost(IKlopCell cell, IKlopPlayer klopPlayer)
       {
          if (cell.Owner == klopPlayer)
          {
             return 0; // Zero cost for owned cell
          }
-         
+
          if (cell.State == ECellState.Dead)
          {
             return TurnBlockedCost; // Can't move into own dead cell or base cell
          }
-         
+
          if (cell.Owner != null && cell.State == ECellState.Alive)
          {
             if (IsCellNearBase(cell, klopPlayer))
@@ -104,7 +118,7 @@ namespace KlopAi
 
          if (Node.GetNeighborCoordinates(cell.X, cell.Y).Select(c => klopModel[c.Item1, c.Item2]).Any(c => c != null && c.Owner != null && c.Owner != klopPlayer))
          {
-            return TurnNearEnemyEmptyCost;  // Turn near enemy klop costs a bit more.
+            return TurnNearEnemyEmptyCost; // Turn near enemy klop costs a bit more.
          }
 
          return TurnEmptyCost; // Default - turn into empty cell.
