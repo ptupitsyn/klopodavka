@@ -45,8 +45,11 @@ namespace KlopAi
          var result = new List<IKlopCell>();
          while (lastNode != null)
          {
-            result.Add(klopModel[lastNode.X, lastNode.Y]);
+            var node = klopModel[lastNode.X, lastNode.Y];
             lastNode = lastNode.Parent;
+
+            if (node.Owner == klopModel.CurrentPlayer) continue;
+            result.Add(node);
          }
          return result;
       }
