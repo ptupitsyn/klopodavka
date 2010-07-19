@@ -15,6 +15,7 @@ namespace KlopAi
       public const int TurnEatEnemyBaseCost = 8; // Цена съедания клопа около вражеской базы
       public const int TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
       public const int TurnEmptyCost = 100; // Цена хода в пустую клетку
+      public const int TurnNearEnemyEmptyCost = 140; // Цена хода в пустую клетку рядом с врагом
       public const int TurnNearBaseCost = 11000; // Цена хода около своей базы
       private readonly Node[,] field;
       private readonly IKlopModel klopModel;
@@ -101,10 +102,15 @@ namespace KlopAi
             return TurnNearBaseCost;
          }
 
+         if (Node.GetNeighborCoordinates(cell.X, cell.Y).Select(c => klopModel[c.Item1, c.Item2]).Any(c => c != null && c.Owner != null && c.Owner != klopPlayer))
+         {
+            return TurnNearEnemyEmptyCost;  // Turn near enemy klop costs a bit more.
+         }
+
          return TurnEmptyCost; // Default - turn into empty cell.
       }
 
-      private bool IsCellNearBase(IKlopCell cell, IKlopPlayer baseOwner)
+      private static bool IsCellNearBase(IKlopCell cell, IKlopPlayer baseOwner)
       {
          return Math.Max(Math.Abs(cell.X - baseOwner.BasePosX), Math.Abs(cell.Y - baseOwner.BasePosY)) == 1;
       }
