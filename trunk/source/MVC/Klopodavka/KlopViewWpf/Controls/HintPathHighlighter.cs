@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
+using System.Linq;
+using KlopAi;
 using KlopIfaces;
 
-namespace KlopViewWpf
+namespace KlopViewWpf.Controls
 {
    public class HintPathHighlighter
    {
@@ -28,7 +30,18 @@ namespace KlopViewWpf
 
       public void HighlightPath(IKlopCell cell)
       {
-         cell.Highlighted = true;
+         var pathFinder = new KlopPathFinder(_model, _model.CurrentPlayer);
+         var path = pathFinder.FindPath(_model.CurrentPlayer.BasePosX, _model.CurrentPlayer.BasePosY, cell.X, cell.Y);
+         
+         foreach (var klopCell in _model.Cells.Where(c => !path.Contains(c)))
+         {
+            klopCell.Highlighted = false;
+         }
+
+         foreach (var klopCell in path)
+         {
+            klopCell.Highlighted = true;
+         }
       }
 
       #endregion

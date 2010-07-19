@@ -6,7 +6,7 @@ using KlopIfaces;
 
 namespace KlopAi
 {
-   internal class KlopPathFinder
+   public class KlopPathFinder
    {
       #region Fields and Constants
 
@@ -36,7 +36,9 @@ namespace KlopAi
          field = new Node[model.FieldWidth,model.FieldHeight];
          foreach (IKlopCell cell in model.Cells)
          {
-            field[cell.X, cell.Y] = new Node(cell.X, cell.Y) {Cost = GetCellCost(cell)};
+            var cost = GetCellCost(cell);
+            //((KlopCell) cell).Tag = cost;
+            field[cell.X, cell.Y] = new Node(cell.X, cell.Y) {Cost = cost};
          }
       }
 
@@ -73,10 +75,12 @@ namespace KlopAi
          {
             return 0; // Zero cost for owned cell
          }
+         
          if (cell.State == ECellState.Dead)
          {
             return TurnBlockedCost; // Can't move into own dead cell or base cell
          }
+         
          if (cell.Owner != null && cell.State == ECellState.Alive)
          {
             if (IsCellNearBase(cell, klopPlayer))
@@ -91,6 +95,12 @@ namespace KlopAi
 
             return TurnEatCost;
          }
+
+         if (IsCellNearBase(cell, klopPlayer))
+         {
+            return TurnNearBaseCost;
+         }
+
          return TurnEmptyCost; // Default - turn into empty cell.
       }
 
@@ -111,7 +121,8 @@ namespace KlopAi
          var dy = n1.Y - n2.Y;
 
          // Diagonal turn should cost 1
-         return Math.Max(Math.Abs(dx), Math.Abs(dy)); //Math.Sqrt(dx*dx + dy*dy);
+         return Math.Max(Math.Abs(dx), Math.Abs(dy)); 
+         //return Math.Sqrt(dx*dx + dy*dy);
       }
 
       /// <summary>

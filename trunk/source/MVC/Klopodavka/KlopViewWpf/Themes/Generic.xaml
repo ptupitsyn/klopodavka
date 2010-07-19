@@ -6,7 +6,7 @@
 
     <Converters:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
     <SolidColorBrush Color="Gray" Opacity="0.3" x:Key="availableBrush" PresentationOptions:Freeze="True" />
-    <SolidColorBrush Color="Gray" Opacity="0.1" x:Key="hoverBrush" PresentationOptions:Freeze="True" />
+    <SolidColorBrush Color="Yellow" Opacity="0.2" x:Key="hoverBrush" PresentationOptions:Freeze="True" />
 
     <Style TargetType="local:KlopCell">
         <Setter Property="Foreground" Value="Transparent" />
