@@ -35,6 +35,21 @@ namespace KlopAi.algo
       /// <returns></returns>
       public Node FindPath(Node startNode, Node finishNode, Func<Node, Node, double> getDistance, Func<int, int, Node> getNodeByXy)
       {
+         return FindPath(startNode, finishNode, getDistance, getNodeByXy, false);
+      }
+
+
+      /// <summary>
+      /// Finds the shortest path between specified nodes.
+      /// </summary>
+      /// <param name="startNode">The start node.</param>
+      /// <param name="finishNode">The finish node.</param>
+      /// <param name="getDistance">Distance function - should return distance between specified nodes.</param>
+      /// <param name="getNodeByXy">Node function - should return nodes by specified coordinates.</param>
+      /// <param name="inverted">if set to <c>true</c> finds longest path.</param>
+      /// <returns></returns>
+      public Node FindPath(Node startNode, Node finishNode, Func<Node, Node, double> getDistance, Func<int, int, Node> getNodeByXy, bool inverted)
+      {
          //Reset
          openNodes.Clear();
          closedNodes.Clear();
@@ -46,7 +61,7 @@ namespace KlopAi.algo
 
          while (openNodes.Count > 0)
          {
-            var currentNode = openNodes.Pop();
+            var currentNode = inverted ? openNodes.PopHighest() : openNodes.Pop();
 
             if (currentNode.Equals(finishNode)) // if n is a goal node
             {
