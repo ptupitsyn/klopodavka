@@ -23,6 +23,7 @@ namespace KlopViewWpf
       private HintPathHighlighter _pathHighlighter;
       private DelegateCommand<IKlopCell> _setCurrentCellCommand;
       private DelegateCommand _undoCommand;
+      private readonly int _baseDist;
 
       #endregion
 
@@ -33,6 +34,7 @@ namespace KlopViewWpf
          FieldWidth = 30;
          FieldHeight = 34;
          _turnLength = 10;
+         _baseDist = 4;
       }
 
       #endregion
@@ -50,11 +52,11 @@ namespace KlopViewWpf
          {
             if (_klopModel == null)
             {
-               var aiPlayer = new KlopAiPlayer {BasePosX = 2, BasePosY = FieldHeight - 3, Color = Colors.Red, Name = "Луноход 1"};
-               var aiPlayer2 = new KlopAiPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Green, Name = "Луноход 2"};
-               var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - 3, BasePosY = 2, Color = Colors.Blue, Human = true, Name = "Player 1"};
+               var aiPlayer = new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"};
+               var aiPlayer2 = new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"};
+               var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"};
 
-               var players = new List<IKlopPlayer> {humanPlayer, aiPlayer};
+               var players = new List<IKlopPlayer> {aiPlayer2, aiPlayer};
                _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, _turnLength);
 
                aiPlayer.SetModel(_klopModel);

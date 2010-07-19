@@ -44,6 +44,7 @@
     <Compile Include="algo\AStar.cs" />
     <Compile Include="algo\Node.cs" />
     <Compile Include="algo\PriorityQueue.cs" />
+    <Compile Include="Extentions\EnumerableExtensions.cs" />
     <Compile Include="KlopAiPlayer.cs" />
     <Compile Include="KlopPathFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

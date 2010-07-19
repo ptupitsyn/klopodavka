@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media;
+using KlopAi.Extentions;
 using KlopIfaces;
 
 namespace KlopAi
@@ -119,14 +120,34 @@ namespace KlopAi
 
       private void DoThinking(object sender, DoWorkEventArgs doWorkEventArgs)
       {
+         //TODO: Catch exceptions!
+
          List<IKlopCell> path = null;
+         var pathFinder = new KlopPathFinder(model);
+
          while (model.CurrentPlayer == this && model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
          {
-            if (path == null)
+            while (path == null || path.Count == 0)
             {
-               var pathFinder = new KlopPathFinder(model);
-               var enemy = model.Players.First(p => p != model.CurrentPlayer);
-               path = pathFinder.FindPath(enemy.BasePosX, enemy.BasePosY, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, model.CurrentPlayer);
+               IKlopCell target;
+               if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 5)
+               {
+                  // Fight started, rush to base
+                  var enemy = model.Players.First(p => p != model.CurrentPlayer);
+                  target = model[enemy.BasePosX, enemy.BasePosY];
+               }
+               else
+               {
+                  // Fight not started, generate pattern
+                  target = model.Cells.Where(c =>
+                                                {
+                                                   var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
+                                                   return d > 2 && d < (model.FieldHeight + model.FieldWidth)/4;
+                                                }).Random();
+               }
+               
+               // Find path FROM target to have correct ordered list
+               path = pathFinder.FindPath(target.X, target.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, model.CurrentPlayer);
             }
             var cell = path.First();
             path.Remove(cell);
