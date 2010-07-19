@@ -79,6 +79,37 @@ namespace KlopAi
          return result;
       }
 
+      /// <summary>
+      /// Gets the distance between two nodes.
+      /// </summary>
+      public static double GetDistance(Node n1, Node n2)
+      {
+         return GetDistance(n1.X, n1.Y, n2.X, n2.Y);
+      }
+
+      /// <summary>
+      /// Gets the distance between two nodes.
+      /// </summary>
+      public static double GetDistance(IKlopCell cell1, IKlopCell cell2)
+      {
+         return GetDistance(cell1.X, cell1.Y, cell2.X, cell2.Y);
+      }
+
+      /// <summary>
+      /// Gets the distance between two nodes.
+      /// </summary>
+      public static double GetDistance(int x1, int y1, int x2, int y2)
+      {
+         var dx = x1 - x2;
+         var dy = y1 - y2;
+
+         // Diagonal turn should cost 1
+         //return Math.Max(Math.Abs(dx), Math.Abs(dy)); 
+
+         // Use Sqrt for more natural-looking paths
+         return Math.Sqrt(dx*dx + dy*dy);
+      }
+
       #endregion
 
       #region Private and protected properties and indexers
@@ -137,24 +168,6 @@ namespace KlopAi
       private static bool IsCellNearBase(IKlopCell cell, IKlopPlayer baseOwner)
       {
          return Math.Max(Math.Abs(cell.X - baseOwner.BasePosX), Math.Abs(cell.Y - baseOwner.BasePosY)) == 1;
-      }
-
-      /// <summary>
-      /// Gets the distance between two nodes.
-      /// </summary>
-      /// <param name="n1">The n1.</param>
-      /// <param name="n2">The n2.</param>
-      /// <returns></returns>
-      private static double GetDistance(Node n1, Node n2)
-      {
-         var dx = n1.X - n2.X;
-         var dy = n1.Y - n2.Y;
-
-         // Diagonal turn should cost 1
-         //return Math.Max(Math.Abs(dx), Math.Abs(dy)); 
-
-         // Use Sqrt for more natural-looking paths
-         return Math.Sqrt(dx*dx + dy*dy);
       }
 
       /// <summary>
