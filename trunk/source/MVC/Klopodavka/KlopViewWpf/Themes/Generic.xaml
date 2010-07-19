@@ -6,7 +6,7 @@
 
     <Converters:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
     <SolidColorBrush Color="Gray" Opacity="0.3" x:Key="availableBrush" PresentationOptions:Freeze="True" />
-    <SolidColorBrush Color="Yellow" Opacity="0.2" x:Key="hoverBrush" PresentationOptions:Freeze="True" />
+    <SolidColorBrush Color="Yellow" Opacity="1" x:Key="hoverBrush" PresentationOptions:Freeze="True" />
 
     <Style TargetType="local:KlopCell">
         <Setter Property="Foreground" Value="Transparent" />
@@ -83,7 +83,7 @@
                 <DataTrigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="Background.Opacity" From="0" To="0.1" Duration="0:0:0.1" />
+                            <DoubleAnimation Storyboard.TargetProperty="Background.Opacity" From="0" To="0.4" Duration="0:0:0.2" />
                         </Storyboard>
                     </BeginStoryboard>
                 </DataTrigger.EnterActions>

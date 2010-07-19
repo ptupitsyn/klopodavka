@@ -74,6 +74,9 @@ namespace KlopAi.algo
 
                var newg = currentNode.Gdist + nextNode.Cost;
 
+               if (currentNode.X != nextNode.X && currentNode.Y != nextNode.Y)
+                  newg *= 0.95;   // Make diagonal moves slightly preferred
+
                //if n' is in openNodes or closedNodes, and n'.g <= newg {	skip }
                if (closedNodes.Contains(nextNode)) continue; // TODO: think..
                if (openNodes.Contains(nextNode) && nextNode.Gdist <= newg) continue;

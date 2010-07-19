@@ -135,13 +135,14 @@ namespace KlopAi
                if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 7)
                {
                   // Fight started, rush to base
+                  return;
                   var enemy = model.Players.First(p => p != model.CurrentPlayer);
                   target = model[enemy.BasePosX, enemy.BasePosY];
                }
                else
                {
                   // Fight not started, generate pattern
-                  maxPathLength = model.TurnLength/3;
+                  maxPathLength = 2;
                   target = model.Cells.Where(c =>
                                                 {
                                                    var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);

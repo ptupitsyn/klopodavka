@@ -109,10 +109,12 @@ namespace KlopAi
          var dy = y1 - y2;
 
          // Diagonal turn should cost 1
-         //return Math.Max(Math.Abs(dx), Math.Abs(dy)); 
+         return Math.Max(Math.Abs(dx), Math.Abs(dy)); 
 
          // Use Sqrt for more natural-looking paths
-         return Math.Sqrt(dx*dx + dy*dy);
+         //return Math.Sqrt(dx*dx + dy*dy);
+
+         //return (Math.Max(Math.Abs(dx), Math.Abs(dy)) + Math.Sqrt(dx*dx + dy*dy))/2;
       }
 
       #endregion
@@ -165,7 +167,7 @@ namespace KlopAi
             return TurnNearEnemyEmptyCost; // Turn near enemy klop costs a bit more.
          }
 
-         var neighborCount = klopModel.GetNeighborCells(cell).Sum(c => c.Owner == null ? 0 : 10 / GetDistance(c, cell));
+         var neighborCount = klopModel.GetNeighborCells(cell).Sum(c => c.Owner == null ? 0 : 10 * GetDistance(c, cell));
 
          return TurnEmptyCost + neighborCount; // Default - turn into empty cell.
       }

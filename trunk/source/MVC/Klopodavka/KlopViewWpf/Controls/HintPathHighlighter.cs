@@ -26,6 +26,16 @@ namespace KlopViewWpf.Controls
 
       public void HighlightPath(IKlopCell cell)
       {
+         if (!_model.CurrentPlayer.Human)
+         {
+            // Deselect all
+            foreach (var klopCell in _model.Cells.Where(c => c.Highlighted))
+            {
+               klopCell.Highlighted = false;
+            }
+            return;
+         }
+
          var path = PathFinder.FindPath(_model.CurrentPlayer.BasePosX, _model.CurrentPlayer.BasePosY, cell.X, cell.Y, _model.CurrentPlayer);
 
          foreach (var klopCell in _model.Cells.Where(c => !path.Contains(c)))
