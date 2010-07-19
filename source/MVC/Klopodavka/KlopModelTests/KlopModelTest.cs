@@ -63,7 +63,7 @@ namespace KlopModelTests
                                    new KlopPlayer {BasePosX = width - 5, BasePosY = 4},
                                    new KlopPlayer {BasePosX = 4, BasePosY = height - 5},
                                 };
-         var model = new KlopModel.KlopModel(width, height, players);
+         var model = new KlopModel.KlopModel(width, height, players, 10);
          var turns = 0;
          var stopwatch = new Stopwatch();
          stopwatch.Start();

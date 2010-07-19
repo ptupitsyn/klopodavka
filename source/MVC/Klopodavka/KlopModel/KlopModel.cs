@@ -47,12 +47,13 @@ namespace KlopModel
       /// <param name="width">The width.</param>
       /// <param name="height">The height.</param>
       /// <param name="players">The players.</param>
-      public KlopModel(int width, int height, IList<IKlopPlayer> players)
+      /// <param name="turnLenght">The turn lenght.</param>
+      public KlopModel(int width, int height, IList<IKlopPlayer> players, int turnLenght)
       {
          FieldWidth = width;
          FieldHeight = height;
          Players = players;
-         TurnLength = 10; // default
+         TurnLength = turnLenght; 
 
          if (width < 10 || height < 10)
          {

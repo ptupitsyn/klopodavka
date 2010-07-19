@@ -1,26 +1,22 @@
 using System;
 
-namespace Clops.Ai.Algo
+namespace KlopAi.algo
 {
    /// <summary>
-   /// Summary description for node.
+   /// Represents path node.
    /// </summary>
-   public class Node
+   public class Node : IComparable
    {
-      //
-
       #region Constructors
 
       public Node(int x, int y)
       {
          Parent = null;
-         hdist = 0;
-         gdist = 0;
-         cost = 0;
-         inpath = false;
-         visited = false;
-         px = x;
-         py = y;
+         Hdist = 0;
+         Gdist = 0;
+         Cost = 0;
+         X = x;
+         Y = y;
       }
 
       public Node() : this(0, 0)
@@ -33,11 +29,9 @@ namespace Clops.Ai.Algo
 
       public int CompareTo(object obj)
       {
-         // TODO:  Add node.CompareTo implementation
-         //return fval.CompareTo();
          var n = obj as Node;
          if (n != null)
-            return fval.CompareTo(n.fval);
+            return Fval.CompareTo(n.Fval);
          throw new ArgumentException("object is not a NODE");
       }
 
@@ -45,41 +39,58 @@ namespace Clops.Ai.Algo
 
       #region Public properties and indexers
 
+      /// <summary>
+      /// Parent node; used to construct path.
+      /// </summary>
+      /// <value>The parent.</value>
       public Node Parent { get; set; }
-      //
-      public double gdist { get; set; }
-      public double hdist { get; set; }
-      public double cost { get; set; }
-      public bool inpath { get; set; }
-      public bool visited { get; set; }
-      public int px { get; set; }
-      public int py { get; set; }
 
-      public double fval
+      /// <summary>
+      /// Cost of move from start Node to this Node.
+      /// </summary>
+      public double Gdist { get; set; }
+
+      /// <summary>
+      /// Heuristic cost of move from this Node to finish Node.
+      /// </summary>
+      public double Hdist { get; set; }
+
+      /// <summary>
+      /// Cost of move to this Node.
+      /// </summary>
+      public double Cost { get; set; }
+
+      /// <summary>
+      /// Gets or sets the X position of Node.
+      /// </summary>
+      public int X { get; set; }
+
+      /// <summary>
+      /// Gets or sets the Y position of Node.
+      /// </summary>
+      public int Y { get; set; }
+
+      /// <summary>
+      /// Resulting cost of moving to this Node.
+      /// </summary>
+      public double Fval
       {
-         get { return gdist + hdist; }
+         get { return Gdist + Hdist; }
       }
 
       #endregion
-
-      //
 
       #region Public methods
 
       public Node Clone()
       {
-         var newNode = new Node(px, py)
-                          {
-                             Parent = Parent,
-                             hdist = hdist,
-                             gdist = gdist,
-                             cost = cost,
-                             inpath = inpath,
-                             visited = visited,
-                             px = px,
-                             py = py
-                          };
-         return newNode;
+         return new Node(X, Y)
+                   {
+                      Parent = Parent,
+                      Hdist = Hdist,
+                      Gdist = Gdist,
+                      Cost = Cost,
+                   };
       }
 
       #endregion

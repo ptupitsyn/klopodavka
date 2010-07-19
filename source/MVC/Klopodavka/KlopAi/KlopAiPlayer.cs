@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Windows.Media;
@@ -119,11 +120,18 @@ namespace KlopAi
 
       private void DoThinking(object sender, DoWorkEventArgs doWorkEventArgs)
       {
+         List<IKlopCell> path = null;
          while (model.CurrentPlayer == this && model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
          {
-            Thread.Sleep(200); // Simulate processing :)
-            var cell = model.Cells.Where(c => c.Available).First();
-            Worker.ReportProgress(0, cell); // Make calls to model in ReportProgress - on UI thread.
+            if (path == null)
+            {
+               var pathFinder = new KlopPathFinder(model);
+               var enemy = model.Players.First(p => p != model.CurrentPlayer);
+               path = pathFinder.FindPath(enemy.BasePosX, enemy.BasePosY, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
+            }
+            var cell = path.First();
+            path.Remove(cell);
+            model.MakeTurn(cell);
          }
       }
 
