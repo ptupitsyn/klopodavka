@@ -141,7 +141,7 @@ namespace KlopAi
                else
                {
                   // Fight not started, generate pattern
-                  maxPathLength = 2;
+                  maxPathLength = model.TurnLength / 3;
                   target = model.Cells.Where(c =>
                                                 {
                                                    var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
