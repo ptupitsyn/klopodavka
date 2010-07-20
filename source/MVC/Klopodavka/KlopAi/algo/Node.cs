@@ -7,12 +7,14 @@ namespace KlopAi.algo
    /// <summary>
    /// Represents path node.
    /// </summary>
-   public class Node : IComparable
+   public class Node : IComparable<Node>
    {
       #region Fields and Constants
 
       private static readonly int[] Dx = new[] {-1, -1, -1, 1, 1, 1, 0, 0};
       private static readonly int[] Dy = new[] {-1, 0, 1, -1, 0, 1, -1, 1};
+      private double gdist;
+      private double hdist;
 
       #endregion
 
@@ -34,14 +36,11 @@ namespace KlopAi.algo
 
       #endregion
 
-      #region IComparable Members
+      #region IComparable<Node> implementation
 
-      public int CompareTo(object obj)
+      public int CompareTo(Node other)
       {
-         var n = obj as Node;
-         if (n != null)
-            return Fval.CompareTo(n.Fval);
-         throw new ArgumentException("object is not a NODE");
+         return Fval.CompareTo(other.Fval);
       }
 
       #endregion
@@ -57,12 +56,28 @@ namespace KlopAi.algo
       /// <summary>
       /// Cost of move from start Node to this Node.
       /// </summary>
-      public double Gdist { get; set; }
+      public double Gdist
+      {
+         get { return gdist; }
+         set
+         {
+            gdist = value;
+            Fval = Gdist + Hdist;
+         }
+      }
 
       /// <summary>
       /// Heuristic cost of move from this Node to finish Node.
       /// </summary>
-      public double Hdist { get; set; }
+      public double Hdist
+      {
+         get { return hdist; }
+         set
+         {
+            hdist = value;
+            Fval = Gdist + Hdist;
+         }
+      }
 
       /// <summary>
       /// Cost of move to this Node.
@@ -72,20 +87,17 @@ namespace KlopAi.algo
       /// <summary>
       /// Gets or sets the X position of Node.
       /// </summary>
-      public int X { get; set; }
+      public int X { get; private set; }
 
       /// <summary>
       /// Gets or sets the Y position of Node.
       /// </summary>
-      public int Y { get; set; }
+      public int Y { get; private set; }
 
       /// <summary>
-      /// Resulting cost of moving to this Node.
+      /// Resulting cost of moving to this Node. (Equals Gdist + Hdist)
       /// </summary>
-      public double Fval
-      {
-         get { return Gdist + Hdist; }
-      }
+      public double Fval { get; private set; }
 
       #endregion
 
