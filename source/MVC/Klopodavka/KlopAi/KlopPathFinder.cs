@@ -57,6 +57,15 @@ namespace KlopAi
       /// </summary>
       public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer, bool inverted)
       {
+         return FindPath(GetNodeByCoordinates(startX, startY), GetNodeByCoordinates(finishX, finishY), klopPlayer, inverted)
+            .Select(n => _klopModel[n.X, n.Y]).Where(c => c.Owner != klopPlayer).ToList();
+      }
+
+      /// <summary>
+      /// Finds the path between two nodes.
+      /// </summary>
+      public List<Node> FindPath(Node startNode, Node finishNode, IKlopPlayer klopPlayer, bool inverted)
+      {
          // Init field
          foreach (IKlopCell cell in _klopModel.Cells)
          {
@@ -70,17 +79,24 @@ namespace KlopAi
          }
 
          // Get result
-         var lastNode = PathFinder.FindPath(GetNodeByCoordinates(startX, startY), GetNodeByCoordinates(finishX, finishY), GetDistance, GetNodeByCoordinates, inverted);
-         var result = new List<IKlopCell>();
+         var lastNode = PathFinder.FindPath(startNode, finishNode, GetDistance, GetNodeByCoordinates, inverted);
+
+         var result = new List<Node>();
          while (lastNode != null)
          {
-            var node = _klopModel[lastNode.X, lastNode.Y];
+            result.Add(lastNode);
             lastNode = lastNode.Parent;
-
-            if (node.Owner == klopPlayer) continue;
-            result.Add(node);
          }
          return result;
+      }
+
+      /// <summary>
+      /// Finds the most important cell: cell which most of all affects total path cost.
+      /// </summary>
+      public IKlopCell FindMostImportantCell(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
+      {
+         //var initialCost = FindPath(startX, startY, finishX, finishY, klopPlayer).Sum()
+         return null; //TODO
       }
 
       /// <summary>
@@ -166,7 +182,7 @@ namespace KlopAi
             return TurnNearEnemyEmptyCost; // Turn near enemy klop costs a bit more.
          }
 
-         var neighborCount = _klopModel.GetNeighborCells(cell).Sum(c => c.Owner == null ? 0 : 10 * GetDistance(c, cell));
+         var neighborCount = _klopModel.GetNeighborCells(cell).Where(c => c.Owner == null).Sum(c => 10*GetDistance(c, cell));
 
          return TurnEmptyCost + neighborCount; // Default - turn into empty cell.
       }
