@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -16,20 +15,9 @@ namespace KlopAi.algo
       /// </summary>
       public Node Pop()
       {
-         Node o = null; 
-         var d = double.MaxValue;
-
-         foreach (Node n in this)
-         {
-            if (n.Fval < d)
-            {
-               o = n;
-               d = o.Fval;
-            }
-         }
-
-         Remove(o);
-         return o;
+         var min = this.Min(); 
+         Remove(min);
+         return min;
       }
 
       /// <summary>
@@ -38,20 +26,9 @@ namespace KlopAi.algo
       /// <returns></returns>
       public Node PopHighest()
       {
-         Node o = null;
-         var d = double.MinValue;
-
-         foreach (Node n in this)
-         {
-            if (n.Fval > d)
-            {
-               o = n;
-               d = o.Fval;
-            }
-         }
-
-         Remove(o);
-         return o;
+         var max = this.Max();
+         Remove(max);
+         return max;
       }
 
       #endregion

@@ -63,10 +63,10 @@ namespace KlopAi
             var f = _field[cell.X, cell.Y];
             f.Reset();
             f.Cost = GetCellCost(cell, klopPlayer);
-            if (f.Cost != TurnEmptyCost)
-            {
-               ((KlopCell) cell).Tag = f.Cost;
-            }
+            //if (f.Cost != TurnEmptyCost)
+            //{
+            //   ((KlopCell) cell).Tag = f.Cost;
+            //}
          }
 
          // Get result
