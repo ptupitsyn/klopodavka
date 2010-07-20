@@ -392,12 +392,12 @@ namespace Common.Commands
          // if T is of value type and the parameter is not
          // set yet, then return false if CanExecute delegate
          // exists, else return true
-         if (parameter == null &&
-             typeof (T).IsValueType)
+         if (canExecuteMethod == null) return true;
+         if (parameter == null && typeof (T).IsValueType)
          {
-            return (canExecuteMethod == null);
+            return (false);
          }
-         return CanExecute((T) parameter);
+         return CanExecute((T)parameter);
       }
 
 
