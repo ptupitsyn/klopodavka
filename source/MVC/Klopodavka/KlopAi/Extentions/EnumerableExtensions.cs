@@ -36,6 +36,31 @@ namespace KlopAi.Extentions
          return enumerable.ToList().Random();
       }
 
+
+      /// <summary>
+      /// Get the highest ranked element, judging by compareBy function results.
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <param name="enumerable">The enumerable.</param>
+      /// <param name="compareBy">The compare by.</param>
+      /// <returns></returns>
+      public static T Highest<T>(this IEnumerable<T> enumerable, Func<T,IComparable> compareBy)
+      {
+         IComparable max = null;
+         T result = default(T);
+         foreach (var o in enumerable)
+         {
+            var val = compareBy(o);
+            if (max == null || max.CompareTo(val) < 0)
+            {
+               max = val;
+               result = o;
+            }
+         }
+         return result;
+      }
+
+
       #endregion
    }
 }

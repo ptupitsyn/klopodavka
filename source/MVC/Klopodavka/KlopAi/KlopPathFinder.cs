@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using KlopAi.algo;
 using KlopIfaces;
-using KlopModel;
 
 namespace KlopAi
 {
@@ -61,22 +60,23 @@ namespace KlopAi
             .Select(n => _klopModel[n.X, n.Y]).Where(c => c.Owner != klopPlayer).ToList();
       }
 
+
       /// <summary>
       /// Finds the path between two nodes.
       /// </summary>
       public List<Node> FindPath(Node startNode, Node finishNode, IKlopPlayer klopPlayer, bool inverted)
       {
+         return FindPath(startNode, finishNode, klopPlayer, inverted, false);
+      }
+
+      /// <summary>
+      /// Finds the path between two nodes.
+      /// </summary>
+      public List<Node> FindPath(Node startNode, Node finishNode, IKlopPlayer klopPlayer, bool inverted, bool skipEvaluate)
+      {
          // Init field
-         foreach (IKlopCell cell in _klopModel.Cells)
-         {
-            var f = _field[cell.X, cell.Y];
-            f.Reset();
-            f.Cost = GetCellCost(cell, klopPlayer);
-            //if (f.Cost != TurnEmptyCost)
-            //{
-            //   ((KlopCell) cell).Tag = f.Cost;
-            //}
-         }
+         if (!skipEvaluate)
+            EvaluateCells(klopPlayer);
 
          // Get result
          var lastNode = PathFinder.FindPath(startNode, finishNode, GetDistance, GetNodeByCoordinates, inverted);
@@ -91,12 +91,21 @@ namespace KlopAi
       }
 
       /// <summary>
-      /// Finds the most important cell: cell which most of all affects total path cost.
+      /// Calculates cells Cost.
       /// </summary>
-      public IKlopCell FindMostImportantCell(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
+      /// <param name="klopPlayer">The klop player.</param>
+      public void EvaluateCells(IKlopPlayer klopPlayer)
       {
-         //var initialCost = FindPath(startX, startY, finishX, finishY, klopPlayer).Sum()
-         return null; //TODO
+         foreach (IKlopCell cell in _klopModel.Cells)
+         {
+            var f = _field[cell.X, cell.Y];
+            f.Reset();
+            f.Cost = GetCellCost(cell, klopPlayer);
+            //if (f.Cost != TurnEmptyCost)
+            //{
+            //   ((KlopCell) cell).Tag = f.Cost;
+            //}
+         }
       }
 
       /// <summary>
@@ -124,12 +133,25 @@ namespace KlopAi
          var dy = y1 - y2;
 
          // Diagonal turn should cost 1
-         return Math.Max(Math.Abs(dx), Math.Abs(dy)); 
+         return Math.Max(Math.Abs(dx), Math.Abs(dy));
 
          // Use Sqrt for more natural-looking paths
          //return Math.Sqrt(dx*dx + dy*dy);
 
          //return (Math.Max(Math.Abs(dx), Math.Abs(dy)) + Math.Sqrt(dx*dx + dy*dy))/2;
+      }
+
+      /// <summary>
+      /// Gets the node by coordinates.
+      /// </summary>
+      /// <param name="x">The x.</param>
+      /// <param name="y">The y.</param>
+      /// <returns></returns>
+      public Node GetNodeByCoordinates(int x, int y)
+      {
+         if ((x >= 0) && (x < _field.GetLength(0)) && (y >= 0) && (y < _field.GetLength(1)))
+            return _field[x, y];
+         return null;
       }
 
       #endregion
@@ -190,19 +212,6 @@ namespace KlopAi
       private static bool IsCellNearBase(IKlopCell cell, IKlopPlayer baseOwner)
       {
          return Math.Max(Math.Abs(cell.X - baseOwner.BasePosX), Math.Abs(cell.Y - baseOwner.BasePosY)) == 1;
-      }
-
-      /// <summary>
-      /// Gets the node by coordinates.
-      /// </summary>
-      /// <param name="x">The x.</param>
-      /// <param name="y">The y.</param>
-      /// <returns></returns>
-      private Node GetNodeByCoordinates(int x, int y)
-      {
-         if ((x >= 0) && (x < _field.GetLength(0)) && (y >= 0) && (y < _field.GetLength(1)))
-            return _field[x, y];
-         return null;
       }
 
       #endregion

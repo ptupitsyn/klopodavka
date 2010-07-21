@@ -1,8 +1,7 @@
 ﻿<Window x:Class="KlopViewWpf.KlopMainWindow" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" 
-        xmlns:AttachedCommandBehavior="clr-namespace:AttachedCommandBehavior;assembly=Common" xmlns:Converters="clr-namespace:KlopViewWpf.Converters" 
-        Title="Klopodavka 2.0" MinHeight="496" MinWidth="800"    >
+        xmlns:AttachedCommandBehavior="clr-namespace:AttachedCommandBehavior;assembly=Common" xmlns:Converters="clr-namespace:KlopViewWpf.Converters" xmlns:Controls="clr-namespace:Common.Controls;assembly=Common" Title="Klopodavka 2.0" MinHeight="496" MinWidth="800"    >
     <Window.Resources>
         <Converters:ClopGridWidthConverter x:Key="_clopGridWidthConverter" />
     </Window.Resources>
@@ -80,9 +79,8 @@
         </Border>
         
         <!-- Test buttons -->
-        <!--<StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Left" >
-            <Button Content="Start Demo" Command="{Binding StartDemoCommand}" Width="100" />
-            <Button Content="Stop Demo" Command="{Binding StopDemoCommand}" Width="100" />
-        </StackPanel>-->
+        <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10" >
+            <Controls:ImageLinkButton Content="Reset" Command="{Binding ResetCommand}" Foreground="Blue"  ActiveForeground="Blue" Cursor="Hand" />
+        </StackPanel>
     </Grid>
 </Window>
