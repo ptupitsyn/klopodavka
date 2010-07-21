@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media;
+using KlopAi.algo;
 using KlopAi.Extentions;
 using KlopIfaces;
 
@@ -13,6 +15,7 @@ namespace KlopAi
 
       private IKlopModel model;
       private BackgroundWorker worker;
+      private KlopPathFinder pathFinder;
 
       #endregion
 
@@ -41,6 +44,7 @@ namespace KlopAi
       public void SetModel(IKlopModel klopModel)
       {
          model = klopModel;
+         pathFinder = new KlopPathFinder(model);
          model.PropertyChanged += ModelPropertyChanged;
          StartWorker();
       }
@@ -118,12 +122,48 @@ namespace KlopAi
          }
       }
 
+      /// <summary>
+      /// Finds the most important cell: cell which most of all affects total path cost.
+      /// </summary>
+      /// <returns>Tuple of most important cell and path cost difference.</returns>
+      public Tuple<IKlopCell, double> FindMostImportantCell(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
+      {
+         var startN = pathFinder.GetNodeByCoordinates(startX, startY);
+         var finishN = pathFinder.GetNodeByCoordinates(finishX, finishY);
+         var initialCost = pathFinder.FindPath(startN, finishN, klopPlayer, false).Sum(n => n.Cost);
+         double maxCost = 0;
+         Node resultNode = null;
+         foreach (var node in model.Cells.Where(c => c.Available && c.Owner == klopPlayer && c.State == ECellState.Alive).Select(c => pathFinder.GetNodeByCoordinates(c.X, c.Y)))
+         {
+            var oldCost = node.Cost;
+            node.Cost = KlopPathFinder.TurnBlockedCost;
+
+            var cost = pathFinder.FindPath(startN, finishN, klopPlayer, false, true).Sum(n => n.Cost);
+            if (cost > maxCost)
+            {
+               maxCost = cost;
+               resultNode = node;
+            }
+            
+            node.Cost = oldCost;
+         }
+         return resultNode == null ? null : new Tuple<IKlopCell, double>(model[resultNode.X, resultNode.Y], maxCost - initialCost);
+      }
+
+
+      public IKlopCell FindCheapestCell(IKlopPlayer klopPlayer)
+      {
+         pathFinder.EvaluateCells(klopPlayer);
+         return model.Cells.Where(c => c.Owner != klopPlayer)
+            .Select(c => new {c, node = pathFinder.GetNodeByCoordinates(c.X, c.Y)}).Highest(c => -c.node.Cost).c;
+      }
+
+
+
       private void DoThinking(object sender, DoWorkEventArgs doWorkEventArgs)
       {
          //TODO: Catch exceptions!
-
          List<IKlopCell> path = null;
-         var pathFinder = new KlopPathFinder(model);
 
          while (model.CurrentPlayer == this && model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
          {
@@ -132,11 +172,22 @@ namespace KlopAi
                IKlopCell target;
                var maxPathLength = int.MaxValue;
 
-               if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 7)
+               if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 6)
                {
                   // Fight started, rush to base
                   var enemy = model.Players.First(p => p != model.CurrentPlayer);
                   target = model[enemy.BasePosX, enemy.BasePosY];
+                  maxPathLength = 1;
+                  var importantCell = FindMostImportantCell(model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, target.X, target.Y, enemy);
+                  if (importantCell != null && importantCell.Item2 > KlopPathFinder.TurnEmptyCost * 2)
+                  {
+                     //TODO: FindMostImportantCell should return list of cells, filter it and use.
+                     target = importantCell.Item1;
+                  }
+                  else
+                  {
+                     target = FindCheapestCell(model.CurrentPlayer);
+                  }
                }
                else
                {
@@ -144,6 +195,7 @@ namespace KlopAi
                   maxPathLength = model.TurnLength / 3;
                   target = model.Cells.Where(c =>
                                                 {
+                                                   if (c.X < 4 || c.Y < 4 || c.X >= model.FieldWidth - 5 || c.Y >= model.FieldHeight - 5) return false;
                                                    var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
                                                    return d > 2 && d < (model.FieldHeight + model.FieldWidth)/3.7;
                                                 }).Random();

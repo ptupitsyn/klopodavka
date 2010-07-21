@@ -24,6 +24,7 @@ namespace KlopViewWpf
       private DelegateCommand<IKlopCell> _setCurrentCellCommand;
       private DelegateCommand _undoCommand;
       private readonly int _baseDist;
+      private DelegateCommand _resetCommand;
 
       #endregion
 
@@ -31,8 +32,8 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 20;
-         FieldHeight = 20;
+         FieldWidth = 40;
+         FieldHeight = 40;
          _turnLength = 10;
          _baseDist = 4;
       }
@@ -86,6 +87,14 @@ namespace KlopViewWpf
       public DelegateCommand<IKlopCell> SetActiveCellCommand
       {
          get { return _setCurrentCellCommand ?? (_setCurrentCellCommand = new DelegateCommand<IKlopCell>(c => ActiveCell = c)); }
+      }
+
+      public DelegateCommand ResetCommand
+      {
+         get
+         {
+            return _resetCommand ?? (_resetCommand = new DelegateCommand(() => Model.Reset()));
+         }
       }
 
       #endregion
