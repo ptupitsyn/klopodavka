@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KlopAi.algo;
 using KlopIfaces;
+using KlopModel;
 
 namespace KlopAi
 {
@@ -15,7 +16,8 @@ namespace KlopAi
       public const double TurnEatEnemyBaseCost = 8; // Цена съедания клопа около вражеской базы
       public const double TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
       public const double TurnEmptyCost = 100; // Цена хода в пустую клетку
-      public const double TurnNearBaseCost = 9000; // Цена хода около своей базы
+      public const double TurnNearOwnBaseCost = 2000; // Цена хода около своей базы
+      public const double TurnNearEnemyBaseCost = 5000; // Цена хода около чужой базы
       public const double TurnNearEnemyEmptyCost = 140; // Цена хода в пустую клетку рядом с врагом
       private readonly Node[,] _field;
       private readonly IKlopModel _klopModel;
@@ -103,7 +105,7 @@ namespace KlopAi
             f.Cost = GetCellCost(cell, klopPlayer);
             //if (f.Cost != TurnEmptyCost)
             //{
-            //   ((KlopCell) cell).Tag = f.Cost;
+            //   ((KlopCell)cell).Tag = f.Cost;
             //}
          }
       }
@@ -179,6 +181,7 @@ namespace KlopAi
             return TurnBlockedCost; // Can't move into own dead cell or base cell
          }
 
+         //TODO: Additive cost! E.g. near own clop + near enemy clop!!
          if (cell.Owner != null && cell.State == ECellState.Alive)
          {
             if (IsCellNearBase(cell, klopPlayer))
@@ -196,17 +199,24 @@ namespace KlopAi
 
          if (IsCellNearBase(cell, klopPlayer))
          {
-            return TurnNearBaseCost;
+            return TurnNearOwnBaseCost;
          }
 
-         if (_klopModel.GetNeighborCells(cell).Any(c => c.Owner != null && c.Owner != klopPlayer))
+         var neighbors = _klopModel.GetNeighborCells(cell);
+         if (neighbors.Any(c => c.State == ECellState.Base))
          {
-            return TurnNearEnemyEmptyCost; // Turn near enemy klop costs a bit more.
+            return TurnNearEnemyBaseCost;
          }
 
-         var neighborCount = _klopModel.GetNeighborCells(cell).Where(c => c.Owner == null).Sum(c => 10*GetDistance(c, cell));
+         var enemyCount = neighbors.Count(c => c.Owner != null && c.Owner != klopPlayer);
+         if (enemyCount > 0)
+         {
+            return TurnNearEnemyEmptyCost * (1 + (double)enemyCount / 2); // Turn near enemy klop costs a bit more.
+         }
 
-         return TurnEmptyCost + neighborCount; // Default - turn into empty cell.
+         var neighborCount = neighbors.Count(c => c.Owner != null);
+
+         return TurnEmptyCost * (1 + (double)neighborCount / 2); // Default - turn into empty cell.
       }
 
       private static bool IsCellNearBase(IKlopCell cell, IKlopPlayer baseOwner)

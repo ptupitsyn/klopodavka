@@ -172,7 +172,7 @@ namespace KlopAi
                IKlopCell target;
                var maxPathLength = int.MaxValue;
 
-               if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 6)
+               if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c=>c.Owner != null) > model.FieldHeight * model.FieldWidth / 8)
                {
                   // Fight started, rush to base
                   var enemy = model.Players.First(p => p != model.CurrentPlayer);
@@ -195,9 +195,12 @@ namespace KlopAi
                   maxPathLength = model.TurnLength / 3;
                   target = model.Cells.Where(c =>
                                                 {
-                                                   if (c.X < 4 || c.Y < 4 || c.X >= model.FieldWidth - 5 || c.Y >= model.FieldHeight - 5) return false;
-                                                   var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
-                                                   return d > 2 && d < (model.FieldHeight + model.FieldWidth)/3.7;
+                                                   //TODO: c.GetNeighborCount == 0
+                                                   if (c.X < 1 || c.Y < 1 || c.X >= model.FieldWidth - 2 || c.Y >= model.FieldHeight - 2) return false;
+                                                   //var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
+                                                   var dx = Math.Abs(c.X - model.CurrentPlayer.BasePosX);
+                                                   var dy = Math.Abs(c.Y - model.CurrentPlayer.BasePosY);
+                                                   return dx > 2 && dy > 2 && (dx + dy) < (model.FieldHeight + model.FieldWidth)/3;
                                                 }).Random();
                }
                
