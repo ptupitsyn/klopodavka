@@ -179,6 +179,8 @@ namespace KlopAi
                   target = model[enemy.BasePosX, enemy.BasePosY];
                   maxPathLength = 1;
                   var importantCell = FindMostImportantCell(model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, target.X, target.Y, enemy);
+
+                  //TODO: Find most important reacheble cell!
                   if (importantCell != null && importantCell.Item2 > KlopPathFinder.TurnEmptyCost * 2)
                   {
                      //TODO: FindMostImportantCell should return list of cells, filter it and use.
