@@ -126,6 +126,7 @@
     <Compile Include="Converters\EqualityToVisibilityConverter.cs" />
     <Compile Include="Converters\NumberToArrayConverter.cs" />
     <Compile Include="Controls\HintPathHighlighter.cs" />
+    <Compile Include="KlopCell2.cs" />
     <Compile Include="KlopGameViewModel.cs" />
     <Compile Include="KlopMainWindow.xaml.cs">
       <DependentUpon>KlopMainWindow.xaml</DependentUpon>
