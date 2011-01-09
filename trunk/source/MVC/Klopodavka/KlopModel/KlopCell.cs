@@ -115,7 +115,7 @@ namespace KlopModel
          {
             if (_available == value) return;
             _available = value;
-            DeferOnPropertyChanged("Available", DispatcherPriority.ApplicationIdle);
+            OnPropertyChanged("Available");
          }
       }
 
