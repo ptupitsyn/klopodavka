@@ -14,31 +14,30 @@ namespace KlopViewWpf
    /// <summary>
    /// Interaction logic for KlopCell.xaml
    /// </summary>
-   public partial class KlopCell
+   public class KlopCell2 : FrameworkElement
    {
       #region Fields and Constants
 
       public static readonly DependencyProperty BackgroundProperty =
-         DependencyProperty.Register("Background", typeof (Brush), typeof (KlopCell),
+         DependencyProperty.Register("Background", typeof(Brush), typeof(KlopCell2),
                                      new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
 
 
       private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
 
       public static readonly DependencyProperty CellProperty =
-         DependencyProperty.Register("Cell", typeof (IKlopCell), typeof (KlopCell), new UIPropertyMetadata(null, OnKlopCellChanged));
+         DependencyProperty.Register("Cell", typeof(IKlopCell), typeof(KlopCell2), new UIPropertyMetadata(null, OnKlopCellChanged));
 
       public static readonly DependencyProperty ForegroundProperty =
-         DependencyProperty.Register("Foreground", typeof (Brush), typeof (KlopCell),
+         DependencyProperty.Register("Foreground", typeof(Brush), typeof(KlopCell2),
                                      new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
 
       #endregion
 
       #region Constructors
 
-      public KlopCell()
+      public KlopCell2()
       {
-         InitializeComponent();
          BorderPen.Freeze();
       }
 
@@ -48,19 +47,19 @@ namespace KlopViewWpf
 
       public IKlopCell Cell
       {
-         get { return (IKlopCell) GetValue(CellProperty); }
+         get { return (IKlopCell)GetValue(CellProperty); }
          set { SetValue(CellProperty, value); }
       }
 
       public Brush Background
       {
-         get { return (Brush) GetValue(BackgroundProperty); }
+         get { return (Brush)GetValue(BackgroundProperty); }
          set { SetValue(BackgroundProperty, value); }
       }
 
       public Brush Foreground
       {
-         get { return (Brush) GetValue(ForegroundProperty); }
+         get { return (Brush)GetValue(ForegroundProperty); }
          set { SetValue(ForegroundProperty, value); }
       }
 
@@ -70,7 +69,7 @@ namespace KlopViewWpf
 
       private static void OnKlopCellChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
       {
-         ((KlopCell) d).OnKlopCellChanged(e);
+         ((KlopCell2)d).OnKlopCellChanged(e);
       }
 
       private void OnKlopCellChanged(DependencyPropertyChangedEventArgs e)
@@ -87,26 +86,24 @@ namespace KlopViewWpf
 
       private void UpdateBrushes()
       {
-         if (Cell == null)
-         {
-            return;
-         }
-
          Brush bg = Brushes.Transparent;
          var fg = bg;
 
-         switch (Cell.State)
+         if (Cell != null && Cell.Owner != null)
          {
-            case ECellState.Base:
-               fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, false);
-               bg = Brushes.Gray;
-               break;
-            case ECellState.Alive:
-               fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, false);
-               break;
-            case ECellState.Dead:
-               fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, true);
-               break;
+            switch (Cell.State)
+            {
+               case ECellState.Base:
+                  fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, false);
+                  bg = Brushes.Gray;
+                  break;
+               case ECellState.Alive:
+                  fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, false);
+                  break;
+               case ECellState.Dead:
+                  fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, true);
+                  break;
+            }
          }
 
          if (fg != Foreground)
