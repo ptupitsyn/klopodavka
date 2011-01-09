@@ -98,10 +98,10 @@ namespace KlopModel
             _history.Clear(); // cannot undo after turn switch
 
             // Reset availability
-            foreach (KlopCell cell in _cells)
-            {
-               cell.Available = false;
-            }
+            //foreach (KlopCell cell in _cells)
+            //{
+            //   cell.Available = false;
+            //}
          }
       }
 

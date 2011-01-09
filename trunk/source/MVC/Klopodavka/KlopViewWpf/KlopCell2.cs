@@ -1,6 +1,5 @@
 ﻿#region Usings
 
-using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -13,44 +12,37 @@ using KlopViewWpf.Converters;
 namespace KlopViewWpf
 {
    /// <summary>
-   /// Interaction logic for KlopCell.xaml
+   /// KlopCell control. Written without XAML to improve performance (InitializeComponent is very slow).
    /// </summary>
    public class KlopCell2 : FrameworkElement
    {
       #region Fields and Constants
 
       private static readonly Brush AvailableBrush;
-      private static readonly Brush HoverBrush = Brushes.Yellow;
-      private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
-
-      private IKlopCell _cell;
-      private IKlopModel _model;
 
       public static readonly DependencyProperty BackgroundProperty =
          DependencyProperty.Register("Background", typeof (Brush), typeof (KlopCell2),
-                                     new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
+                                     new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
+      private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
 
       public static readonly DependencyProperty CellProperty =
          DependencyProperty.Register("Cell", typeof (IKlopCell), typeof (KlopCell2), new UIPropertyMetadata(null, OnKlopCellChanged));
 
       public static readonly DependencyProperty ForegroundProperty =
          DependencyProperty.Register("Foreground", typeof (Brush), typeof (KlopCell2),
-                                     new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
+                                     new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
+      private static readonly Brush HoverBrush = Brushes.Yellow;
 
 
       public static readonly DependencyProperty ModelProperty =
          DependencyProperty.Register("Model", typeof (IKlopModel), typeof (KlopCell2), new UIPropertyMetadata(null, OnModelChanged));
 
-      private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-      {
-         ((KlopCell2) d).OnModelChanged(e);
-      }
-
-      private void OnModelChanged(DependencyPropertyChangedEventArgs e)
-      {
-         _model = Model;  // Cache for faster access
-         UpdateBrushes();
-      }
+      private Brush _background;
+      private IKlopCell _cell;
+      private Brush _foreground;
+      private IKlopModel _model;
 
       #endregion
 
@@ -88,19 +80,38 @@ namespace KlopViewWpf
 
       public Brush Background
       {
-         get { return (Brush) GetValue(BackgroundProperty); }
-         set { SetValue(BackgroundProperty, value); }
+         get { return _background ?? (_background = (Brush) GetValue(BackgroundProperty)); }
+         set
+         {
+            SetValue(BackgroundProperty, value);
+            _background = value;
+         }
       }
 
       public Brush Foreground
       {
-         get { return (Brush) GetValue(ForegroundProperty); }
-         set { SetValue(ForegroundProperty, value); }
+         get { return _foreground ?? (_foreground = (Brush) GetValue(ForegroundProperty)); }
+         set
+         {
+            SetValue(ForegroundProperty, value);
+            _foreground = value;
+         }
       }
 
       #endregion
 
       #region Private and protected methods
+
+      private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+      {
+         ((KlopCell2) d).OnModelChanged(e);
+      }
+
+      private void OnModelChanged(DependencyPropertyChangedEventArgs e)
+      {
+         _model = Model; // Cache for faster access
+         UpdateBrushes();
+      }
 
       private static void OnKlopCellChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
       {
@@ -115,7 +126,7 @@ namespace KlopViewWpf
             oldCell.PropertyChanged -= Cell_PropertyChanged;
          }
 
-         _cell = Cell;   // Cache value for faster access
+         _cell = Cell; // Cache value for faster access
          _cell.PropertyChanged += Cell_PropertyChanged;
          UpdateBrushes();
       }

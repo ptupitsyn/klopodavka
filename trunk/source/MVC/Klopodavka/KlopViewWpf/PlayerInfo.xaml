@@ -18,7 +18,13 @@
     
     <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="8">
         <Grid>
-            <Border Background="LightGray">
+            <Border>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0.1,1">
+                        <GradientStop Color="White" Offset="0" />
+                        <GradientStop Color="LightGray" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
                 <!-- Visible when player is current -->
                 <Border.Visibility>
                     <MultiBinding Converter="{StaticResource _equalityToVisibility}">
