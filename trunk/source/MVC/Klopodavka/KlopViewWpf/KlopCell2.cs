@@ -23,6 +23,9 @@ namespace KlopViewWpf
       private static readonly Brush HoverBrush = Brushes.Yellow;
       private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
 
+      private IKlopCell _cell;
+      private IKlopModel _model;
+
       public static readonly DependencyProperty BackgroundProperty =
          DependencyProperty.Register("Background", typeof (Brush), typeof (KlopCell2),
                                      new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -40,7 +43,13 @@ namespace KlopViewWpf
 
       private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
       {
-         ((KlopCell2)d).UpdateBrushes();
+         ((KlopCell2) d).OnModelChanged(e);
+      }
+
+      private void OnModelChanged(DependencyPropertyChangedEventArgs e)
+      {
+         _model = Model;  // Cache for faster access
+         UpdateBrushes();
       }
 
       #endregion
@@ -103,10 +112,11 @@ namespace KlopViewWpf
          var oldCell = e.OldValue as IKlopCell;
          if (oldCell != null)
          {
-            Cell.PropertyChanged -= Cell_PropertyChanged;
+            oldCell.PropertyChanged -= Cell_PropertyChanged;
          }
 
-         Cell.PropertyChanged += Cell_PropertyChanged;
+         _cell = Cell;   // Cache value for faster access
+         _cell.PropertyChanged += Cell_PropertyChanged;
          UpdateBrushes();
       }
 
@@ -115,31 +125,31 @@ namespace KlopViewWpf
          Brush bg = Brushes.Transparent;
          var fg = bg;
 
-         if (Cell != null && Model != null)
+         if (_cell != null && _model != null)
          {
-            if (Cell.Owner != null)
+            if (_cell.Owner != null)
             {
-               switch (Cell.State)
+               switch (_cell.State)
                {
                   case ECellState.Base:
-                     fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, false);
+                     fg = ColorToKlopBrushConverter.GetBrush(_cell.Owner.Color, false);
                      bg = Brushes.Gray;
                      break;
                   case ECellState.Alive:
-                     fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, false);
+                     fg = ColorToKlopBrushConverter.GetBrush(_cell.Owner.Color, false);
                      break;
                   case ECellState.Dead:
-                     fg = ColorToKlopBrushConverter.GetBrush(Cell.Owner.Color, true);
+                     fg = ColorToKlopBrushConverter.GetBrush(_cell.Owner.Color, true);
                      break;
                }
             }
 
-            if (Cell.Available && Model.CurrentPlayer.Human)
+            if (_cell.Available && _model.CurrentPlayer.Human)
             {
                bg = AvailableBrush;
             }
 
-            if (Cell.Highlighted)
+            if (_cell.Highlighted)
             {
                bg = HoverBrush;
                Cursor = Cursors.Hand;
@@ -187,14 +197,14 @@ namespace KlopViewWpf
 
       protected override void OnMouseEnter(MouseEventArgs e)
       {
-         if (Cell == null) return;
-         Cell.Highlighted = true;
+         if (_cell == null) return;
+         _cell.Highlighted = true;
       }
 
       protected override void OnMouseLeave(MouseEventArgs e)
       {
-         if (Cell == null) return;
-         Cell.Highlighted = false;
+         if (_cell == null) return;
+         _cell.Highlighted = false;
       }
 
       #endregion

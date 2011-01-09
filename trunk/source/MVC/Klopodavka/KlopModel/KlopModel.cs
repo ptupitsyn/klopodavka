@@ -127,10 +127,15 @@ namespace KlopModel
          }
 
          var avail = FindAvailableCells(_cells[CurrentPlayer.BasePosX, CurrentPlayer.BasePosY]).ToDictionary(cell => cell);
-         foreach (KlopCell cell in _cells)
-         {
-            cell.Available = avail.ContainsKey(cell);
-         }
+
+         // TODO: Bad thing that model knows of UI dispatcher..
+         UiDispatcherInvoke(() =>
+                               {
+                                  foreach (KlopCell cell in _cells)
+                                  {
+                                     cell.Available = avail.ContainsKey(cell);
+                                  }
+                               });
       }
 
       /// <summary>
