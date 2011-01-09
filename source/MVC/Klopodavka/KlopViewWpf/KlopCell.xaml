@@ -1,12 +1,12 @@
 ﻿<FrameworkElement x:Class="KlopViewWpf.KlopCell" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:KlopIfaces="clr-namespace:KlopIfaces;assembly=KlopIfaces" xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" 
                   RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True">
-    <!--<FrameworkElement.Resources>
+    <FrameworkElement.Resources>
         <ResourceDictionary Source="Themes\Generic.xaml" />
     </FrameworkElement.Resources>
     <FrameworkElement.RenderTransform>
         <ScaleTransform x:Name="scale"   />
-    </FrameworkElement.RenderTransform>-->
-    <!--<FrameworkElement.Style>
+    </FrameworkElement.RenderTransform>
+    <FrameworkElement.Style>
         <Style>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding State}" Value="{x:Static KlopIfaces:ECellState.Free}">
@@ -69,5 +69,5 @@
 
             </Style.Triggers>
         </Style>
-    </FrameworkElement.Style>-->
+    </FrameworkElement.Style>
 </FrameworkElement>

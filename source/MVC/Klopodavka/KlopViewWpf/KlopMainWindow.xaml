@@ -63,7 +63,11 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <!--<Border Background="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />-->
-                        <KlopViewWpf:KlopCell2 Cell="{Binding}" FocusVisualStyle="{x:Null}" MouseLeftButtonUp="KlopCell_MouseLeftButtonUp" />
+                        <KlopViewWpf:KlopCell2 Model="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Model}"  
+                                               Cell="{Binding}" 
+                                               MouseLeftButtonUp="KlopCell_MouseLeftButtonUp"
+                                               MouseEnter="KlopCell_MouseEnter"
+                                               />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -72,7 +76,7 @@
         <!-- Test buttons -->
         <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10" >
             <Controls:ImageLinkButton Content="Reset" Command="{Binding ResetCommand}" Foreground="Blue"  ActiveForeground="Blue" Cursor="Hand" />
-            <Controls:ImageLinkButton Content="Init" Click="ImageLinkButton_Click" Foreground="Blue"  ActiveForeground="Blue" Cursor="Hand" />
+            <!--<Controls:ImageLinkButton Content="Init" Click="ImageLinkButton_Click" Foreground="Blue"  ActiveForeground="Blue" Cursor="Hand" />-->
         </StackPanel>
     </Grid>
 </Window>

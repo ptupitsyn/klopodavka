@@ -26,6 +26,7 @@ namespace KlopViewWpf
 
       public KlopMainWindow()
       {
+         DataContext = _viewModel;
          InitializeComponent();
       }
 
@@ -43,11 +44,17 @@ namespace KlopViewWpf
          _viewModel.MakeTurnCommand.Execute(((KlopCell2) sender).Cell);
       }
 
+      /// <summary>
+      /// Handles the MouseEnter event of the KlopCell control.
+      /// </summary>
+      /// <param name="sender">The source of the event.</param>
+      /// <param name="e">The <see cref="System.Windows.Input.MouseEventArgs"/> instance containing the event data.</param>
+      private void KlopCell_MouseEnter(object sender, MouseEventArgs e)
+      {
+         _viewModel.SetActiveCellCommand.Execute(((KlopCell2)sender).Cell);
+      }
+
       #endregion
 
-      private void ImageLinkButton_Click(object sender, System.Windows.RoutedEventArgs e)
-      {
-         DataContext = _viewModel;
-      }
    }
 }
