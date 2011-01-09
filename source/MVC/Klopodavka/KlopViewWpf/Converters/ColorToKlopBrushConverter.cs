@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using KlopViewWpf.Preferences;
 
 #endregion
 
@@ -90,7 +91,9 @@ namespace KlopViewWpf.Converters
             image = border;
          }
 
-         var brush = new VisualBrush {Visual = image};
+         var brush = PreferencesManager.Instance.RenderPreferences.UseCachedBrush
+                        ? (Brush) new BitmapCacheBrush(image)
+                        : new VisualBrush {Visual = image};
          ClopBrushes[key] = brush;
 
          return brush;
