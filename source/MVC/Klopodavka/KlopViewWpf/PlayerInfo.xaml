@@ -18,7 +18,7 @@
     
     <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="8">
         <Grid>
-            <Border>
+            <Border CornerRadius="8">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0.1,1">
                         <GradientStop Color="White" Offset="0" />

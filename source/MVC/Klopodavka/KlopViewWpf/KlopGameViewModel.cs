@@ -8,6 +8,7 @@ using KlopAi;
 using KlopIfaces;
 using KlopModel;
 using KlopViewWpf.Controls;
+using KlopViewWpf.Preferences;
 
 #endregion
 
@@ -32,10 +33,9 @@ namespace KlopViewWpf
 
       public KlopGameViewModel()
       {
-         FieldWidth = 33;
-         FieldHeight = 33;
-         _turnLength = 10;
-         _baseDist = 4;
+         FieldHeight = FieldWidth = PreferencesManager.Instance.GamePreferences.GameFieldSize;
+         _turnLength = PreferencesManager.Instance.GamePreferences.GameTurnLength;
+         _baseDist = PreferencesManager.Instance.GamePreferences.GameBaseDistance;
       }
 
       #endregion

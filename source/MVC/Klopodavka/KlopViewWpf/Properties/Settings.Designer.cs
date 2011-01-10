@@ -46,5 +46,41 @@ namespace KlopViewWpf.Properties {
                 this["DisableAnimation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int GameFieldSize {
+            get {
+                return ((int)(this["GameFieldSize"]));
+            }
+            set {
+                this["GameFieldSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int GameTurnLength {
+            get {
+                return ((int)(this["GameTurnLength"]));
+            }
+            set {
+                this["GameTurnLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int GameBaseDistance {
+            get {
+                return ((int)(this["GameBaseDistance"]));
+            }
+            set {
+                this["GameBaseDistance"] = value;
+            }
+        }
     }
 }
