@@ -6,8 +6,10 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using KlopIfaces;
 using KlopViewWpf.Converters;
+using KlopViewWpf.Preferences;
 
 #endregion
 
@@ -22,12 +24,14 @@ namespace KlopViewWpf
       #region Fields and Constants
 
       private static readonly Brush AvailableBrush;
+      private static readonly Brush HoverBrush = Brushes.Yellow.Clone();
+      private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
+      private const int DesiredFramerate = 50;
+
 
       public static readonly DependencyProperty BackgroundProperty =
          DependencyProperty.Register("Background", typeof (Brush), typeof (KlopCell2),
                                      new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
-
-      private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
 
       public static readonly DependencyProperty CellProperty =
          DependencyProperty.Register("Cell", typeof (IKlopCell), typeof (KlopCell2), new UIPropertyMetadata(null, OnKlopCellChanged));
@@ -35,9 +39,6 @@ namespace KlopViewWpf
       public static readonly DependencyProperty ForegroundProperty =
          DependencyProperty.Register("Foreground", typeof (Brush), typeof (KlopCell2),
                                      new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
-
-      private static readonly Brush HoverBrush = Brushes.Yellow;
-
 
       public static readonly DependencyProperty ModelProperty =
          DependencyProperty.Register("Model", typeof (IKlopModel), typeof (KlopCell2), new UIPropertyMetadata(null, OnModelChanged));
@@ -57,6 +58,8 @@ namespace KlopViewWpf
       static KlopCell2()
       {
          AvailableBrush = new SolidColorBrush(Colors.Gray) {Opacity = 0.3};
+         HoverBrush.Opacity = 0.5;
+
          AvailableBrush.Freeze();
          BorderPen.Freeze();
          HoverBrush.Freeze();
@@ -121,6 +124,7 @@ namespace KlopViewWpf
                _opacityStoryboard.Children.Add(animation);
                Storyboard.SetTarget(animation, this);
                Storyboard.SetTargetProperty(animation, new PropertyPath("Opacity"));
+               Timeline.SetDesiredFrameRate(_opacityStoryboard, DesiredFramerate);
             }
             return _opacityStoryboard;
          }
@@ -150,6 +154,7 @@ namespace KlopViewWpf
 
                Storyboard.SetTargetProperty(animX, new PropertyPath("RenderTransform.ScaleX"));
                Storyboard.SetTargetProperty(animY, new PropertyPath("RenderTransform.ScaleY"));
+               Timeline.SetDesiredFrameRate(_zoomStoryboard, DesiredFramerate);
             }
             return _zoomStoryboard;
          }
@@ -298,13 +303,24 @@ namespace KlopViewWpf
       /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
       private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs e)
       {
+         UpdateBrushes();
+         AnimateChanges(e);
+      }
+
+
+      private void AnimateChanges(PropertyChangedEventArgs e)
+      {
+         if (PreferencesManager.Instance.RenderPreferences.DisableAnimation) return;
+
          if (e.PropertyName == "State")
          {
             // TODO: Delay animations through static cache?
-            OpacityStoryboard.Begin();
-            ZoomStoryboard.Begin();
+            Dispatcher.BeginInvoke((Action) (() =>
+                                                {
+                                                   OpacityStoryboard.Begin();
+                                                   ZoomStoryboard.Begin();
+                                                }), DispatcherPriority.SystemIdle);
          }
-         UpdateBrushes();
       }
 
       #endregion
