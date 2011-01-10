@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows.Media;
 using KlopAi.algo;
 using KlopAi.Extentions;
@@ -171,6 +172,7 @@ namespace KlopAi
       /// </summary>
       private void DoThinking(object sender, DoWorkEventArgs doWorkEventArgs)
       {
+         Thread.CurrentThread.Priority = ThreadPriority.Lowest;
          //TODO: Catch exceptions!
          List<IKlopCell> path = null;
 

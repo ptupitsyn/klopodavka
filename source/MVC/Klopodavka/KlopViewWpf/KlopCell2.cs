@@ -1,6 +1,7 @@
 ﻿#region Usings
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -13,7 +14,6 @@ using KlopViewWpf.Preferences;
 
 #endregion
 
-
 namespace KlopViewWpf
 {
    /// <summary>
@@ -23,15 +23,16 @@ namespace KlopViewWpf
    {
       #region Fields and Constants
 
+      private const int DesiredFramerate = 60;
+      private static readonly Queue<Action> ActionQueue = new Queue<Action>();
       private static readonly Brush AvailableBrush;
-      private static readonly Brush HoverBrush = Brushes.Yellow.Clone();
-      private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
-      private const int DesiredFramerate = 50;
 
 
       public static readonly DependencyProperty BackgroundProperty =
          DependencyProperty.Register("Background", typeof (Brush), typeof (KlopCell2),
                                      new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
+      private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
 
       public static readonly DependencyProperty CellProperty =
          DependencyProperty.Register("Cell", typeof (IKlopCell), typeof (KlopCell2), new UIPropertyMetadata(null, OnKlopCellChanged));
@@ -40,8 +41,12 @@ namespace KlopViewWpf
          DependencyProperty.Register("Foreground", typeof (Brush), typeof (KlopCell2),
                                      new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
+      private static readonly Brush HoverBrush = Brushes.Yellow.Clone();
+
       public static readonly DependencyProperty ModelProperty =
          DependencyProperty.Register("Model", typeof (IKlopModel), typeof (KlopCell2), new UIPropertyMetadata(null, OnModelChanged));
+
+      private static DispatcherTimer ActionTimer;
 
       private Brush _background;
       private IKlopCell _cell;
@@ -51,7 +56,6 @@ namespace KlopViewWpf
       private Storyboard _zoomStoryboard;
 
       #endregion
-
 
       #region Constructors
 
@@ -69,10 +73,14 @@ namespace KlopViewWpf
       public KlopCell2()
       {
          FocusVisualStyle = null;
+
+         if (ActionTimer == null)
+         {
+            ActionTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(70), DispatcherPriority.Background, ActionTimer_Tick, Dispatcher);
+         }
       }
 
       #endregion
-
 
       #region Public properties and indexers
 
@@ -110,7 +118,6 @@ namespace KlopViewWpf
 
       #endregion
 
-
       #region Private and protected properties and indexers
 
       private Storyboard OpacityStoryboard
@@ -120,7 +127,7 @@ namespace KlopViewWpf
             if (_opacityStoryboard == null)
             {
                _opacityStoryboard = new Storyboard();
-               var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.3)));
+               var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.2)));
                _opacityStoryboard.Children.Add(animation);
                Storyboard.SetTarget(animation, this);
                Storyboard.SetTargetProperty(animation, new PropertyPath("Opacity"));
@@ -140,12 +147,12 @@ namespace KlopViewWpf
                RenderTransform = new ScaleTransform();
                RenderTransformOrigin = new Point(0.5, 0.5);
 
-               var duration = new Duration(TimeSpan.FromSeconds(0.5));
+               var duration = new Duration(TimeSpan.FromSeconds(0.3));
                var animX = new DoubleAnimation(2, 1, duration);
                var animY = new DoubleAnimation(2, 1, duration);
 
-               animX.EasingFunction = animY.EasingFunction = new BounceEase {Bounces = 2, Bounciness = 1.8, EasingMode = EasingMode.EaseIn};
-               
+               animX.EasingFunction = animY.EasingFunction = new BounceEase {Bounces = 1, Bounciness = 1.8, EasingMode = EasingMode.EaseIn};
+
                _zoomStoryboard.Children.Add(animX);
                _zoomStoryboard.Children.Add(animY);
 
@@ -162,8 +169,20 @@ namespace KlopViewWpf
 
       #endregion
 
-
       #region Private and protected methods
+
+      /// <summary>
+      /// Handles the Tick event of the ActionTimer control.
+      /// </summary>
+      /// <param name="sender">The source of the event.</param>
+      /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+      private static void ActionTimer_Tick(object sender, EventArgs e)
+      {
+         if (ActionQueue.Count > 0)
+         {
+            ActionQueue.Dequeue()();
+         }
+      }
 
       private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
       {
@@ -291,8 +310,8 @@ namespace KlopViewWpf
          _cell.Highlighted = false;
       }
 
-      #endregion
 
+      #endregion
 
       #region Event handlers
 
@@ -303,23 +322,21 @@ namespace KlopViewWpf
       /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
       private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         UpdateBrushes();
-         AnimateChanges(e);
-      }
-
-
-      private void AnimateChanges(PropertyChangedEventArgs e)
-      {
-         if (PreferencesManager.Instance.RenderPreferences.DisableAnimation) return;
-
-         if (e.PropertyName == "State")
+         if (e.PropertyName == "State" && !PreferencesManager.Instance.RenderPreferences.DisableAnimation)
          {
-            // TODO: Delay animations through static cache?
-            Dispatcher.BeginInvoke((Action) (() =>
-                                                {
-                                                   OpacityStoryboard.Begin();
-                                                   ZoomStoryboard.Begin();
-                                                }), DispatcherPriority.SystemIdle);
+            // Animate state changes
+            Opacity = 0;
+            ActionQueue.Enqueue(() =>
+                                   {
+                                      UpdateBrushes();
+                                      OpacityStoryboard.Begin();
+                                      ZoomStoryboard.Begin();
+                                   });
+         }
+         else
+         {
+            // Simple render update
+            UpdateBrushes();
          }
       }
 
