@@ -8,8 +8,23 @@
         <Converters:EqualityToVisibilityConverter x:Key="_equalityToVisibility" />
         <Converters:NumberToArrayConverter x:Key="_numberToArray" />
         <DataTemplate x:Key="_klopTemplate">
-            <Border Margin="1" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}"
-                    Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />
+            <Border Margin="1" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}" Name="_klop"
+                    Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}">
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="Border.Loaded">
+                        <EventTrigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="_klop" 
+                                                 Storyboard.TargetProperty="Opacity" 
+                                                 From="1" To="0" Duration="0:0:0.2"
+                                                 />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.ExitActions>
+                    </EventTrigger>
+                </Border.Triggers>
+            </Border>
         </DataTemplate>
         <ItemsPanelTemplate x:Key="_klopPanelTemplate">
             <UniformGrid Columns="5"/>
@@ -18,7 +33,7 @@
     
     <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="8">
         <Grid>
-            <Border CornerRadius="8">
+            <Border CornerRadius="8" Name="currentBorder">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0.1,1">
                         <GradientStop Color="White" Offset="0" />
@@ -40,11 +55,41 @@
                 <TextBlock Text="{Binding ElementName=controlRoot, Path=Player.Name}" FontSize="16" Margin="10" 
                            HorizontalAlignment="Center" FontWeight="Bold"   >
                 </TextBlock>
+                
+                <!-- Big clop icon -->
                 <Border Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}" Margin="10"
-                    Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" >
+                        Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" >
                     <Border.Effect>
                         <DropShadowEffect ShadowDepth="0" />
                     </Border.Effect>
+                    <Border.RenderTransform>
+                        <ScaleTransform ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Mode=Self}}"  />
+                    </Border.RenderTransform>
+                    <Border.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=currentBorder, Path=Visibility}" Value="Visible">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                                 From="1" To="0.96" Duration="0:0:1" RepeatBehavior="Forever" AutoReverse="True" >
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                    <DataTrigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard FillBehavior="Stop">
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                                 To="1" Duration="0:0:1"  />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
                 </Border>
 
                 <!-- Remaining clops -->
