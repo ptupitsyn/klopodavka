@@ -1,13 +1,16 @@
 ﻿#region Usings
 
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using KlopIfaces;
 using KlopViewWpf.Converters;
 
 #endregion
+
 
 namespace KlopViewWpf
 {
@@ -43,8 +46,11 @@ namespace KlopViewWpf
       private IKlopCell _cell;
       private Brush _foreground;
       private IKlopModel _model;
+      private Storyboard _opacityStoryboard;
+      private Storyboard _zoomStoryboard;
 
       #endregion
+
 
       #region Constructors
 
@@ -63,6 +69,7 @@ namespace KlopViewWpf
       }
 
       #endregion
+
 
       #region Public properties and indexers
 
@@ -100,6 +107,57 @@ namespace KlopViewWpf
 
       #endregion
 
+
+      #region Private and protected properties and indexers
+
+      private Storyboard OpacityStoryboard
+      {
+         get
+         {
+            if (_opacityStoryboard == null)
+            {
+               _opacityStoryboard = new Storyboard();
+               var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.3)));
+               _opacityStoryboard.Children.Add(animation);
+               Storyboard.SetTarget(animation, this);
+               Storyboard.SetTargetProperty(animation, new PropertyPath("Opacity"));
+            }
+            return _opacityStoryboard;
+         }
+      }
+
+      private Storyboard ZoomStoryboard
+      {
+         get
+         {
+            if (_zoomStoryboard == null)
+            {
+               _zoomStoryboard = new Storyboard();
+               RenderTransform = new ScaleTransform();
+               RenderTransformOrigin = new Point(0.5, 0.5);
+
+               var duration = new Duration(TimeSpan.FromSeconds(0.5));
+               var animX = new DoubleAnimation(2, 1, duration);
+               var animY = new DoubleAnimation(2, 1, duration);
+
+               animX.EasingFunction = animY.EasingFunction = new BounceEase {Bounces = 2, Bounciness = 1.8, EasingMode = EasingMode.EaseIn};
+               
+               _zoomStoryboard.Children.Add(animX);
+               _zoomStoryboard.Children.Add(animY);
+
+               Storyboard.SetTarget(animX, this);
+               Storyboard.SetTarget(animY, this);
+
+               Storyboard.SetTargetProperty(animX, new PropertyPath("RenderTransform.ScaleX"));
+               Storyboard.SetTargetProperty(animY, new PropertyPath("RenderTransform.ScaleY"));
+            }
+            return _zoomStoryboard;
+         }
+      }
+
+      #endregion
+
+
       #region Private and protected methods
 
       private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -107,16 +165,19 @@ namespace KlopViewWpf
          ((KlopCell2) d).OnModelChanged(e);
       }
 
+
       private void OnModelChanged(DependencyPropertyChangedEventArgs e)
       {
          _model = Model; // Cache for faster access
          UpdateBrushes();
       }
 
+
       private static void OnKlopCellChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
       {
          ((KlopCell2) d).OnKlopCellChanged(e);
       }
+
 
       private void OnKlopCellChanged(DependencyPropertyChangedEventArgs e)
       {
@@ -130,6 +191,7 @@ namespace KlopViewWpf
          _cell.PropertyChanged += Cell_PropertyChanged;
          UpdateBrushes();
       }
+
 
       private void UpdateBrushes()
       {
@@ -182,10 +244,12 @@ namespace KlopViewWpf
          }
       }
 
+
       protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
       {
          return new GeometryHitTestResult(this, IntersectionDetail.FullyContains);
       }
+
 
       protected override void OnRender(DrawingContext drawingContext)
       {
@@ -196,21 +260,25 @@ namespace KlopViewWpf
          drawingContext.DrawRectangle(Foreground, BorderPen, new Rect(RenderSize));
       }
 
+
       protected override Size ArrangeOverride(Size finalSize)
       {
          return finalSize;
       }
+
 
       protected override Size MeasureOverride(Size availableSize)
       {
          return availableSize;
       }
 
+
       protected override void OnMouseEnter(MouseEventArgs e)
       {
          if (_cell == null) return;
          _cell.Highlighted = true;
       }
+
 
       protected override void OnMouseLeave(MouseEventArgs e)
       {
@@ -219,6 +287,7 @@ namespace KlopViewWpf
       }
 
       #endregion
+
 
       #region Event handlers
 
@@ -229,6 +298,12 @@ namespace KlopViewWpf
       /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
       private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs e)
       {
+         if (e.PropertyName == "State")
+         {
+            // TODO: Delay animations through static cache?
+            OpacityStoryboard.Begin();
+            ZoomStoryboard.Begin();
+         }
          UpdateBrushes();
       }
 
