@@ -54,6 +54,7 @@ namespace KlopViewWpf
       private IKlopModel _model;
       private Storyboard _opacityStoryboard;
       private Storyboard _zoomStoryboard;
+      private readonly ScaleTransform _scaleTransform = new ScaleTransform();
 
       #endregion
 
@@ -73,6 +74,8 @@ namespace KlopViewWpf
       public KlopCell2()
       {
          FocusVisualStyle = null;
+         RenderTransform = _scaleTransform;
+         RenderTransformOrigin = new Point(0.5, 0.5);
 
          if (ActionTimer == null)
          {
@@ -143,9 +146,7 @@ namespace KlopViewWpf
          {
             if (_zoomStoryboard == null)
             {
-               _zoomStoryboard = new Storyboard();
-               RenderTransform = new ScaleTransform();
-               RenderTransformOrigin = new Point(0.5, 0.5);
+               _zoomStoryboard = new Storyboard {FillBehavior = FillBehavior.Stop};
 
                var duration = new Duration(TimeSpan.FromSeconds(0.3));
                var animX = new DoubleAnimation(2, 1, duration);
@@ -301,6 +302,11 @@ namespace KlopViewWpf
       {
          if (_cell == null) return;
          _cell.Highlighted = true;
+
+         if (_cell.State == ECellState.Alive && _cell.Owner != _model.CurrentPlayer)
+         {
+            _scaleTransform.ScaleX = _scaleTransform.ScaleY = 1.3;
+         }
       }
 
 
@@ -308,6 +314,7 @@ namespace KlopViewWpf
       {
          if (_cell == null) return;
          _cell.Highlighted = false;
+         _scaleTransform.ScaleX = _scaleTransform.ScaleY = 1;
       }
 
 
