@@ -142,6 +142,7 @@
     <Compile Include="PlayerInfo.xaml.cs">
       <DependentUpon>PlayerInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Preferences\GamePreferences.cs" />
     <Compile Include="Preferences\PreferencesManager.cs" />
     <Compile Include="Preferences\RenderPreferences.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
