@@ -57,7 +57,7 @@ namespace KlopViewWpf
                var aiPlayer2 = new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"};
                var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"};
 
-               var players = new List<IKlopPlayer> { humanPlayer, aiPlayer };
+               var players = new List<IKlopPlayer> { aiPlayer2, aiPlayer };
                _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, _turnLength);
 
                aiPlayer.SetModel(_klopModel);

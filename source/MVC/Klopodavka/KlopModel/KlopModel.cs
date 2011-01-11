@@ -326,6 +326,7 @@ namespace KlopModel
       /// <param name="y">The y.</param>
       public void MakeTurn(int x, int y)
       {
+         //BUG! Sometimes here comes deadlock (CPU player thinking + human player making move)
          lock (_syncroot)
          {
             if (!CheckCoordinates(x, y))
