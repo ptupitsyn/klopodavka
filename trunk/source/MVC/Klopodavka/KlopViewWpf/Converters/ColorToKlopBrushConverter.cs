@@ -82,15 +82,8 @@ namespace KlopViewWpf.Converters
 
          if (dead)
          {
-            image.Effect = new DropShadowEffect {ShadowDepth = 0, BlurRadius = 40, Color = Colors.Black, Opacity = 1};
-            var border = new Border
-                            {
-                               Child = image,
-                               Effect = new BlurEffect {Radius = 60},
-                            };
-            image = border;
+            image.Effect = new DropShadowEffect {ShadowDepth = 0, BlurRadius = 20, Color = Colors.Black, Opacity = 1};
          }
-
 
          Brush brush;
          if (PreferencesManager.Instance.RenderPreferences.UseCachedBrush)
