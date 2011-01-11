@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options" x:Class="KlopViewWpf.KlopImage" x:Name="UserControl">
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="KlopViewWpf.KlopImage" x:Name="UserControl">
     <UserControl.Resources>
         <SolidColorBrush x:Key="ClopColorBrush" Color="{Binding ElementName=UserControl, Path=KlopColor}" />
     </UserControl.Resources>

@@ -279,6 +279,10 @@ namespace KlopViewWpf
 
       protected override void OnRender(DrawingContext drawingContext)
       {
+         if (Cell != null && Cell.State == ECellState.Dead)
+         {
+            drawingContext.DrawEllipse(Brushes.Gray, null, new Point(RenderSize.Width/2, RenderSize.Height/2), RenderSize.Width/2, RenderSize.Height/2);
+         }
          if (Background != null && Background != Brushes.Transparent)
          {
             drawingContext.DrawRectangle(Background, null, new Rect(RenderSize));

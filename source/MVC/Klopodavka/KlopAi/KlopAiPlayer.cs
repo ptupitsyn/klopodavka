@@ -196,7 +196,8 @@ namespace KlopAi
                   if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c => c.Owner != null) > model.FieldHeight*model.FieldWidth/8)
                   {
                      // Fight started, rush to base
-                     var enemy = model.Players.Where(p => p != model.CurrentPlayer).Random();
+                     var enemies = model.Players.Where(p => p != model.CurrentPlayer);
+                     var enemy = enemies.FirstOrDefault(p => p.Human) ?? enemies.Random();
                      target = model[enemy.BasePosX, enemy.BasePosY];
                      maxPathLength = 1;
                      var importantCell = FindMostImportantCell(model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, target.X, target.Y, enemy);
