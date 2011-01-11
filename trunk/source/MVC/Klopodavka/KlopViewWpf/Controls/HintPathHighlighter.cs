@@ -41,9 +41,11 @@ namespace KlopViewWpf.Controls
             klopCell.Highlighted = false;
          }
 
+         var i = path.Count;
          foreach (var klopCell in path)
          {
             klopCell.Highlighted = true;
+            klopCell.Tag = i--;
          }
       }
 

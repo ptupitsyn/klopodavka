@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -24,7 +25,7 @@ namespace KlopViewWpf
       #region Fields and Constants
 
       private const int DesiredFramerate = 60;
-      private const int AnimationQueueLimit = 50;
+      private const int AnimationQueueLimit = 100;
       private static readonly Queue<Action> ActionQueue = new Queue<Action>();
       private static readonly Brush AvailableBrush;
 
@@ -56,6 +57,7 @@ namespace KlopViewWpf
       private Storyboard _opacityStoryboard;
       private Storyboard _zoomStoryboard;
       private readonly ScaleTransform _scaleTransform = new ScaleTransform();
+      private readonly Typeface _typeFace = new Typeface("Arial");
 
       #endregion
 
@@ -188,11 +190,11 @@ namespace KlopViewWpf
 
       private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
       {
-         ((KlopCell2) d).OnModelChanged(e);
+         ((KlopCell2) d).OnModelChanged();
       }
 
 
-      private void OnModelChanged(DependencyPropertyChangedEventArgs e)
+      private void OnModelChanged()
       {
          _model = Model; // Cache for faster access
          UpdateBrushes();
@@ -283,11 +285,19 @@ namespace KlopViewWpf
          {
             drawingContext.DrawEllipse(Brushes.Gray, null, new Point(RenderSize.Width/2, RenderSize.Height/2), RenderSize.Width/2, RenderSize.Height/2);
          }
+         
          if (Background != null && Background != Brushes.Transparent)
          {
             drawingContext.DrawRectangle(Background, null, new Rect(RenderSize));
          }
+         
          drawingContext.DrawRectangle(Foreground, BorderPen, new Rect(RenderSize));
+
+         if (Cell != null && Cell.Highlighted && Cell.Tag != null)
+         {
+            drawingContext.DrawText(new FormattedText(Cell.Tag.ToString(), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeFace, 8, Brushes.Gray),
+                                    new Point(2, 2));
+         }
       }
 
 
@@ -334,7 +344,10 @@ namespace KlopViewWpf
       /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
       private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         if (e.PropertyName == "State" && !PreferencesManager.Instance.RenderPreferences.DisableAnimation && ActionQueue.Count < AnimationQueueLimit)
+         if (e.PropertyName == "State" 
+            && !PreferencesManager.Instance.RenderPreferences.DisableAnimation 
+            && ActionQueue.Count < AnimationQueueLimit
+            && Cell.State != ECellState.Free)
          {
             // Animate state changes
             Opacity = 0;

@@ -42,5 +42,11 @@ namespace KlopIfaces
       /// </summary>
       /// <value><c>true</c> if highlighted; otherwise, <c>false</c>.</value>
       bool Highlighted { get; set; }
+
+      /// <summary>
+      /// Gets or sets the tag (any value to display if needed).
+      /// </summary>
+      /// <value>The hint.</value>
+      object Tag { get; set; }
    }
 }
