@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using System;
 using System.Windows.Threading;
 using KlopIfaces;
 
@@ -134,8 +135,6 @@ namespace KlopModel
          }
       }
 
-      #region Public properties and indexers
-
       /// <summary>
       /// Gets or sets the tag. Any additional information about this cell.
       /// </summary>
@@ -150,8 +149,6 @@ namespace KlopModel
             OnPropertyChanged("Tag");
          }
       }
-
-      #endregion
 
       #endregion
    }
