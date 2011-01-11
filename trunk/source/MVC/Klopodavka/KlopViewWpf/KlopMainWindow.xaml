@@ -53,7 +53,9 @@
                     </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </Border.Background>
-            <ItemsControl ItemsSource="{Binding Model.Cells, IsAsync=True}">
+            <ItemsControl ItemsSource="{Binding Model.Cells, IsAsync=True}"                                                  
+                          AttachedCommandBehavior:CommandBehavior.Event="MouseRightButtonDown"                                                   
+                          AttachedCommandBehavior:CommandBehavior.Command="{Binding UndoCommand}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Rows="{Binding Model.FieldHeight}" Columns="{Binding Model.FieldWidth}">
