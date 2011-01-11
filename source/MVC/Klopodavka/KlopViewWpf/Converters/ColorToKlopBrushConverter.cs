@@ -91,9 +91,17 @@ namespace KlopViewWpf.Converters
             image = border;
          }
 
-         var brush = PreferencesManager.Instance.RenderPreferences.UseCachedBrush
-                        ? (Brush) new BitmapCacheBrush(image)
-                        : new VisualBrush {Visual = image};
+
+         Brush brush;
+         if (PreferencesManager.Instance.RenderPreferences.UseCachedBrush)
+         {
+            image.CacheMode = new BitmapCache(0.15);
+            brush = new BitmapCacheBrush(image);
+         }
+         else
+         {
+            brush = new VisualBrush {Visual = image};
+         }
          ClopBrushes[key] = brush;
 
          return brush;

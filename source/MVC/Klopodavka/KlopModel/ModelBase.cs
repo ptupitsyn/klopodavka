@@ -115,7 +115,8 @@ namespace KlopModel
             }
             else
             {
-               UiDispatcherInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)));
+               // DO NOT USE Invoke from background thread - it leads to deadlocks! Only BeginInvoke!
+               UiDispatcherBeginInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)));
             }
          }
       }
@@ -133,16 +134,6 @@ namespace KlopModel
          {
             UiDispatcherBeginInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)), priority);
          }
-      }
-
-
-      /// <summary>
-      /// Invokes specified action on ui dispatcher thread.
-      /// </summary>
-      /// <param name="action">The action.</param>
-      protected void UiDispatcherInvoke(Action action)
-      {
-         _uiDispatcher.Invoke(action);
       }
 
 
@@ -184,9 +175,9 @@ namespace KlopModel
       /// <param name="silent">if set to <c>true</c> [silent].</param>
       protected void ReportException(Exception exception, bool silent)
       {
-         UiDispatcherInvoke(() => Exceptions.Add(exception));
+         UiDispatcherBeginInvoke(() => Exceptions.Add(exception));
          if (silent) return;
-         UiDispatcherInvoke(() => { throw new Exception(exception.Message, exception); });
+         UiDispatcherBeginInvoke(() => { throw new Exception(exception.Message, exception); });
       }
 
 

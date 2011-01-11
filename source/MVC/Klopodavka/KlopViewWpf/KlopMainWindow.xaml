@@ -29,10 +29,12 @@
         <!-- Player Information -->
         <StackPanel Grid.Column="0">
             <KlopViewWpf:PlayerInfo Player="{Binding Model.Players[0]}" Model="{Binding Model}" Margin="10" />
+            <KlopViewWpf:PlayerInfo Player="{Binding Model.Players[2]}" Model="{Binding Model}" Margin="10" />
         </StackPanel>
 
         <StackPanel Grid.Column="2">
             <KlopViewWpf:PlayerInfo Player="{Binding Model.Players[1]}" Model="{Binding Model}" Margin="10" />
+            <KlopViewWpf:PlayerInfo Player="{Binding Model.Players[3]}" Model="{Binding Model}" Margin="10" />
         </StackPanel>
 
         <!-- Game Field -->

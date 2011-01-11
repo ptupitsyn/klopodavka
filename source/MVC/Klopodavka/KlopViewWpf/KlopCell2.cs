@@ -24,6 +24,7 @@ namespace KlopViewWpf
       #region Fields and Constants
 
       private const int DesiredFramerate = 60;
+      private const int AnimationQueueLimit = 50;
       private static readonly Queue<Action> ActionQueue = new Queue<Action>();
       private static readonly Brush AvailableBrush;
 
@@ -329,7 +330,7 @@ namespace KlopViewWpf
       /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
       private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         if (e.PropertyName == "State" && !PreferencesManager.Instance.RenderPreferences.DisableAnimation)
+         if (e.PropertyName == "State" && !PreferencesManager.Instance.RenderPreferences.DisableAnimation && ActionQueue.Count < AnimationQueueLimit)
          {
             // Animate state changes
             Opacity = 0;

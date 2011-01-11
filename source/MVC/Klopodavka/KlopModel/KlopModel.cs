@@ -74,6 +74,12 @@ namespace KlopModel
          _cells = new KlopCell[width,height];
          _history = new Stack<KlopCell>();
          Reset();
+      
+         // initialize players
+         foreach (var player in players)
+         {
+            player.SetModel(this);
+         }
       }
 
       #endregion
@@ -82,7 +88,7 @@ namespace KlopModel
 
       private void SwitchTurn()
       {
-         if (RemainingKlops == 0)
+         if (RemainingKlops == 0 || !Cells.Any(c => c.Available))
          {
             RemainingKlops = TurnLength;
 
@@ -119,7 +125,7 @@ namespace KlopModel
       /// <summary>
       /// Mark cells where turn is possible as available
       /// </summary>
-      private void FindAvailableCells()
+      private Dictionary<IKlopCell, IKlopCell> FindAvailableCells()
       {
          foreach (KlopCell cell in _cells)
          {
@@ -127,15 +133,12 @@ namespace KlopModel
          }
 
          var avail = FindAvailableCells(_cells[CurrentPlayer.BasePosX, CurrentPlayer.BasePosY]).ToDictionary(cell => cell);
+         foreach (var cell in _cells)
+         {
+            cell.Available = avail.ContainsKey(cell);
+         }
 
-         // TODO: Bad thing that model knows of UI dispatcher..
-         UiDispatcherInvoke(() =>
-                               {
-                                  foreach (KlopCell cell in _cells)
-                                  {
-                                     cell.Available = avail.ContainsKey(cell);
-                                  }
-                               });
+         return avail;
       }
 
       /// <summary>
@@ -352,9 +355,17 @@ namespace KlopModel
             }
 
             RemainingKlops--;
-            SwitchTurn();
-            //TODO: GameOver condition
-            FindAvailableCells();
+
+            // Try switching turns while someone still have available cells
+            int availCount;
+            var retryCount = Players.Count + 1;
+            do
+            {
+               SwitchTurn();
+               //TODO: GameOver condition -> Count clops?
+               availCount = FindAvailableCells().Count;
+               //TODO: Mark player as defeated?
+            } while (availCount == 0 && retryCount-- > 0);
          }
       }
 

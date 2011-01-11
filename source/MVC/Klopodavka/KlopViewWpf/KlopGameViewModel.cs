@@ -54,14 +54,12 @@ namespace KlopViewWpf
             if (_klopModel == null)
             {
                var aiPlayer = new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"};
-               var aiPlayer2 = new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"};
+               var aiPlayer2 = new KlopAiPlayer {BasePosX = _baseDist, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"};
+               var aiPlayer3 = new KlopAiPlayer { BasePosX = FieldWidth - _baseDist - 1, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3" };
                var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"};
 
-               var players = new List<IKlopPlayer> { aiPlayer2, aiPlayer };
+               var players = new List<IKlopPlayer> {aiPlayer, aiPlayer2, aiPlayer3, humanPlayer};
                _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, _turnLength);
-
-               aiPlayer.SetModel(_klopModel);
-               aiPlayer2.SetModel(_klopModel);
             }
             return _klopModel;
          }
