@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using System;
 using System.Windows.Media;
 using KlopIfaces;
 
@@ -16,6 +17,10 @@ namespace KlopModel
       public int BasePosY { get; set; }
       public bool Human { get; set; }
       public Color Color { get; set; }
+      
+      public void SetModel(IKlopModel klopModel)
+      {
+      }
 
       #endregion
    }

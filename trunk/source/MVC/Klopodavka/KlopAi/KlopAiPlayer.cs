@@ -21,6 +21,7 @@ namespace KlopAi
       private IKlopModel model;
       private KlopPathFinder pathFinder;
       private BackgroundWorker worker;
+      private readonly object _syncRoot = new object();
 
       #endregion
 
@@ -125,6 +126,12 @@ namespace KlopAi
       private void StartWorker()
       {
          if (model.CurrentPlayer != this) return;
+
+         if (Worker.IsBusy)
+         {
+            Worker.CancelAsync();
+            worker = null;  // Throw away old worker if it is hanging for some reason
+         }
          Worker.RunWorkerAsync();
       }
 
@@ -174,64 +181,69 @@ namespace KlopAi
       {
          Thread.CurrentThread.Priority = ThreadPriority.Lowest;
          //TODO: Catch exceptions!
-         List<IKlopCell> path = null;
 
-         while (model.CurrentPlayer == this && model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
+         lock (_syncRoot)  // Sometimes workers can overlap
          {
-            while (path == null || path.Count == 0)
+            List<IKlopCell> path = null;
+
+            while (model.CurrentPlayer == this && model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
             {
-               IKlopCell target;
-               var maxPathLength = int.MaxValue;
-
-               if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c => c.Owner != null) > model.FieldHeight*model.FieldWidth/8)
+               while (path == null || path.Count == 0)
                {
-                  // Fight started, rush to base
-                  var enemy = model.Players.First(p => p != model.CurrentPlayer);
-                  target = model[enemy.BasePosX, enemy.BasePosY];
-                  maxPathLength = 1;
-                  var importantCell = FindMostImportantCell(model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, target.X, target.Y, enemy);
+                  IKlopCell target;
+                  var maxPathLength = int.MaxValue;
 
-                  //TODO: Find most important reacheble cell!
-                  if (importantCell != null && importantCell.Item2 > KlopPathFinder.TurnEmptyCost*2)
+                  if (model.Cells.Any(c => c.State == ECellState.Dead) || model.Cells.Count(c => c.Owner != null) > model.FieldHeight*model.FieldWidth/8)
                   {
-                     //TODO: FindMostImportantCell should return list of cells, filter it and use.
-                     target = importantCell.Item1;
+                     // Fight started, rush to base
+                     var enemy = model.Players.Where(p => p != model.CurrentPlayer).Random();
+                     target = model[enemy.BasePosX, enemy.BasePosY];
+                     maxPathLength = 1;
+                     var importantCell = FindMostImportantCell(model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, target.X, target.Y, enemy);
+
+                     //TODO: Find most important reacheble cell!
+                     if (importantCell != null && importantCell.Item2 > KlopPathFinder.TurnEmptyCost*2)
+                     {
+                        //TODO: FindMostImportantCell should return list of cells, filter it and use.
+                        target = importantCell.Item1;
+                     }
+                     else
+                     {
+                        target = FindCheapestCell(model.CurrentPlayer);
+                     }
                   }
                   else
                   {
-                     target = FindCheapestCell(model.CurrentPlayer);
+                     // Fight not started, generate pattern
+                     maxPathLength = model.TurnLength/3;
+                     target = model.Cells.Where(c =>
+                                                   {
+                                                      //TODO: c.GetNeighborCount == 0
+                                                      if (c.X < 1 || c.Y < 1 || c.X >= model.FieldWidth - 2 || c.Y >= model.FieldHeight - 2) return false;
+                                                      //var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
+                                                      var dx = Math.Abs(c.X - model.CurrentPlayer.BasePosX);
+                                                      var dy = Math.Abs(c.Y - model.CurrentPlayer.BasePosY);
+                                                      return dx > 1 && dy > 1 && (dx*dx + dy*dy) < (Math.Pow(model.FieldHeight, 2) + Math.Pow(model.FieldWidth, 2))/4;
+                                                   }).Random() ?? model.Cells.Where(c => c.Owner == null).Random();
                   }
+
+                  // Find path FROM target to have correct ordered list
+                  path = pathFinder.FindPath(target.X, target.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, model.CurrentPlayer).Take(maxPathLength).ToList();
                }
-               else
+               var cell = path.First();
+               path.Remove(cell);
+
+               if (!cell.Available)
                {
-                  // Fight not started, generate pattern
-                  maxPathLength = model.TurnLength/3;
-                  target = model.Cells.Where(c =>
-                                                {
-                                                   //TODO: c.GetNeighborCount == 0
-                                                   if (c.X < 1 || c.Y < 1 || c.X >= model.FieldWidth - 2 || c.Y >= model.FieldHeight - 2) return false;
-                                                   //var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
-                                                   var dx = Math.Abs(c.X - model.CurrentPlayer.BasePosX);
-                                                   var dy = Math.Abs(c.Y - model.CurrentPlayer.BasePosY);
-                                                   return dx > 1 && dy > 1 && (dx*dx + dy*dy) < (Math.Pow(model.FieldHeight, 2) + Math.Pow(model.FieldWidth, 2))/4;
-                                                }).Random() ?? model.Cells.Where(c => c.Owner == null).Random();
+                  // Something went wrong, pathfinder returned unavailable cell. Use simple fallback logic:
+                  // This can happen also when base reached. Need to switch strategy.
+                  cell = model.Cells.FirstOrDefault(c => c.Available);
+                  if (cell == null) continue; // There are no available cells...
+                  path = null; // Invalidate path
                }
 
-               // Find path FROM target to have correct ordered list
-               path = pathFinder.FindPath(target.X, target.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY, model.CurrentPlayer).Take(maxPathLength).ToList();
+               model.MakeTurn(cell);
             }
-            var cell = path.First();
-            path.Remove(cell);
-
-            if (!cell.Available)
-            {
-               // Something went wrong, pathfinder returned unavailable cell. Use simple fallback logic:
-               // This can happen also when base reached. Need to switch strategy.
-               cell = model.Cells.First(c => c.Available);
-               path = null; // Invalidate path
-            }
-
-            model.MakeTurn(cell);
          }
       }
 

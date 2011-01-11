@@ -4,6 +4,7 @@ using System.Windows.Media;
 
 #endregion
 
+
 namespace KlopIfaces
 {
    /// <summary>
@@ -42,6 +43,17 @@ namespace KlopIfaces
       /// </summary>
       /// <value>The color.</value>
       Color Color { get; }
+
+      #endregion
+
+
+      #region Public methods
+
+      /// <summary>
+      /// Sets the IKlopModel.
+      /// </summary>
+      /// <param name="klopModel"></param>
+      void SetModel(IKlopModel klopModel);
 
       #endregion
    }
