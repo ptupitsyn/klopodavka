@@ -34,7 +34,7 @@ namespace KlopViewWpf
          DependencyProperty.Register("Background", typeof (Brush), typeof (KlopCell2),
                                      new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
-      private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.5);
+      private static readonly Pen BorderPen = new Pen(Brushes.Gray, 0.1);
 
       public static readonly DependencyProperty CellProperty =
          DependencyProperty.Register("Cell", typeof (IKlopCell), typeof (KlopCell2), new UIPropertyMetadata(null, OnKlopCellChanged));
