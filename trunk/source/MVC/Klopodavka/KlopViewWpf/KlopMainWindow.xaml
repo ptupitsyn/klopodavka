@@ -6,7 +6,6 @@
     <Window.Resources>
         <ResourceDictionary>
             <Converters:ClopGridWidthConverter x:Key="_clopGridWidthConverter" />
-            <Converters:ColorToKlopBrushConverter x:Key="_colorToKlopBrushConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes\Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
