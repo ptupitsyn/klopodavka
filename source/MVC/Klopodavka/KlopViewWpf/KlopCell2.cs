@@ -28,6 +28,7 @@ namespace KlopViewWpf
       private const int AnimationQueueLimit = 100;
       private static readonly Queue<Action> ActionQueue = new Queue<Action>();
       private static readonly Brush AvailableBrush;
+      private static readonly RadialGradientBrush DeadBrush = new RadialGradientBrush(Colors.Gray, Color.FromArgb(0, 0, 0, 0)) {RadiusX = 0.6, RadiusY = 0.6};
 
 
       public static readonly DependencyProperty BackgroundProperty =
@@ -71,6 +72,7 @@ namespace KlopViewWpf
          AvailableBrush.Freeze();
          BorderPen.Freeze();
          HoverBrush.Freeze();
+         DeadBrush.Freeze();
       }
 
 
@@ -283,9 +285,10 @@ namespace KlopViewWpf
       {
          if (Cell != null && Cell.State == ECellState.Dead)
          {
-            drawingContext.DrawEllipse(Brushes.Gray, null, new Point(RenderSize.Width/2, RenderSize.Height/2), RenderSize.Width/2, RenderSize.Height/2);
+            //drawingContext.DrawEllipse(new RadialGradientBrush(Colors.LightGray, Cell.Owner.Color) {RadiusX = 1, RadiusY = 1}, null, new Point(RenderSize.Width / 2, RenderSize.Height / 2), RenderSize.Width / 2, RenderSize.Height / 2);
+            drawingContext.DrawRectangle(DeadBrush, null, new Rect(RenderSize));
          }
-         
+
          if (Background != null && Background != Brushes.Transparent)
          {
             drawingContext.DrawRectangle(Background, null, new Rect(RenderSize));
@@ -298,6 +301,7 @@ namespace KlopViewWpf
             drawingContext.DrawText(new FormattedText(Cell.Tag.ToString(), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeFace, 8, Brushes.Gray),
                                     new Point(2, 2));
          }
+      
       }
 
 

@@ -80,11 +80,6 @@ namespace KlopViewWpf.Converters
             image.RenderTransform = new RotateTransform(180);
          }
 
-         if (dead)
-         {
-            image.Effect = new DropShadowEffect {ShadowDepth = 0, BlurRadius = 20, Color = Colors.Black, Opacity = 1};
-         }
-
          Brush brush;
          if (PreferencesManager.Instance.RenderPreferences.UseCachedBrush)
          {
