@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("KlopViewWpf")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Klopodavka")]
+[assembly: AssemblyDescription("Klopodavka board game")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("KlopViewWpf")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2009")]
+[assembly: AssemblyCompany("Kefir")]
+[assembly: AssemblyProduct("Klopodavka")]
+[assembly: AssemblyCopyright("Copyright © Kefir 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
