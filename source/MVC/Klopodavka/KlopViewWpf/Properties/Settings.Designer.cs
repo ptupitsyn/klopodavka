@@ -26,36 +26,12 @@ namespace KlopViewWpf.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool UseCachedBrush {
-            get {
-                return ((bool)(this["UseCachedBrush"]));
-            }
-            set {
-                this["UseCachedBrush"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DisableAnimation {
             get {
                 return ((bool)(this["DisableAnimation"]));
             }
             set {
                 this["DisableAnimation"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int GameFieldSize {
-            get {
-                return ((int)(this["GameFieldSize"]));
-            }
-            set {
-                this["GameFieldSize"] = value;
             }
         }
         
@@ -73,7 +49,31 @@ namespace KlopViewWpf.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseCachedBrush {
+            get {
+                return ((bool)(this["UseCachedBrush"]));
+            }
+            set {
+                this["UseCachedBrush"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("35")]
+        public int GameFieldSize {
+            get {
+                return ((int)(this["GameFieldSize"]));
+            }
+            set {
+                this["GameFieldSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int GameBaseDistance {
             get {
                 return ((int)(this["GameBaseDistance"]));
