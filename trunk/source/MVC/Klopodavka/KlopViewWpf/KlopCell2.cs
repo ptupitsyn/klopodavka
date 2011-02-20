@@ -28,7 +28,7 @@ namespace KlopViewWpf
       private const int AnimationQueueLimit = 100;
       private static readonly Queue<Action> ActionQueue = new Queue<Action>();
       private static readonly Brush AvailableBrush;
-      private static readonly RadialGradientBrush DeadBrush = new RadialGradientBrush(Colors.Gray, Color.FromArgb(0, 0, 0, 0)) {RadiusX = 0.6, RadiusY = 0.6};
+      private static readonly RadialGradientBrush DeadBrush = new RadialGradientBrush(Colors.Black, Color.FromArgb(0, 0, 0, 0)) {RadiusX = 0.55, RadiusY = 0.55};
 
 
       public static readonly DependencyProperty BackgroundProperty =
