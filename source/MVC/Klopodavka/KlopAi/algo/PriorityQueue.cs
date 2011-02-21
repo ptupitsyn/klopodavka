@@ -15,6 +15,9 @@ namespace KlopAi.algo
       /// </summary>
       public Node Pop()
       {
+         // This (or PopHighest) take 50% of PathFinder performance. 
+         // I've spent several hours on trying to improve the performance of the following three lines to ABSOLUTELY NO SUCCESS:
+         // Sorted* classes do not help, manual enumeration does not help
          var min = this.Min(); 
          Remove(min);
          return min;
