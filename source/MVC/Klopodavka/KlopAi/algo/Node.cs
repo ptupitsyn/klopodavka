@@ -1,6 +1,10 @@
+#region Usings
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+#endregion
 
 namespace KlopAi.algo
 {
@@ -13,8 +17,8 @@ namespace KlopAi.algo
 
       private static readonly int[] Dx = new[] {-1, -1, -1, 1, 1, 1, 0, 0};
       private static readonly int[] Dy = new[] {-1, 0, 1, -1, 0, 1, -1, 1};
-      private double gdist;
-      private double hdist;
+      private double _gdist;
+      private double _hdist;
 
       #endregion
 
@@ -40,7 +44,7 @@ namespace KlopAi.algo
 
       public int CompareTo(Node other)
       {
-         return Fval.CompareTo(other.Fval);
+         return _fval.CompareTo(other._fval);
       }
 
       #endregion
@@ -58,11 +62,11 @@ namespace KlopAi.algo
       /// </summary>
       public double Gdist
       {
-         get { return gdist; }
+         get { return _gdist; }
          set
          {
-            gdist = value;
-            Fval = Gdist + Hdist;
+            _gdist = value;
+            _fval = _gdist + _hdist;
          }
       }
 
@@ -71,11 +75,11 @@ namespace KlopAi.algo
       /// </summary>
       public double Hdist
       {
-         get { return hdist; }
+         get { return _hdist; }
          set
          {
-            hdist = value;
-            Fval = Gdist + Hdist;
+            _hdist = value;
+            _fval = _gdist + _hdist;
          }
       }
 
@@ -97,7 +101,7 @@ namespace KlopAi.algo
       /// <summary>
       /// Resulting cost of moving to this Node. (Equals Gdist + Hdist)
       /// </summary>
-      public double Fval { get; private set; }
+      private double _fval;  // Field is faster than autoproperty (at least in debug mode)
 
       #endregion
 
@@ -133,9 +137,20 @@ namespace KlopAi.algo
       public void Reset()
       {
          Parent = null;
-         Gdist = 0;
-         Hdist = 0;
+         _gdist = 0;
+         _hdist = 0;
          Cost = 0;
+      }
+
+      /// <summary>
+      /// Returns a <see cref="System.String"/> that represents this instance.
+      /// </summary>
+      /// <returns>
+      /// A <see cref="System.String"/> that represents this instance.
+      /// </returns>
+      public override string ToString()
+      {
+         return string.Format("[{0}, {1}]", X, Y);
       }
 
       #endregion

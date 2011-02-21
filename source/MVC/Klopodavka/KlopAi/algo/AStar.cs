@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace KlopAi.algo
@@ -14,12 +14,12 @@ namespace KlopAi.algo
       /// <summary>
       /// List of closed nodes - these nodes does not require processing anymore.
       /// </summary>
-      private readonly Hashtable closedNodes = new Hashtable(); // TODO: Can we replace this with IsVisited for optimization?
+      private readonly HashSet<Node> _closedNodes = new HashSet<Node>(); // TODO: Can we replace this with IsVisited for optimization?
 
       /// <summary>
       /// List of open nodes - nodes that require processing.
       /// </summary>
-      private readonly PriorityQueue openNodes = new PriorityQueue();
+      private readonly PriorityQueue _openNodes = new PriorityQueue();
 
       #endregion
 
@@ -51,17 +51,17 @@ namespace KlopAi.algo
       public Node FindPath(Node startNode, Node finishNode, Func<Node, Node, double> getDistance, Func<int, int, Node> getNodeByXy, bool inverted)
       {
          //Reset
-         openNodes.Clear();
-         closedNodes.Clear();
+         _openNodes.Clear();
+         _closedNodes.Clear();
 
          startNode.Gdist = 0;
          startNode.Hdist = getDistance(startNode, finishNode);
          startNode.Parent = null;
-         openNodes.Add(startNode);
+         _openNodes.Add(startNode);
 
-         while (openNodes.Count > 0)
+         while (_openNodes.Count > 0)
          {
-            var currentNode = inverted ? openNodes.PopHighest() : openNodes.Pop();
+            var currentNode = inverted ? _openNodes.PopHighest() : _openNodes.Pop();
 
             if (currentNode.Equals(finishNode)) // if n is a goal node
             {
@@ -78,17 +78,17 @@ namespace KlopAi.algo
                   newg *= 0.99;   // Make diagonal moves slightly preferred
 
                //if n' is in openNodes or closedNodes, and n'.g <= newg {	skip }
-               if (closedNodes.Contains(nextNode)) continue; // TODO: think..
-               if (openNodes.Contains(nextNode) && nextNode.Gdist <= newg) continue;
+               if (_closedNodes.Contains(nextNode)) continue; // TODO: think..
+               if (_openNodes.Contains(nextNode) && nextNode.Gdist <= newg) continue;
 
                nextNode.Parent = currentNode;
                nextNode.Gdist = newg;
                nextNode.Hdist = getDistance(nextNode, finishNode);
                //if (closedNodes.Contains(nextNode)) closedNodes.Remove(nextNode);
-               if (!(openNodes.Contains(nextNode))) openNodes.Add(nextNode);
+               _openNodes.Add(nextNode);
             }
 
-            closedNodes.Add(currentNode, null);
+            _closedNodes.Add(currentNode);
          }
 
          Debug.Assert(false, "Path has not been found!");
