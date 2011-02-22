@@ -89,5 +89,7 @@
             <Controls:ImageLinkButton Content="Reset" Command="{Binding ResetCommand}" Foreground="Blue"  ActiveForeground="Blue" Cursor="Hand" />
             <!--<Controls:ImageLinkButton Content="Init" Click="ImageLinkButton_Click" Foreground="Blue"  ActiveForeground="Blue" Cursor="Hand" />-->
         </StackPanel>
+        
+        <!--<KlopViewWpf:MainMenu HorizontalAlignment="Center"  VerticalAlignment="Center" Grid.Column="1" />-->
     </Grid>
 </Window>
