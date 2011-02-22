@@ -92,17 +92,49 @@ namespace KlopAi
          return result;
       }
 
+      private static readonly Dictionary<Tuple<IKlopPlayer, IKlopCell>, Tuple<double, ECellState>> CellValueCache =
+         new Dictionary<Tuple<IKlopPlayer, IKlopCell>, Tuple<double, ECellState>>();
+
       /// <summary>
       /// Calculates cells Cost.
       /// </summary>
       /// <param name="klopPlayer">The klop player.</param>
       public void EvaluateCells(IKlopPlayer klopPlayer)
       {
+         //TODO: Refactor, Extract CellEvaluator class
+
+         foreach (IKlopCell cell in _klopModel.Cells)
+         {
+            var cacheKey = new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, cell);
+            if (!CellValueCache.ContainsKey(cacheKey)) continue;
+            
+            var cachedCell = CellValueCache[cacheKey];
+            if (cachedCell.Item2 == cell.State) continue;
+            
+            // Remove cell and adjanced cells from cache
+            CellValueCache.Remove(cacheKey);
+            foreach (IKlopCell neighborCell in _klopModel.GetNeighborCells(cell))
+            {
+               CellValueCache.Remove(new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, neighborCell));
+            }
+         }
+
          foreach (IKlopCell cell in _klopModel.Cells)
          {
             var f = _field[cell.X, cell.Y];
             f.Reset();
-            f.Cost = GetCellCost(cell, klopPlayer);
+
+            var cacheKey = new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, cell);
+            if (CellValueCache.ContainsKey(cacheKey))
+            {
+               f.Cost = CellValueCache[cacheKey].Item1;
+            }
+            else
+            {
+               f.Cost = GetCellCost(cell, klopPlayer);
+               CellValueCache[cacheKey] = new Tuple<double, ECellState>(f.Cost, cell.State);
+            }
+
             //if (f.Cost != TurnEmptyCost)
             //{
             //   ((KlopCell)cell).Tag = f.Cost;
