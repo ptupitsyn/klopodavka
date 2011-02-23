@@ -42,7 +42,7 @@ namespace KlopIfaces
       /// Gets the color.
       /// </summary>
       /// <value>The color.</value>
-      Color Color { get; }
+      Color Color { get; }  // TODO: Change this to eliminate PresentationCore reference (string representation?)
 
       #endregion
 

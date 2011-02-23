@@ -49,6 +49,7 @@ namespace KlopIfaces
       /// <value>The remaining klops.</value>
       int RemainingKlops { get; }
 
+      //TODO: Expose also some kind of Point structure for [X,Y] for convenience (extract simple iface from from IKlopCell for it)
       /// <summary>
       /// Gets the <see cref="KlopIfaces.IKlopCell"/> with the specified position
       /// </summary>

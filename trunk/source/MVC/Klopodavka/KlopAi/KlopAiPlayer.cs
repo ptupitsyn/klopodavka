@@ -66,10 +66,7 @@ namespace KlopAi
          var initialCost = _pathFinder.FindPath(startN, finishN, klopPlayer, false).Sum(n => n.Cost);
          double maxCost = 0;
          Node resultNode = null;
-         foreach (
-            var node in
-               _model.Cells.Where(c => c.Available && c.Owner == klopPlayer && c.State == ECellState.Alive).Select(c => _pathFinder.GetNodeByCoordinates(c.X, c.Y))
-            )
+         foreach (var node in _model.Cells.Where(c => c.Available && c.Owner == klopPlayer && c.State == ECellState.Alive).Select(c => _pathFinder.GetNodeByCoordinates(c.X, c.Y)))
          {
             var oldCost = node.Cost;
             node.Cost = KlopCellEvaluator.TurnBlockedCost;
@@ -181,6 +178,7 @@ namespace KlopAi
       {
          Thread.CurrentThread.Priority = ThreadPriority.Lowest;
          //TODO: Catch exceptions!
+         //TODO: Refactor!!!
 
          lock (_syncRoot)  // Sometimes workers can overlap
          {
@@ -188,19 +186,20 @@ namespace KlopAi
 
             while (_model.CurrentPlayer == this && _model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
             {
+               var player = _model.CurrentPlayer;
                while (path == null || path.Count == 0)
                {
                   IKlopCell target;
                   var maxPathLength = int.MaxValue;
 
-                  if (_model.Cells.Any(c => c.State == ECellState.Dead) || _model.Cells.Count(c => c.Owner != null) > _model.FieldHeight*_model.FieldWidth/8)
+                  if (_model.Cells.Any(c => c.State == ECellState.Dead) /*|| _model.Cells.Count(c => c.Owner != null) > _model.FieldHeight*_model.FieldWidth/8*/)
                   {
                      // Fight started, rush to base
-                     var enemies = _model.Players.Where(p => p != _model.CurrentPlayer);
+                     var enemies = _model.Players.Where(p => p != player);
                      var enemy = enemies.FirstOrDefault(p => p.Human) ?? enemies.Random();
                      target = _model[enemy.BasePosX, enemy.BasePosY];
                      maxPathLength = 1;
-                     var importantCell = FindMostImportantCell(_model.CurrentPlayer.BasePosX, _model.CurrentPlayer.BasePosY, target.X, target.Y, enemy);
+                     var importantCell = FindMostImportantCell(player.BasePosX, player.BasePosY, target.X, target.Y, enemy);
 
                      //TODO: Find most important reacheble cell!
                      if (importantCell != null && importantCell.Item2 > KlopCellEvaluator.TurnEmptyCost*2)
@@ -210,26 +209,40 @@ namespace KlopAi
                      }
                      else
                      {
-                        target = FindCheapestCell(_model.CurrentPlayer);
+                        target = FindCheapestCell(player);  //TODO: Bug when no good cells to eat - it goes along the border
                      }
                   }
                   else
                   {
-                     // Fight not started, generate pattern
-                     maxPathLength = _model.TurnLength/3;
-                     target = _model.Cells.Where(c =>
-                                                   {
-                                                      //TODO: c.GetNeighborCount == 0
-                                                      if (c.X < 1 || c.Y < 1 || c.X >= _model.FieldWidth - 2 || c.Y >= _model.FieldHeight - 2) return false;
-                                                      //var d = KlopPathFinder.GetDistance(c.X, c.Y, model.CurrentPlayer.BasePosX, model.CurrentPlayer.BasePosY);
-                                                      var dx = Math.Abs(c.X - _model.CurrentPlayer.BasePosX);
-                                                      var dy = Math.Abs(c.Y - _model.CurrentPlayer.BasePosY);
-                                                      return dx > 1 && dy > 1 && (dx*dx + dy*dy) < (Math.Pow(_model.FieldHeight, 2) + Math.Pow(_model.FieldWidth, 2))/4;
-                                                   }).Random() ?? _model.Cells.Where(c => c.Owner == null).Random();
+                     // Find closest enemy cell, compare to available turns, take attack decision (GetEnemyDistance is incorrect here)
+                     var closestEnemy = _model.Cells.Where(c => c.Owner != null && c.Owner != player)
+                        .Select(c => new Tuple<int, int, int>(_pathFinder.FindPath(player.BasePosX, player.BasePosY, c.X, c.Y, player).Count(cc => cc.Owner != player), c.X, c.Y))
+                        .Min();
+
+                     if (closestEnemy.Item1 < _model.RemainingKlops / 2.5)  //TODO: Constants (AttackThreshold, alias: Aggression)
+                     {
+                        target = _model[closestEnemy.Item2, closestEnemy.Item3];
+                     }
+                     else
+                     {
+                        // Fight not started, generate pattern
+                        maxPathLength = _model.TurnLength / 3;
+                        target = _model.Cells.Where(c =>
+                        {
+                           if (c.X < 1 || c.Y < 1 || c.X >= _model.FieldWidth - 2 || c.Y >= _model.FieldHeight - 2) return false;
+                           if (_model.GetNeighborCells(c).Any(cc => cc.Owner != null)) return false;
+                           var dx = Math.Abs(c.X - player.BasePosX);
+                           var dy = Math.Abs(c.Y - player.BasePosY);
+                           return dx > 1 && dy > 1 
+                              && ((dx * dx + dy * dy) < (Math.Pow(_model.FieldHeight, 2) + Math.Pow(_model.FieldWidth, 2)) / 3)
+                              && (GetEnemyDistance(c, player) > _model.TurnLength / 1.7);
+                        }).Random() ?? _model.Cells.Where(c => c.Owner == null).Random();
+                     }
+
                   }
 
                   // Find path FROM target to have correct ordered list
-                  path = _pathFinder.FindPath(target.X, target.Y, _model.CurrentPlayer.BasePosX, _model.CurrentPlayer.BasePosY, _model.CurrentPlayer).Take(maxPathLength).ToList();
+                  path = _pathFinder.FindPath(target.X, target.Y, player.BasePosX, player.BasePosY, player).Take(maxPathLength).ToList();
                }
                var cell = path.First();
                path.Remove(cell);
@@ -246,6 +259,19 @@ namespace KlopAi
                _model.MakeTurn(cell);
             }
          }
+      }
+
+      /// <summary>
+      /// Gets the distance to the closest enemy cell.
+      /// </summary>
+      /// <param name="cell">The cell.</param>
+      /// <param name="player"></param>
+      /// <returns></returns>
+      private double GetEnemyDistance(IKlopCell cell, IKlopPlayer player)
+      {
+         var cells = _model.Cells.Where(c => c.Owner != null && c.Owner != player).ToArray();
+         var doubles = cells.Select(c => KlopPathFinder.GetDistance(c, cell)).ToArray();
+         return doubles.Min();
       }
 
       #endregion
