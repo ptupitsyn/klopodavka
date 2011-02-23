@@ -61,6 +61,51 @@ namespace KlopAi.Extentions
       }
 
 
+      /// <summary>
+      /// Adds the range of elements to the collection.
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <param name="collection">The collection.</param>
+      /// <param name="itemsToAdd">The items to add.</param>
+      public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> itemsToAdd)
+      {
+         foreach (T item in itemsToAdd)
+         {
+            collection.Add(item);
+         }
+      }
+
+
+      /// <summary>
+      /// Removes the range of elements from collection.
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <param name="collection">The collection.</param>
+      /// <param name="itemsToAdd">The items to add.</param>
+      public static void RemoveRange<T>(this ICollection<T> collection, IEnumerable<T> itemsToAdd)
+      {
+         foreach (T item in itemsToAdd)
+         {
+            collection.Remove(item);
+         }
+      }
+
+
+      /// <summary>
+      /// Removes the range of elements from dictionary.
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <typeparam name="TV">The type of the V.</typeparam>
+      /// <param name="dictionary">The dictionary.</param>
+      /// <param name="itemsToRemove">The items to remove.</param>
+      public static void RemoveRange<T,TV>(this IDictionary<T,TV> dictionary, IEnumerable<T> itemsToRemove)
+      {
+         foreach (T item in itemsToRemove)
+         {
+            dictionary.Remove(item);
+         }
+      }
+
       #endregion
    }
 }

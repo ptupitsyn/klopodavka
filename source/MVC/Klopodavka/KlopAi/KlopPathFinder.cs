@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using KlopAi.algo;
+using KlopAi.Extentions;
 using KlopIfaces;
 using KlopModel;
 
@@ -102,7 +104,7 @@ namespace KlopAi
       public void EvaluateCells(IKlopPlayer klopPlayer)
       {
          //TODO: Refactor, Extract CellEvaluator class
-
+         var toRemove = new HashSet<Tuple<IKlopPlayer, IKlopCell>>();
          foreach (IKlopCell cell in _klopModel.Cells)
          {
             var cacheKey = new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, cell);
@@ -111,13 +113,11 @@ namespace KlopAi
             var cachedCell = CellValueCache[cacheKey];
             if (cachedCell.Item2 == cell.State) continue;
             
-            // Remove cell and adjanced cells from cache
-            CellValueCache.Remove(cacheKey);
-            foreach (IKlopCell neighborCell in _klopModel.GetNeighborCells(cell))
-            {
-               CellValueCache.Remove(new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, neighborCell));
-            }
+            // Remove cell and adjanced cells from cache (do not remove immediately, needed for adjanced cells check)
+            toRemove.Add(cacheKey);
+            toRemove.AddRange(_klopModel.GetNeighborCells(cell).Select(c => new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, c)));
          }
+         CellValueCache.RemoveRange(toRemove);
 
          foreach (IKlopCell cell in _klopModel.Cells)
          {
@@ -128,6 +128,7 @@ namespace KlopAi
             if (CellValueCache.ContainsKey(cacheKey))
             {
                f.Cost = CellValueCache[cacheKey].Item1;
+               //Debug.Assert(f.Cost == GetCellCost(cell, klopPlayer));  // Cache integrity test
             }
             else
             {
