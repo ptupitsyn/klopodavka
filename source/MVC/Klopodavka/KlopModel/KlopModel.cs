@@ -278,7 +278,7 @@ namespace KlopModel
             {
                for (int x = 0; x < FieldWidth; x++)
                {
-                  yield return this[x, y];
+                  yield return _cells[x, y];
                }
             }
          }
