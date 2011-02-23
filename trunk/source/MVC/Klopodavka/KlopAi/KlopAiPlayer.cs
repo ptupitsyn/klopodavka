@@ -226,17 +226,20 @@ namespace KlopAi
                      else
                      {
                         // Fight not started, generate pattern
-                        maxPathLength = _model.TurnLength / 3;
-                        target = _model.Cells.Where(c =>
-                        {
-                           if (c.X < 1 || c.Y < 1 || c.X >= _model.FieldWidth - 2 || c.Y >= _model.FieldHeight - 2) return false;
-                           if (_model.GetNeighborCells(c).Any(cc => cc.Owner != null)) return false;
-                           var dx = Math.Abs(c.X - player.BasePosX);
-                           var dy = Math.Abs(c.Y - player.BasePosY);
-                           return dx > 1 && dy > 1 
-                              && ((dx * dx + dy * dy) < (Math.Pow(_model.FieldHeight, 2) + Math.Pow(_model.FieldWidth, 2)) / 3)
-                              && (GetEnemyDistance(c, player) > _model.TurnLength / 1.7);
-                        }).Random() ?? _model.Cells.Where(c => c.Owner == null).Random();
+                        maxPathLength = 2;// _model.TurnLength / 3;
+                        target = _model.Cells
+                                    .Where(c =>
+                                              {
+                                                 if (c.X < 1 || c.Y < 1 || c.X >= _model.FieldWidth - 2 || c.Y >= _model.FieldHeight - 2) return false;
+                                                 if (_model.GetNeighborCells(c).Any(cc => cc.Owner != null)) return false;
+                                                 var dx = Math.Abs(c.X - player.BasePosX);
+                                                 var dy = Math.Abs(c.Y - player.BasePosY);
+                                                 return dx > 1 && dy > 1
+                                                        && ((dx*dx + dy*dy) < (Math.Pow(_model.FieldHeight, 2) + Math.Pow(_model.FieldWidth, 2))/3)
+                                                        && (GetEnemyDistance(c, player) > _model.TurnLength/1.7);
+                                              }).Random() ?? _model.Cells.Where(c => c.Owner == null).Random();
+                        // TODO: Target sometimes falls behing enemy cells, and, however, target cell is not close to enemy, the path is.
+                        // TODO: "Safe path"?? "Safe evaluator"..
                      }
 
                   }
