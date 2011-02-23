@@ -1,11 +1,12 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using KlopAi.algo;
-using KlopAi.Extentions;
 using KlopIfaces;
-using KlopModel;
+
+#endregion
 
 namespace KlopAi
 {
@@ -13,17 +14,10 @@ namespace KlopAi
    {
       #region Fields and Constants
 
-      public const double TurnBlockedCost = int.MaxValue; // Цена хода в запрещенную клетку (->inf)
-      public const double TurnEatCost = 35; // Цена хода в занятую клетку
-      public const double TurnEatEnemyBaseCost = 8; // Цена съедания клопа около вражеской базы
-      public const double TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
-      public const double TurnEmptyCost = 100; // Цена хода в пустую клетку
-      public const double TurnNearOwnBaseCost = 2000; // Цена хода около своей базы
-      public const double TurnNearEnemyBaseCost = 5000; // Цена хода около чужой базы
-      public const double TurnNearEnemyEmptyCost = 140; // Цена хода в пустую клетку рядом с врагом
+      private readonly AStar _aStar;
+      private readonly KlopCellEvaluator _cellEvaluator;
       private readonly Node[,] _field;
       private readonly IKlopModel _klopModel;
-      private AStar _aStar;
 
       #endregion
 
@@ -36,6 +30,8 @@ namespace KlopAi
       public KlopPathFinder(IKlopModel model)
       {
          _klopModel = model;
+         _cellEvaluator = new KlopCellEvaluator(model);
+         _aStar = new AStar();
          _field = new Node[model.FieldWidth,model.FieldHeight];
          foreach (IKlopCell cell in _klopModel.Cells)
          {
@@ -79,11 +75,10 @@ namespace KlopAi
       public List<Node> FindPath(Node startNode, Node finishNode, IKlopPlayer klopPlayer, bool inverted, bool skipEvaluate)
       {
          // Init field
-         if (!skipEvaluate)
-            EvaluateCells(klopPlayer);
+         if (!skipEvaluate) EvaluateCells(klopPlayer);
 
          // Get result
-         var lastNode = PathFinder.FindPath(startNode, finishNode, GetDistance, GetNodeByCoordinates, inverted);
+         var lastNode = _aStar.FindPath(startNode, finishNode, GetDistance, GetNodeByCoordinates, inverted);
 
          var result = new List<Node>();
          while (lastNode != null)
@@ -94,54 +89,6 @@ namespace KlopAi
          return result;
       }
 
-      private static readonly Dictionary<Tuple<IKlopPlayer, IKlopCell>, Tuple<double, ECellState>> CellValueCache =
-         new Dictionary<Tuple<IKlopPlayer, IKlopCell>, Tuple<double, ECellState>>();
-
-      /// <summary>
-      /// Calculates cells Cost.
-      /// </summary>
-      /// <param name="klopPlayer">The klop player.</param>
-      public void EvaluateCells(IKlopPlayer klopPlayer)
-      {
-         //TODO: Refactor, Extract CellEvaluator class
-         var toRemove = new HashSet<Tuple<IKlopPlayer, IKlopCell>>();
-         foreach (IKlopCell cell in _klopModel.Cells)
-         {
-            var cacheKey = new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, cell);
-            if (!CellValueCache.ContainsKey(cacheKey)) continue;
-            
-            var cachedCell = CellValueCache[cacheKey];
-            if (cachedCell.Item2 == cell.State) continue;
-            
-            // Remove cell and adjanced cells from cache (do not remove immediately, needed for adjanced cells check)
-            toRemove.Add(cacheKey);
-            toRemove.AddRange(_klopModel.GetNeighborCells(cell).Select(c => new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, c)));
-         }
-         CellValueCache.RemoveRange(toRemove);
-
-         foreach (IKlopCell cell in _klopModel.Cells)
-         {
-            var f = _field[cell.X, cell.Y];
-            f.Reset();
-
-            var cacheKey = new Tuple<IKlopPlayer, IKlopCell>(klopPlayer, cell);
-            if (CellValueCache.ContainsKey(cacheKey))
-            {
-               f.Cost = CellValueCache[cacheKey].Item1;
-               //Debug.Assert(f.Cost == GetCellCost(cell, klopPlayer));  // Cache integrity test
-            }
-            else
-            {
-               f.Cost = GetCellCost(cell, klopPlayer);
-               CellValueCache[cacheKey] = new Tuple<double, ECellState>(f.Cost, cell.State);
-            }
-
-            //if (f.Cost != TurnEmptyCost)
-            //{
-            //   ((KlopCell)cell).Tag = f.Cost;
-            //}
-         }
-      }
 
       /// <summary>
       /// Gets the distance between two nodes.
@@ -191,72 +138,18 @@ namespace KlopAi
 
       #endregion
 
-      #region Private and protected properties and indexers
-
-      private AStar PathFinder
+      /// <summary>
+      /// Evaluates the cells for specified player.
+      /// </summary>
+      /// <param name="klopPlayer">The klop player.</param>
+      internal void EvaluateCells(IKlopPlayer klopPlayer)
       {
-         get { return _aStar ?? (_aStar = new AStar()); }
+         _cellEvaluator.EvaluateCells(klopPlayer, (cell, cost) =>
+                                                     {
+                                                        var node = _field[cell.X, cell.Y];
+                                                        node.Reset();
+                                                        node.Cost = cost;
+                                                     });
       }
-
-      #endregion
-
-      #region Private and protected methods
-
-      private double GetCellCost(IKlopCell cell, IKlopPlayer klopPlayer)
-      {
-         if (cell.Owner == klopPlayer)
-         {
-            return 0; // Zero cost for owned cell
-         }
-
-         if (cell.State == ECellState.Dead)
-         {
-            return TurnBlockedCost; // Can't move into own dead cell or base cell
-         }
-
-         //TODO: Additive cost! E.g. near own clop + near enemy clop!!
-         if (cell.Owner != null && cell.State == ECellState.Alive)
-         {
-            if (IsCellNearBase(cell, klopPlayer))
-            {
-               return TurnEatOwnbaseCost;
-            }
-
-            if (_klopModel.Players.Where(p => p != klopPlayer).Any(enemy => IsCellNearBase(cell, enemy)))
-            {
-               return TurnEatEnemyBaseCost;
-            }
-
-            return TurnEatCost;
-         }
-
-         if (IsCellNearBase(cell, klopPlayer))
-         {
-            return TurnNearOwnBaseCost;
-         }
-
-         var neighbors = _klopModel.GetNeighborCells(cell);
-         if (neighbors.Any(c => c.State == ECellState.Base))
-         {
-            return TurnNearEnemyBaseCost;
-         }
-
-         var enemyCount = neighbors.Count(c => c.Owner != null && c.Owner != klopPlayer);
-         if (enemyCount > 0)
-         {
-            return TurnNearEnemyEmptyCost * (1 + (double)enemyCount / 2); // Turn near enemy klop costs a bit more.
-         }
-
-         var neighborCount = neighbors.Count(c => c.Owner != null);
-
-         return TurnEmptyCost * (1 + (double)neighborCount / 2); // Default - turn into empty cell.
-      }
-
-      private static bool IsCellNearBase(IKlopCell cell, IKlopPlayer baseOwner)
-      {
-         return Math.Max(Math.Abs(cell.X - baseOwner.BasePosX), Math.Abs(cell.Y - baseOwner.BasePosY)) == 1;
-      }
-
-      #endregion
    }
 }
