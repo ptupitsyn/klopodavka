@@ -89,12 +89,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="KlopCell.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="KlopMainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -143,9 +137,6 @@
   <ItemGroup>
     <Compile Include="Controls\HitTestCanvas.cs" />
     <Compile Include="Controls\HitTestViewbox.cs" />
-    <Compile Include="KlopCell.xaml.cs">
-      <DependentUpon>KlopCell.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>

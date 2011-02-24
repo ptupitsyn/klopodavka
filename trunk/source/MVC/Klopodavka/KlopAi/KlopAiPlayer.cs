@@ -22,6 +22,7 @@ namespace KlopAi
       private KlopPathFinder _pathFinder;
       private BackgroundWorker _worker;
       private readonly object _syncRoot = new object();
+      private const decimal AttackThreshold = 0.3M;
 
       #endregion
 
@@ -219,7 +220,7 @@ namespace KlopAi
                         .Select(c => new Tuple<int, int, int>(_pathFinder.FindPath(player.BasePosX, player.BasePosY, c.X, c.Y, player).Count(cc => cc.Owner != player), c.X, c.Y))
                         .Min();
 
-                     if (closestEnemy.Item1 < _model.RemainingKlops / 2.5)  //TODO: Constants (AttackThreshold, alias: Aggression)
+                     if (closestEnemy.Item1 < _model.RemainingKlops * AttackThreshold)  //TODO: Constants (AttackThreshold, alias: Aggression)
                      {
                         target = _model[closestEnemy.Item2, closestEnemy.Item3];
                      }
@@ -239,7 +240,7 @@ namespace KlopAi
                                                         && (GetEnemyDistance(c, player) > _model.TurnLength/1.7);
                                               }).Random() ?? _model.Cells.Where(c => c.Owner == null).Random();
                         // TODO: Target sometimes falls behing enemy cells, and, however, target cell is not close to enemy, the path is.
-                        // TODO: "Safe path"?? "Safe evaluator"..
+                        // TODO: "Safe path"?? "Safe evaluator".. or SafePathFinder. How to build safe cells map fast?
                      }
 
                   }
