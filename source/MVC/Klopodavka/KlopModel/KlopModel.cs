@@ -304,8 +304,6 @@ namespace KlopModel
                   cell.Flag = false;
                   cell.Owner = null;
                   cell.State = ECellState.Free;
-                  cell.Highlighted = false;
-                  cell.Tag = null;
                }
             }
 
