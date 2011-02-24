@@ -74,7 +74,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <!--<Border Background="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />-->
-                        <KlopViewWpf:KlopCell2 Model="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Model}"  
+                        <KlopViewWpf:KlopCell2 Model="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext}"  
                                                Cell="{Binding}" 
                                                MouseLeftButtonUp="KlopCell_MouseLeftButtonUp"
                                                MouseEnter="KlopCell_MouseEnter"

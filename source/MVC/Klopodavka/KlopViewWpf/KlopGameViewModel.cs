@@ -58,7 +58,7 @@ namespace KlopViewWpf
                var aiPlayer3 = new KlopAiPlayer { BasePosX = FieldWidth - _baseDist - 1, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3" };
                var humanPlayer = new KlopPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"};
 
-               var players = new List<IKlopPlayer> {humanPlayer, aiPlayer, aiPlayer2};
+               var players = new List<IKlopPlayer> {humanPlayer, aiPlayer};
                _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, _turnLength);
             }
             return _klopModel;
@@ -112,12 +112,12 @@ namespace KlopViewWpf
          {
             Model.MakeTurn(cell);
          }
-         else if (cell.Highlighted)
+         else if (PathHighlighter.IsHighlighted(cell))
          {
             // Cell is highlighted - perform multiple turns:
-            while (Model.RemainingKlops > 0)  
+            while (Model.RemainingKlops > 1)  //TODO: Configurable whether leave one clop or not
             {
-               var currentCell = Model.Cells.FirstOrDefault(c => c.Highlighted && c.Available);
+               var currentCell = Model.Cells.FirstOrDefault(c => c.Available && PathHighlighter.IsHighlighted(c));
                if (currentCell == null) break;
                Model.MakeTurn(currentCell);
                if (currentCell == cell) break; // Destination reached

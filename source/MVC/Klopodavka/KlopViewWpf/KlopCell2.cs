@@ -24,11 +24,10 @@ namespace KlopViewWpf
    {
       #region Fields and Constants
 
-      private const int DesiredFramerate = 60;
       private const int AnimationQueueLimit = 100;
+      private const int DesiredFramerate = 60;
       private static readonly Queue<Action> ActionQueue = new Queue<Action>();
       private static readonly Brush AvailableBrush;
-      private static readonly RadialGradientBrush DeadBrush = new RadialGradientBrush(Colors.Black, Color.FromArgb(0, 0, 0, 0)) {RadiusX = 0.55, RadiusY = 0.55};
 
 
       public static readonly DependencyProperty BackgroundProperty =
@@ -40,6 +39,8 @@ namespace KlopViewWpf
       public static readonly DependencyProperty CellProperty =
          DependencyProperty.Register("Cell", typeof (IKlopCell), typeof (KlopCell2), new UIPropertyMetadata(null, OnKlopCellChanged));
 
+      private static readonly RadialGradientBrush DeadBrush = new RadialGradientBrush(Colors.Black, Color.FromArgb(0, 0, 0, 0)) {RadiusX = 0.55, RadiusY = 0.55};
+
       public static readonly DependencyProperty ForegroundProperty =
          DependencyProperty.Register("Foreground", typeof (Brush), typeof (KlopCell2),
                                      new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -47,18 +48,19 @@ namespace KlopViewWpf
       private static readonly Brush HoverBrush = Brushes.Yellow.Clone();
 
       public static readonly DependencyProperty ModelProperty =
-         DependencyProperty.Register("Model", typeof (IKlopModel), typeof (KlopCell2), new UIPropertyMetadata(null, OnModelChanged));
+         DependencyProperty.Register("Model", typeof (KlopGameViewModel), typeof (KlopCell2), new UIPropertyMetadata(null, OnModelChanged));
 
       private static DispatcherTimer ActionTimer;
+      private readonly ScaleTransform _scaleTransform = new ScaleTransform();
+      private readonly Typeface _typeFace = new Typeface("Arial");
 
       private Brush _background;
       private IKlopCell _cell;
       private Brush _foreground;
-      private IKlopModel _model;
+      private int _highlighted;
+      private KlopGameViewModel _model;
       private Storyboard _opacityStoryboard;
       private Storyboard _zoomStoryboard;
-      private readonly ScaleTransform _scaleTransform = new ScaleTransform();
-      private readonly Typeface _typeFace = new Typeface("Arial");
 
       #endregion
 
@@ -92,9 +94,9 @@ namespace KlopViewWpf
 
       #region Public properties and indexers
 
-      public IKlopModel Model
+      public KlopGameViewModel Model
       {
-         get { return (IKlopModel) GetValue(ModelProperty); }
+         get { return (KlopGameViewModel) GetValue(ModelProperty); }
          set { SetValue(ModelProperty, value); }
       }
 
@@ -173,6 +175,18 @@ namespace KlopViewWpf
          }
       }
 
+      protected int Highlighted
+      {
+         get { return _highlighted; }
+         set
+         {
+            if (_highlighted == value) return;
+            _highlighted = value;
+            UpdateBrushes();
+            InvalidateVisual();
+         }
+      }
+
       #endregion
 
       #region Private and protected methods
@@ -198,7 +212,12 @@ namespace KlopViewWpf
 
       private void OnModelChanged()
       {
+         if (_model != null)
+         {
+            _model.PathHighlighter.HighlightChanged -= PathHighlighter_HighlightChanged;
+         }
          _model = Model; // Cache for faster access
+         _model.PathHighlighter.HighlightChanged += PathHighlighter_HighlightChanged;
          UpdateBrushes();
       }
 
@@ -247,12 +266,12 @@ namespace KlopViewWpf
                }
             }
 
-            if (_cell.Available && _model.CurrentPlayer.Human)
+            if (_cell.Available && _model.Model.CurrentPlayer.Human)
             {
                bg = AvailableBrush;
             }
 
-            if (_cell.Highlighted)
+            if (_highlighted > 0)
             {
                bg = HoverBrush;
                Cursor = Cursors.Hand;
@@ -293,15 +312,15 @@ namespace KlopViewWpf
          {
             drawingContext.DrawRectangle(Background, null, new Rect(RenderSize));
          }
-         
+
          drawingContext.DrawRectangle(Foreground, BorderPen, new Rect(RenderSize));
 
-         if (Cell != null && Cell.Highlighted && Cell.Tag != null)
+         if (_highlighted > 0)
          {
-            drawingContext.DrawText(new FormattedText(Cell.Tag.ToString(), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeFace, 8, Brushes.Gray),
-                                    new Point(2, 2));
+            drawingContext.DrawText(
+               new FormattedText(_highlighted.ToString(), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeFace, 8, Brushes.Gray),
+               new Point(2, 2));
          }
-      
       }
 
 
@@ -320,9 +339,8 @@ namespace KlopViewWpf
       protected override void OnMouseEnter(MouseEventArgs e)
       {
          if (_cell == null) return;
-         _cell.Highlighted = true;
 
-         if (_cell.State == ECellState.Alive && _cell.Owner != _model.CurrentPlayer)
+         if (_cell.State == ECellState.Alive && _cell.Owner != _model.Model.CurrentPlayer)
          {
             _scaleTransform.ScaleX = _scaleTransform.ScaleY = 1.3;
          }
@@ -332,14 +350,22 @@ namespace KlopViewWpf
       protected override void OnMouseLeave(MouseEventArgs e)
       {
          if (_cell == null) return;
-         _cell.Highlighted = false;
          _scaleTransform.ScaleX = _scaleTransform.ScaleY = 1;
       }
-
 
       #endregion
 
       #region Event handlers
+
+      /// <summary>
+      /// Handles the HighlightChanged event of the PathHighlighter control.
+      /// </summary>
+      /// <param name="sender">The source of the event.</param>
+      /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+      private void PathHighlighter_HighlightChanged(object sender, EventArgs e)
+      {
+         Highlighted = _model.PathHighlighter.GetPathLength(_cell);
+      }
 
       /// <summary>
       /// Handles the PropertyChanged event of the Cell control.
@@ -348,10 +374,10 @@ namespace KlopViewWpf
       /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
       private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs e)
       {
-         if (e.PropertyName == "State" 
-            && !PreferencesManager.Instance.RenderPreferences.DisableAnimation 
-            && ActionQueue.Count < AnimationQueueLimit
-            && Cell.State != ECellState.Free)
+         if (e.PropertyName == "State"
+             && !PreferencesManager.Instance.RenderPreferences.DisableAnimation
+             && ActionQueue.Count < AnimationQueueLimit
+             && Cell.State != ECellState.Free)
          {
             // Animate state changes
             Opacity = 0;
