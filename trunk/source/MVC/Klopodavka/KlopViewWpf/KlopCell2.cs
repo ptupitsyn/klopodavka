@@ -46,6 +46,7 @@ namespace KlopViewWpf
                                      new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
       private static readonly Brush HoverBrush = Brushes.Yellow.Clone();
+      private static readonly Brush HoverUnavailableBrush = Brushes.Red.Clone();
 
       public static readonly DependencyProperty ModelProperty =
          DependencyProperty.Register("Model", typeof (KlopGameViewModel), typeof (KlopCell2), new UIPropertyMetadata(null, OnModelChanged));
@@ -70,10 +71,12 @@ namespace KlopViewWpf
       {
          AvailableBrush = new SolidColorBrush(Colors.Gray) {Opacity = 0.3};
          HoverBrush.Opacity = 0.5;
+         HoverUnavailableBrush.Opacity = 0.2;
 
          AvailableBrush.Freeze();
          BorderPen.Freeze();
          HoverBrush.Freeze();
+         HoverUnavailableBrush.Freeze();
          DeadBrush.Freeze();
       }
 
@@ -273,7 +276,7 @@ namespace KlopViewWpf
 
             if (_highlighted > 0)
             {
-               bg = HoverBrush;
+               bg = _highlighted > _model.Model.RemainingKlops ? HoverUnavailableBrush : HoverBrush;
                Cursor = Cursors.Hand;
             }
             else
