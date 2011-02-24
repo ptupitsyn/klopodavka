@@ -1,7 +1,5 @@
 ﻿#region Usings
 
-using System;
-using System.Windows.Threading;
 using KlopIfaces;
 
 #endregion
@@ -56,10 +54,8 @@ namespace KlopModel
       #region Fields and Constants
 
       private bool _available;
-      private bool _highlighted;
       private IKlopPlayer _owner;
       private ECellState _state;
-      private object _tag;
 
       #endregion
 
@@ -117,36 +113,6 @@ namespace KlopModel
             if (_available == value) return;
             _available = value;
             OnPropertyChanged("Available");
-         }
-      }
-
-      /// <summary>
-      /// Gets a value indicating whether this <see cref="IKlopCell"/> is highlighted. This can be used for turn suggestions.
-      /// </summary>
-      /// <value><c>true</c> if highlighted; otherwise, <c>false</c>.</value>
-      public bool Highlighted
-      {
-         get { return _highlighted; }
-         set
-         {
-            if (_highlighted == value) return;
-            _highlighted = value;
-            OnPropertyChanged("Highlighted");
-         }
-      }
-
-      /// <summary>
-      /// Gets or sets the tag. Any additional information about this cell.
-      /// </summary>
-      /// <value>The tag.</value>
-      public object Tag
-      {
-         get { return _tag; }
-         set
-         {
-            if (_tag == value) return;
-            _tag = value;
-            OnPropertyChanged("Tag");
          }
       }
 
