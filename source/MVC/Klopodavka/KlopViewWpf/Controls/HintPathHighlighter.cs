@@ -33,15 +33,18 @@ namespace KlopViewWpf.Controls
 
       public void HighlightPath(IKlopCell cell)
       {
-         // Deselect all
-         _highlightedCells.Clear();
-         if (!_model.CurrentPlayer.Human) return;
+         if (!_model.CurrentPlayer.Human && _highlightedCells.Count == 0) return;
 
-         var path = PathFinder.FindPath(_model.CurrentPlayer.BasePosX, _model.CurrentPlayer.BasePosY, cell.X, cell.Y, _model.CurrentPlayer);
-         var i = path.Count;
-         foreach (var klopCell in path)
+         _highlightedCells.Clear();
+
+         if (_model.CurrentPlayer.Human)
          {
-            _highlightedCells[klopCell] = i--;
+            var path = PathFinder.FindPath(_model.CurrentPlayer.BasePosX, _model.CurrentPlayer.BasePosY, cell.X, cell.Y, _model.CurrentPlayer);
+            var i = path.Count;
+            foreach (var klopCell in path)
+            {
+               _highlightedCells[klopCell] = i--;
+            }
          }
 
          InvokeHighlightChanged();
