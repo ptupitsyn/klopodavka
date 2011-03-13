@@ -1,13 +1,13 @@
-﻿<Window x:Class="KlopViewWpf.KlopMainWindow" 
+﻿<Window x:Class="KlopViewWpf.Views.KlopMainWindow" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:KlopViewWpf="clr-namespace:KlopViewWpf" 
         UseLayoutRounding="True"
-        xmlns:AttachedCommandBehavior="clr-namespace:AttachedCommandBehavior;assembly=Common" xmlns:Converters="clr-namespace:KlopViewWpf.Converters" xmlns:Controls="clr-namespace:Common.Controls;assembly=Common" xmlns:Controls1="clr-namespace:KlopViewWpf.Controls" Title="Klopodavka 2.0" MinHeight="496" MinWidth="800"    >
+        xmlns:AttachedCommandBehavior="clr-namespace:AttachedCommandBehavior;assembly=Common" xmlns:Converters="clr-namespace:KlopViewWpf.Converters" xmlns:Controls="clr-namespace:Common.Controls;assembly=Common" xmlns:Controls1="clr-namespace:KlopViewWpf.Controls" xmlns:Views="clr-namespace:KlopViewWpf.Views" Title="Klopodavka 2.0" MinHeight="496" MinWidth="800"    >
     <Window.Resources>
         <ResourceDictionary>
             <Converters:ClopGridWidthConverter x:Key="_clopGridWidthConverter" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes\Generic.xaml" />
+                <ResourceDictionary Source="..\Themes\Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -28,13 +28,13 @@
         
         <!-- Player Information -->
         <StackPanel Grid.Column="0">
-            <KlopViewWpf:PlayerInfo Player="{Binding Model.Players[0]}" Model="{Binding Model}" Margin="10" />
-            <KlopViewWpf:PlayerInfo Player="{Binding Model.Players[2]}" Model="{Binding Model}" Margin="10" />
+            <Views:PlayerInfo Player="{Binding Model.Players[0]}" Model="{Binding Model}" Margin="10" />
+            <Views:PlayerInfo Player="{Binding Model.Players[2]}" Model="{Binding Model}" Margin="10" />
         </StackPanel>
 
         <StackPanel Grid.Column="2">
-            <KlopViewWpf:PlayerInfo Player="{Binding Model.Players[1]}" Model="{Binding Model}" Margin="10" />
-            <KlopViewWpf:PlayerInfo Player="{Binding Model.Players[3]}" Model="{Binding Model}" Margin="10" />
+            <Views:PlayerInfo Player="{Binding Model.Players[1]}" Model="{Binding Model}" Margin="10" />
+            <Views:PlayerInfo Player="{Binding Model.Players[3]}" Model="{Binding Model}" Margin="10" />
         </StackPanel>
 
         <!-- Game Field -->
@@ -64,7 +64,7 @@
                             <UniformGrid.Background>
                                 <ImageBrush Opacity="0.1">
                                     <ImageBrush.ImageSource>
-                                        <BitmapImage UriSource="Images\Bedbug.png" />
+                                        <BitmapImage UriSource="..\Images\Bedbug.png" />
                                     </ImageBrush.ImageSource>
                                 </ImageBrush>
                             </UniformGrid.Background>
@@ -74,7 +74,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <!--<Border Background="{Binding Owner.Color, Converter={StaticResource _colorToKlopBrushConverter}}" />-->
-                        <KlopViewWpf:KlopCell2 Model="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext}"  
+                        <Views:KlopCell2 Model="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext}"  
                                                Cell="{Binding}" 
                                                MouseLeftButtonUp="KlopCell_MouseLeftButtonUp"
                                                MouseEnter="KlopCell_MouseEnter"

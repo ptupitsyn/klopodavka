@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using KlopViewWpf.Preferences;
+using KlopViewWpf.Views;
 
 #endregion
 

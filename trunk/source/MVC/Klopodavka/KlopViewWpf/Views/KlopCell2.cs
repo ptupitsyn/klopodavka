@@ -12,10 +12,11 @@ using System.Windows.Threading;
 using KlopIfaces;
 using KlopViewWpf.Converters;
 using KlopViewWpf.Preferences;
+using KlopViewWpf.ViewModels;
 
 #endregion
 
-namespace KlopViewWpf
+namespace KlopViewWpf.Views
 {
    /// <summary>
    /// KlopCell control. Written without XAML to improve performance (InitializeComponent is very slow).

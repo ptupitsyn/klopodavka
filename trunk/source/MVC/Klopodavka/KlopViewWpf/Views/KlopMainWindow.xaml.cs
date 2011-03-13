@@ -5,11 +5,11 @@
 #region Usings
 
 using System.Windows.Input;
-using KlopIfaces;
+using KlopViewWpf.ViewModels;
 
 #endregion
 
-namespace KlopViewWpf
+namespace KlopViewWpf.Views
 {
    /// <summary>
    /// Interaction logic for KlopMainWindow.xaml
@@ -41,7 +41,10 @@ namespace KlopViewWpf
       /// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
       private void KlopCell_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
       {
-         _viewModel.MakeTurnCommand.Execute(((KlopCell2) sender).Cell);
+         if (_viewModel.Model.CurrentPlayer.Human)
+         {
+            _viewModel.MakeTurnCommand.Execute(((KlopCell2) sender).Cell);
+         }
       }
 
       /// <summary>

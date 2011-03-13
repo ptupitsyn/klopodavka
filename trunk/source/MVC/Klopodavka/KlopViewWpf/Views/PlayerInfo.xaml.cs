@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using KlopIfaces;
 
-namespace KlopViewWpf
+namespace KlopViewWpf.Views
 {
    /// <summary>
    /// Interaction logic for PlayerInfo.xaml

@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 #endregion
 
-namespace KlopViewWpf
+namespace KlopViewWpf.Views
 {
    /// <summary>
    /// Interaction logic for KlopImage.xaml
