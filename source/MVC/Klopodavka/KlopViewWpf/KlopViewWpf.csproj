@@ -89,23 +89,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="KlopMainWindow.xaml">
+    <Page Include="Views\KlopMainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="KlopImage.xaml">
+    <Page Include="Views\KlopImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainMenu.xaml">
+    <Page Include="Views\MainMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PlayerInfo.xaml">
+    <Page Include="Views\PlayerInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -127,9 +127,10 @@
     <Compile Include="Controls\HintPathHighlighter.cs" />
     <Compile Include="Converters\ObjectToVisibilityConverter.cs" />
     <Compile Include="Effects\ReflectionEffect.cs" />
-    <Compile Include="KlopCell2.cs" />
-    <Compile Include="KlopGameViewModel.cs" />
-    <Compile Include="KlopMainWindow.xaml.cs">
+    <Compile Include="ViewModels\KlopCellViewModel.cs" />
+    <Compile Include="Views\KlopCell2.cs" />
+    <Compile Include="ViewModels\KlopGameViewModel.cs" />
+    <Compile Include="Views\KlopMainWindow.xaml.cs">
       <DependentUpon>KlopMainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -137,10 +138,11 @@
   <ItemGroup>
     <Compile Include="Controls\HitTestCanvas.cs" />
     <Compile Include="Controls\HitTestViewbox.cs" />
-    <Compile Include="MainMenu.xaml.cs">
+    <Compile Include="Views\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PlayerInfo.xaml.cs">
+    <Compile Include="Overlays\ICellOverlay.cs" />
+    <Compile Include="Views\PlayerInfo.xaml.cs">
       <DependentUpon>PlayerInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Preferences\GamePreferences.cs" />
@@ -159,7 +161,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="KlopImage.xaml.cs">
+    <Compile Include="Views\KlopImage.xaml.cs">
       <DependentUpon>KlopImage.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
