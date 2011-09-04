@@ -141,7 +141,6 @@
     <Compile Include="Converters\ObjectToVisibilityConverter.cs" />
     <Compile Include="Effects\ReflectionEffect.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="Views\GameField.xaml.cs">
       <DependentUpon>GameField.xaml</DependentUpon>
     </Compile>
