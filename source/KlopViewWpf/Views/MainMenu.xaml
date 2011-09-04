@@ -12,7 +12,7 @@
                 </StackPanel>
             </Button>
             <Button Margin="20,0,20,0">
-                <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Vertical" IsEnabled="False">
                     <Image Source="..\Images\Bedbug.png" Height="64" HorizontalAlignment="Center" Margin="10" />
                     <TextBlock HorizontalAlignment="Center" Text="Preferences" FontWeight="Bold" Margin="10" />
                 </StackPanel>
