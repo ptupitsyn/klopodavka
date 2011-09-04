@@ -1,6 +1,8 @@
 ﻿#region Usings
 
+using System;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 
 #endregion
 
@@ -10,9 +12,12 @@ namespace KlopViewWpf.ViewModels
    {
       #region Fields and Constants
 
+      private RelayCommand _continueGameCommand;
       private KlopGameViewModel _gameViewModel;
 
       private bool _isMenuVisible;
+      private RelayCommand _newGameCommand;
+      private RelayCommand _showMenuCommand;
 
       #endregion
 
@@ -20,7 +25,7 @@ namespace KlopViewWpf.ViewModels
 
       public MainViewModel()
       {
-         GameViewModel = new KlopGameViewModel();
+         //GameViewModel = new KlopGameViewModel();
          IsMenuVisible = true;
       }
 
@@ -35,6 +40,7 @@ namespace KlopViewWpf.ViewModels
          {
             _gameViewModel = value;
             RaisePropertyChanged("GameViewModel");
+            ContinueGameCommand.RaiseCanExecuteChanged();
          }
       }
 
@@ -46,6 +52,54 @@ namespace KlopViewWpf.ViewModels
             _isMenuVisible = value;
             RaisePropertyChanged("IsMenuVisible");
          }
+      }
+
+      public RelayCommand NewGameCommand
+      {
+         get { return _newGameCommand ?? (_newGameCommand = new RelayCommand(NewGame)); }
+      }
+
+      public RelayCommand ContinueGameCommand
+      {
+         get { return _continueGameCommand ?? (_continueGameCommand = new RelayCommand(ContinueGame, CanContinueGame)); }
+      }
+
+      private bool CanContinueGame()
+      {
+         // TODO: Check if game finished.
+         return GameViewModel != null;
+      }
+
+      public RelayCommand ShowMenuCommand
+      {
+         get { return _showMenuCommand ?? (_showMenuCommand = new RelayCommand(ShowMenu)); }
+      }
+
+      #endregion
+
+      #region Private and protected methods
+
+      private void ShowMenu()
+      {
+         IsMenuVisible = true;
+      }
+
+      private void ContinueGame()
+      {
+         IsMenuVisible = false;
+      }
+
+      private void NewGame()
+      {
+         if (GameViewModel == null)
+         {
+            GameViewModel = new KlopGameViewModel();
+         }
+         else
+         {
+            GameViewModel.ResetCommand.Execute();
+         }
+         IsMenuVisible = false;
       }
 
       #endregion

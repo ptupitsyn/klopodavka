@@ -2,9 +2,13 @@
     <Window.Resources>
         <Converters:ObjectToVisibilityConverter x:Key="_objectToVisibility" />
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding ShowMenuCommand}" />
+    </Window.InputBindings>
     <Grid>
-        <Views:GameField DataContext="{Binding GameViewModel}" />
-        <!--<Views:MainMenu HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" 
-                        Visibility="{Binding IsMenuVisible, Converter={StaticResource _objectToVisibility}}"/>-->
+        <Image Source="../Images/Bedbug.png" Opacity="0.5" />
+        <Views:GameField DataContext="{Binding GameViewModel}" Visibility="{Binding Converter={StaticResource _objectToVisibility}}" />
+        <Views:MainMenu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                        Visibility="{Binding IsMenuVisible, Converter={StaticResource _objectToVisibility}}"/>
     </Grid>
 </Window>

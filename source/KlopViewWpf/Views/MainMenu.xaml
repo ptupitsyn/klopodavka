@@ -3,22 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Effects="clr-namespace:KlopViewWpf.Effects" mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+             Opacity="0"
+             x:Name="menuRoot">
+    <UserControl.Style>
+        <Style TargetType="UserControl">
+            <Style.Triggers>
+                <Trigger Property="Visibility" Value="Visible">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0.0" To="1.0" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+    <Grid>
+        <Border Background="Gray" Opacity="0.7" />
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel">
-            <Button Margin="20,0,20,0">
+            <Button Margin="20,0,20,0" Command="{Binding NewGameCommand}">
                 <StackPanel Orientation="Vertical">
                     <Image Source="..\Images\clop.ico" Height="64" HorizontalAlignment="Center" Margin="10" />
-                    <TextBlock HorizontalAlignment="Center" Text="Quick Game" FontWeight="Bold" Margin="10" />
+                    <TextBlock HorizontalAlignment="Center" Text="New Game" FontWeight="Bold" Margin="10" />
                 </StackPanel>
             </Button>
-            <Button Margin="20,0,20,0">
+            <Button Margin="20,0,20,0" Command="{Binding ContinueGameCommand}">
                 <StackPanel Orientation="Vertical" IsEnabled="False">
-                    <Image Source="..\Images\Bedbug.png" Height="64" HorizontalAlignment="Center" Margin="10" />
-                    <TextBlock HorizontalAlignment="Center" Text="Preferences" FontWeight="Bold" Margin="10" />
+                    <Image Source="..\Images\clop.ico" Height="64" HorizontalAlignment="Center" Margin="10" />
+                    <TextBlock HorizontalAlignment="Center" Text="Continue" FontWeight="Bold" Margin="10" />
                 </StackPanel>
             </Button>
             <StackPanel.Effect>
                 <Effects:ReflectionEffect SourceElement="{Binding ElementName=buttonsPanel}" />
             </StackPanel.Effect>
         </StackPanel>
+    </Grid>
 </UserControl>
