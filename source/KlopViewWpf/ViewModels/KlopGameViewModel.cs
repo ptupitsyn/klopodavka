@@ -53,12 +53,23 @@ namespace KlopViewWpf.ViewModels
          {
             if (_klopModel == null)
             {
-               var aiPlayer = new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"};
-               var humanPlayer = new KlopPlayer { BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1" };
-               //var aiPlayer2 = new KlopAiPlayer {BasePosX = _baseDist, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"};
-               //var aiPlayer3 = new KlopAiPlayer { BasePosX = FieldWidth - _baseDist - 1, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3" };
-
-               var players = new List<IKlopPlayer> {humanPlayer, aiPlayer};
+               var players = new List<IKlopPlayer>
+                                {
+                                   new KlopAiPlayer {BasePosX = _baseDist, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"},
+                                   new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3"},
+                                   new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
+                                   new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Name = "Луноход 4"}
+                                };
+               //var players = new List<IKlopPlayer>
+               //                 {
+               //                    new KlopAiPlayer {BasePosX = _baseDist, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"},
+               //                    new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3"}
+               //                 };
+               //var players = new List<IKlopPlayer>
+               //                 {
+               //                    new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
+               //                    new KlopPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"}
+               //                 };
                _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, _turnLength);
             }
             return _klopModel;
