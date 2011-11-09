@@ -239,17 +239,25 @@ namespace KlopAi
 
       /// <summary>
       /// Finds the nearest enemy cell.
+      /// if targetCell is not specified, all player-owned cells are used as targets.
       /// </summary>
-      /// <param name="player">The player.</param>
       /// <returns></returns>
-      private IKlopCell FindNearestEnemyCell(IKlopPlayer player)
+      private IKlopCell FindNearestEnemyCell(IKlopPlayer player, IKlopCell targetCell = null)
       {
          var flags = new bool[_model.FieldWidth,_model.FieldHeight];
-         
-         // First, mark all own cells with flags.
-         foreach (var cell in _model.Cells.Where(c => c.Owner == player))
+
+         if (targetCell != null)
          {
-            flags[cell.X, cell.Y] = true;
+            // Starting cell specified.
+            flags[targetCell.X, targetCell.Y] = true;
+         }
+         else
+         {
+            // Starting cell not specified - mark all own cells with flags.
+            foreach (var cell in _model.Cells.Where(c => c.Owner == player))
+            {
+               flags[cell.X, cell.Y] = true;
+            }
          }
 
          // Then in each pass mark all flagged cells neighbors with flag until we find an enemy.
@@ -277,7 +285,7 @@ namespace KlopAi
          IKlopCell target;
 
          var closestEnemy = FindNearestEnemyCell(player);
-         var minEnemyDistance = _pathFinder.FindPath(player.BasePosX, player.BasePosY, closestEnemy.X, closestEnemy.Y, player).Count(cc => cc.Owner != player);
+         var minEnemyDistance = GetTurnsCount(player, closestEnemy);
 
          if (minEnemyDistance < _model.RemainingKlops*AttackThreshold)
          {
@@ -296,21 +304,19 @@ namespace KlopAi
 
       private IKlopCell GenerateStartingPattern(IKlopPlayer player)
       {
-         IKlopCell target;
-         target = _model.Cells
-                     .Where(c =>
-                               {
-                                  if (c.X < 1 || c.Y < 1 || c.X >= _model.FieldWidth - 2 || c.Y >= _model.FieldHeight - 2) return false;
-                                  if (_model.GetNeighborCells(c).Any(cc => cc.Owner != null)) return false;
-                                  var dx = Math.Abs(c.X - player.BasePosX);
-                                  var dy = Math.Abs(c.Y - player.BasePosY);
-                                  return dx > 1 && dy > 1
-                                         && ((dx*dx + dy*dy) < (Math.Pow(_model.FieldHeight, 2) + Math.Pow(_model.FieldWidth, 2))/3)
-                                         && (GetEnemyDistance(c, player) > _model.TurnLength/1.7);
-                               }).Random() ?? _model.Cells.Where(c => c.Owner == null).Random();
          // TODO: Target sometimes falls behing enemy cells, and, however, target cell is not close to enemy, the path is.
          // TODO: "Safe path"?? "Safe evaluator".. or SafePathFinder. How to build safe cells map fast?
-         return target;
+         return _model.Cells
+                   .Where(c =>
+                             {
+                                if (c.X < 1 || c.Y < 1 || c.X >= _model.FieldWidth - 2 || c.Y >= _model.FieldHeight - 2) return false;
+                                if (_model.GetNeighborCells(c).Any(cc => cc.Owner != null)) return false;
+                                var dx1 = Math.Abs(c.X - player.BasePosX);
+                                var dy1 = Math.Abs(c.Y - player.BasePosY);
+                                return dx1 > 1 && dy1 > 1
+                                       && ((dx1*dx1 + dy1*dy1) < (Math.Pow(_model.FieldHeight, 2) + Math.Pow(_model.FieldWidth, 2))/3)
+                                       && (GetEnemyDistance(player, c) > _model.TurnLength/1.7);
+                             }).Random() ?? _model.Cells.Where(c => c.Owner == null).Random();
       }
 
 
@@ -339,14 +345,23 @@ namespace KlopAi
       /// <summary>
       /// Gets the distance to the closest enemy cell.
       /// </summary>
-      /// <param name="cell">The cell.</param>
-      /// <param name="player"></param>
-      /// <returns></returns>
-      private double GetEnemyDistance(IKlopCell cell, IKlopPlayer player)
+      private double GetEnemyDistance(IKlopPlayer player, IKlopCell cell)
       {
-         var cells = _model.Cells.Where(c => c.Owner != null && c.Owner != player).ToArray();
-         var doubles = cells.Select(c => KlopPathFinder.GetDistance(c, cell)).ToArray();
-         return doubles.Min();
+         //TODO: Create a map of distances and cache it until new turn. Something like heat map.
+         // BuildEnemyHeatMap! That's what we need.
+         //return GetTurnsCount(player, FindNearestEnemyCell(player, cell));
+
+         // This implementation is rather fast, the above is very slow.
+         return _model.Cells.Where(c => c.Owner != null && c.Owner != player).Select(c => KlopPathFinder.GetDistance(c, cell)).Min();
+      }
+
+
+      /// <summary>
+      /// Gets the count of turns needed to reach specified cell.
+      /// </summary>
+      private int GetTurnsCount(IKlopPlayer player, IKlopCell targetCell)
+      {
+         return _pathFinder.FindPath(player.BasePosX, player.BasePosY, targetCell.X, targetCell.Y, player).Count(cc => cc.Owner != player);
       }
 
       #endregion
