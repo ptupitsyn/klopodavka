@@ -314,9 +314,9 @@ namespace KlopModel
                cell.State = ECellState.Base;
             }
 
-            CurrentPlayerIndex = 0;
             RemainingKlops = TurnLength;
             FindAvailableCells();
+            CurrentPlayerIndex = 0;
          }
       }
 
