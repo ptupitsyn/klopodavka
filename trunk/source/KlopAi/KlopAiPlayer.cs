@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Media;
 using KlopAi.algo;
@@ -22,6 +23,7 @@ namespace KlopAi
       private KlopPathFinder _pathFinder;
       private BackgroundWorker _worker;
       private readonly object _syncRoot = new object();
+      private int[,] _distanceMap;
       private const decimal AttackThreshold = 0.3M;
 
       #endregion
@@ -85,10 +87,10 @@ namespace KlopAi
       }
 
 
-      public IKlopCell FindCheapestCell(IKlopPlayer klopPlayer)
+      public IKlopCell FindCheapestCell()
       {
-         _pathFinder.EvaluateCells(klopPlayer);
-         return _model.Cells.Where(c => c.Owner != klopPlayer)
+         _pathFinder.EvaluateCells(this);
+         return _model.Cells.Where(c => c.Owner != this)
             .Select(c => new {c, node = _pathFinder.GetNodeByCoordinates(c.X, c.Y)}).Highest(c => -c.node.Cost).c;
       }
 
@@ -183,16 +185,16 @@ namespace KlopAi
          lock (_syncRoot)  // Sometimes workers can overlap
          {
             var path = new List<IKlopCell>();
+            _distanceMap = BuildEnemyDistanceMap();
             while (_model.CurrentPlayer == this && _model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
             {
-               var player = _model.CurrentPlayer;
                while (path.Count == 0)
                {
                   int maxPathLength;
-                  var target = FindNextTarget(player, out maxPathLength);
+                  var target = FindNextTarget(out maxPathLength);
 
                   // Find path FROM target to have correct ordered list
-                  path.AddRange(_pathFinder.FindPath(target.X, target.Y, player.BasePosX, player.BasePosY, player).Take(maxPathLength));
+                  path.AddRange(_pathFinder.FindPath(target.X, target.Y, BasePosX, BasePosY, this).Take(maxPathLength));
                }
                var cell = path.First();
                path.Remove(cell);
@@ -215,16 +217,16 @@ namespace KlopAi
       /// <summary>
       /// Finds the next target cell. Core thinking method where gaming logic is situated.
       /// </summary>
-      private IKlopCell FindNextTarget(IKlopPlayer player, out int maxPathLength)
+      private IKlopCell FindNextTarget(out int maxPathLength)
       {
          if (IsFightStarted())
          {
             // Fight started, rush to base
             maxPathLength = 1;
-            return DoFight(player);
+            return DoFight();
          }
             
-         return PrepareOrAttack(player, out maxPathLength);
+         return PrepareOrAttack(out maxPathLength);
       }
 
 
@@ -242,7 +244,7 @@ namespace KlopAi
       /// if targetCell is not specified, all player-owned cells are used as targets.
       /// </summary>
       /// <returns></returns>
-      private IKlopCell FindNearestEnemyCell(IKlopPlayer player, IKlopCell targetCell = null)
+      private IKlopCell FindNearestEnemyCell(IKlopCell targetCell = null)
       {
          var flags = new bool[_model.FieldWidth,_model.FieldHeight];
 
@@ -254,7 +256,7 @@ namespace KlopAi
          else
          {
             // Starting cell not specified - mark all own cells with flags.
-            foreach (var cell in _model.Cells.Where(c => c.Owner == player))
+            foreach (var cell in _model.Cells.Where(c => c.Owner == this))
             {
                flags[cell.X, cell.Y] = true;
             }
@@ -266,7 +268,7 @@ namespace KlopAi
             var neighborCells = _model.Cells.Where(c => flags[c.X, c.Y]).SelectMany(c => _model.GetNeighborCells(c)).Where(c => !flags[c.X, c.Y]).ToArray();
             foreach (var cell in neighborCells)
             {
-               if (cell.Owner != null && cell.Owner != player)
+               if (cell.Owner != null && cell.Owner != this)
                {
                   // Found foreigner cell - return it
                   return cell;
@@ -280,12 +282,12 @@ namespace KlopAi
       /// <summary>
       /// Check whether if enemy is close enough and attacks; in other case generates starting pattern.
       /// </summary>
-      private IKlopCell PrepareOrAttack(IKlopPlayer player, out int maxPathLength)
+      private IKlopCell PrepareOrAttack(out int maxPathLength)
       {
          IKlopCell target;
 
-         var closestEnemy = FindNearestEnemyCell(player);
-         var minEnemyDistance = GetTurnsCount(player, closestEnemy);
+         var closestEnemy = FindNearestEnemyCell();
+         var minEnemyDistance = GetTurnsCount(closestEnemy);
 
          if (minEnemyDistance < _model.RemainingKlops*AttackThreshold)
          {
@@ -295,14 +297,14 @@ namespace KlopAi
          else
          {
             // Fight not started, generate pattern
-            target = GenerateStartingPattern(player);
+            target = GenerateStartingPattern();
             maxPathLength = 2; // _model.TurnLength / 3;
          }
          return target;
       }
 
 
-      private IKlopCell GenerateStartingPattern(IKlopPlayer player)
+      private IKlopCell GenerateStartingPattern()
       {
          // TODO: Target sometimes falls behing enemy cells, and, however, target cell is not close to enemy, the path is.
          // TODO: "Safe path"?? "Safe evaluator".. or SafePathFinder. How to build safe cells map fast?
@@ -311,22 +313,21 @@ namespace KlopAi
                              {
                                 if (c.X < 1 || c.Y < 1 || c.X >= _model.FieldWidth - 2 || c.Y >= _model.FieldHeight - 2) return false;
                                 if (_model.GetNeighborCells(c).Any(cc => cc.Owner != null)) return false;
-                                var dx1 = Math.Abs(c.X - player.BasePosX);
-                                var dy1 = Math.Abs(c.Y - player.BasePosY);
+                                var dx1 = Math.Abs(c.X - BasePosX);
+                                var dy1 = Math.Abs(c.Y - BasePosY);
                                 return dx1 > 1 && dy1 > 1
                                        && ((dx1*dx1 + dy1*dy1) < (Math.Pow(_model.FieldHeight, 2) + Math.Pow(_model.FieldWidth, 2))/3)
-                                       && (GetEnemyDistance(player, c) > _model.TurnLength/1.7);
+                                       && (GetEnemyDistance(c) > _model.TurnLength/1.7);
                              }).Random() ?? _model.Cells.Where(c => c.Owner == null).Random();
       }
 
 
-      private IKlopCell DoFight(IKlopPlayer player)
+      private IKlopCell DoFight()
       {
-         IKlopCell target;
-         var enemies = _model.Players.Where(p => p != player).ToArray();
+         var enemies = _model.Players.Where(p => p != this).ToArray();
          var enemy = enemies.FirstOrDefault(p => p.Human) ?? enemies.Random();
-         target = _model[enemy.BasePosX, enemy.BasePosY];
-         var importantCell = FindMostImportantCell(player.BasePosX, player.BasePosY, target.X, target.Y, enemy);
+         var target = _model[enemy.BasePosX, enemy.BasePosY];
+         var importantCell = FindMostImportantCell(BasePosX, BasePosY, target.X, target.Y, enemy);
 
          //TODO: Find most important reacheble cell!
          if (importantCell != null && importantCell.Item2 > KlopCellEvaluator.TurnEmptyCost*2)
@@ -336,7 +337,7 @@ namespace KlopAi
          }
          else
          {
-            target = FindCheapestCell(player); //TODO: Bug when no good cells to eat - it goes along the border
+            target = FindCheapestCell(); //TODO: Bug when no good cells to eat - it goes along the border
          }
          return target;
       }
@@ -345,23 +346,82 @@ namespace KlopAi
       /// <summary>
       /// Gets the distance to the closest enemy cell.
       /// </summary>
-      private double GetEnemyDistance(IKlopPlayer player, IKlopCell cell)
+      private double GetEnemyDistance(IKlopCell cell)
       {
-         //TODO: Create a map of distances and cache it until new turn. Something like heat map.
-         // BuildEnemyHeatMap! That's what we need.
-         //return GetTurnsCount(player, FindNearestEnemyCell(player, cell));
-
-         // This implementation is rather fast, the above is very slow.
-         return _model.Cells.Where(c => c.Owner != null && c.Owner != player).Select(c => KlopPathFinder.GetDistance(c, cell)).Min();
+         return _distanceMap[cell.X, cell.Y];
       }
 
 
       /// <summary>
       /// Gets the count of turns needed to reach specified cell.
       /// </summary>
-      private int GetTurnsCount(IKlopPlayer player, IKlopCell targetCell)
+      private int GetTurnsCount(IKlopCell targetCell)
       {
-         return _pathFinder.FindPath(player.BasePosX, player.BasePosY, targetCell.X, targetCell.Y, player).Count(cc => cc.Owner != player);
+         return _pathFinder.FindPath(BasePosX, BasePosY, targetCell.X, targetCell.Y, this).Count(cc => cc.Owner != this);
+      }
+
+
+      /// <summary>
+      /// For each cell calculates it's distance from any enemy cell.
+      /// </summary>
+      private int[,] BuildEnemyDistanceMap()
+      {
+         var distanceMap = new int[_model.FieldWidth, _model.FieldHeight];
+         var totalCellCount = distanceMap.Length;
+         var markedCellCount = 0;
+         var maxHeat = 0;
+
+         foreach (var cell in _model.Cells)
+         {
+            if (cell.Owner != null && cell.Owner != this)
+            {
+               // Enemy cell default heat = 0;
+               markedCellCount++;
+            }
+            else
+            {
+               // Non-visited cells are marked with -1
+               distanceMap[cell.X, cell.Y] = -1;
+            }
+         }
+
+         // Then in each pass mark all flagged cells neighbors with flag until we find an enemy.
+         while (markedCellCount < totalCellCount)
+         {
+            maxHeat++;
+            var neighborCells = _model.Cells.Where(c => distanceMap[c.X, c.Y] >= 0).SelectMany(c => _model.GetNeighborCells(c)).ToArray();
+            foreach (var cell in neighborCells)
+            {
+               if (distanceMap[cell.X, cell.Y] >= 0) continue; // Cell already visited. We could use Distinct, but it can be slow.
+               distanceMap[cell.X, cell.Y] = maxHeat;
+               markedCellCount++;
+            }
+         }
+
+         // Visualize:
+         //var s = VisualizeDistanceMap(distanceMap);
+
+         return distanceMap;
+      }
+
+
+      /// <summary>
+      /// Visualizes the distance map.
+      /// Just for debugging.
+      /// </summary>
+      protected string VisualizeDistanceMap(int[,] distanceMap)
+      {
+         //TODO: Make an extension method; or better - allow on-screen visualization with some overlay.
+         var sb = new StringBuilder();
+         for (int y = 0; y < _model.FieldHeight; y++)
+         {
+            for (int x = 0; x < _model.FieldWidth; x++)
+            {
+               sb.Append(distanceMap[x, y].ToString().PadRight(4));
+            }
+            sb.AppendLine();
+         }
+         return sb.ToString();
       }
 
       #endregion
