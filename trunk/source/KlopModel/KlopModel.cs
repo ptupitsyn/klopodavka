@@ -315,8 +315,8 @@ namespace KlopModel
             }
 
             RemainingKlops = TurnLength;
-            FindAvailableCells();
             CurrentPlayerIndex = 0;
+            FindAvailableCells();
          }
       }
 
