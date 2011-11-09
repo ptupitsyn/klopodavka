@@ -246,6 +246,8 @@ namespace KlopAi
       /// <returns></returns>
       private IKlopCell FindNearestEnemyCell(IKlopCell targetCell = null)
       {
+         // TODO: This method is slow, need to use existing distance map.
+
          var flags = new bool[_model.FieldWidth,_model.FieldHeight];
 
          if (targetCell != null)
@@ -268,6 +270,7 @@ namespace KlopAi
             var neighborCells = _model.Cells.Where(c => flags[c.X, c.Y]).SelectMany(c => _model.GetNeighborCells(c)).Where(c => !flags[c.X, c.Y]).ToArray();
             foreach (var cell in neighborCells)
             {
+               //THERE could be BUG: some cells visited more than once! Check this.
                if (cell.Owner != null && cell.Owner != this)
                {
                   // Found foreigner cell - return it
