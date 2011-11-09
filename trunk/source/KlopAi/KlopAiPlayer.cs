@@ -286,6 +286,7 @@ namespace KlopAi
       {
          IKlopCell target;
 
+         // TODO: We can try to use DistanceMap here to speed this up
          var closestEnemy = FindNearestEnemyCell();
          var minEnemyDistance = GetTurnsCount(closestEnemy);
 
