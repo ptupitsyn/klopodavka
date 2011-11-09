@@ -19,12 +19,12 @@ namespace KlopAi
    {
       #region Fields and Constants
 
+      private const decimal AttackThreshold = 0.3M;
+      private readonly object _syncRoot = new object();
+      private int[,] _distanceMap;
       private IKlopModel _model;
       private KlopPathFinder _pathFinder;
       private BackgroundWorker _worker;
-      private readonly object _syncRoot = new object();
-      private int[,] _distanceMap;
-      private const decimal AttackThreshold = 0.3M;
 
       #endregion
 
@@ -42,10 +42,6 @@ namespace KlopAi
 
       public Color Color { get; set; }
 
-      #endregion
-
-      #region Public methods
-
       /// <summary>
       /// Sets the model. Must be called to activate CPU player.
       /// </summary>
@@ -58,6 +54,10 @@ namespace KlopAi
          StartWorker();
       }
 
+      #endregion
+
+      #region Public methods
+
       /// <summary>
       /// Finds the most important cell: cell which most of all affects total path cost.
       /// </summary>
@@ -69,7 +69,10 @@ namespace KlopAi
          var initialCost = _pathFinder.FindPath(startN, finishN, klopPlayer, false).Sum(n => n.Cost);
          double maxCost = 0;
          Node resultNode = null;
-         foreach (var node in _model.Cells.Where(c => c.Available && c.Owner == klopPlayer && c.State == ECellState.Alive).Select(c => _pathFinder.GetNodeByCoordinates(c.X, c.Y)))
+         foreach (
+            var node in
+               _model.Cells.Where(c => c.Available && c.Owner == klopPlayer && c.State == ECellState.Alive).Select(
+                  c => _pathFinder.GetNodeByCoordinates(c.X, c.Y)))
          {
             var oldCost = node.Cost;
             node.Cost = KlopCellEvaluator.TurnBlockedCost;
@@ -130,7 +133,7 @@ namespace KlopAi
          if (Worker.IsBusy)
          {
             Worker.CancelAsync();
-            _worker = null;  // Throw away old worker if it is hanging for some reason
+            _worker = null; // Throw away old worker if it is hanging for some reason
          }
          Worker.RunWorkerAsync();
       }
@@ -138,79 +141,6 @@ namespace KlopAi
       private void StopWorker()
       {
          Worker.CancelAsync();
-      }
-
-      #endregion
-
-      #region Event handlers
-
-      private void DoTurn(object sender, ProgressChangedEventArgs e)
-      {
-         var cell = e.UserState as IKlopCell;
-         if (cell != null && _model.CurrentPlayer == this)
-         {
-            _model.MakeTurn(cell);
-         }
-      }
-
-      /// <summary>
-      /// Handles the PropertyChanged event of the model.
-      /// </summary>
-      /// <param name="sender">The source of the event.</param>
-      /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
-      private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-      {
-         if (e.PropertyName == "CurrentPlayer")
-         {
-            if (_model.CurrentPlayer == this)
-            {
-               StartWorker();
-            }
-            else
-            {
-               StopWorker();
-            }
-         }
-      }
-
-
-      /// <summary>
-      /// AI Worker method.
-      /// </summary>
-      private void DoThinkingMain(object sender, DoWorkEventArgs doWorkEventArgs)
-      {
-         Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-         //TODO: Catch exceptions?
-
-         lock (_syncRoot)  // Sometimes workers can overlap
-         {
-            var path = new List<IKlopCell>();
-            _distanceMap = BuildEnemyDistanceMap();
-            while (_model.CurrentPlayer == this && _model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
-            {
-               while (path.Count == 0)
-               {
-                  int maxPathLength;
-                  var target = FindNextTarget(out maxPathLength);
-
-                  // Find path FROM target to have correct ordered list
-                  path.AddRange(_pathFinder.FindPath(target.X, target.Y, BasePosX, BasePosY, this).Take(maxPathLength));
-               }
-               var cell = path.First();
-               path.Remove(cell);
-
-               if (!cell.Available)
-               {
-                  // Something went wrong, pathfinder returned unavailable cell. Use simple fallback logic:
-                  // This can happen also when base reached. Need to switch strategy.
-                  cell = _model.Cells.FirstOrDefault(c => c.Available);
-                  path.Clear();
-                  if (cell == null) continue;
-               }
-
-               _model.MakeTurn(cell);
-            }
-         }
       }
 
 
@@ -225,7 +155,7 @@ namespace KlopAi
             maxPathLength = 1;
             return DoFight();
          }
-            
+
          return PrepareOrAttack(out maxPathLength);
       }
 
@@ -287,24 +217,15 @@ namespace KlopAi
       /// </summary>
       private IKlopCell PrepareOrAttack(out int maxPathLength)
       {
-         IKlopCell target;
-
-         // TODO: We can try to use DistanceMap here to speed this up
-         var closestEnemy = FindNearestEnemyCell();
-         var minEnemyDistance = GetTurnsCount(closestEnemy);
-
-         if (minEnemyDistance < _model.RemainingKlops*AttackThreshold)
+         if (GetMinEnemyDistance() < _model.RemainingKlops*AttackThreshold)
          {
-            target = closestEnemy;
             maxPathLength = int.MaxValue;
+            return FindNearestEnemyCell();
          }
-         else
-         {
-            // Fight not started, generate pattern
-            target = GenerateStartingPattern();
-            maxPathLength = 2; // _model.TurnLength / 3;
-         }
-         return target;
+
+         // Fight not started, generate pattern
+         maxPathLength = 2; // _model.TurnLength / 3;
+         return GenerateStartingPattern();
       }
 
 
@@ -370,7 +291,7 @@ namespace KlopAi
       /// </summary>
       private int[,] BuildEnemyDistanceMap()
       {
-         var distanceMap = new int[_model.FieldWidth, _model.FieldHeight];
+         var distanceMap = new int[_model.FieldWidth,_model.FieldHeight];
          var totalCellCount = distanceMap.Length;
          var markedCellCount = 0;
          var maxHeat = 0;
@@ -408,6 +329,14 @@ namespace KlopAi
          return distanceMap;
       }
 
+      /// <summary>
+      /// Gets the distance to the nearest enemy cell.
+      /// </summary>
+      /// <returns></returns>
+      private int GetMinEnemyDistance()
+      {
+         return _model.Cells.Where(c => c.Available).Select(c => _distanceMap[c.X, c.Y]).Min();
+      }
 
       /// <summary>
       /// Visualizes the distance map.
@@ -426,6 +355,79 @@ namespace KlopAi
             sb.AppendLine();
          }
          return sb.ToString();
+      }
+
+      #endregion
+
+      #region Event handlers
+
+      private void DoTurn(object sender, ProgressChangedEventArgs e)
+      {
+         var cell = e.UserState as IKlopCell;
+         if (cell != null && _model.CurrentPlayer == this)
+         {
+            _model.MakeTurn(cell);
+         }
+      }
+
+      /// <summary>
+      /// Handles the PropertyChanged event of the model.
+      /// </summary>
+      /// <param name="sender">The source of the event.</param>
+      /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
+      private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+      {
+         if (e.PropertyName == "CurrentPlayer")
+         {
+            if (_model.CurrentPlayer == this)
+            {
+               StartWorker();
+            }
+            else
+            {
+               StopWorker();
+            }
+         }
+      }
+
+
+      /// <summary>
+      /// AI Worker method.
+      /// </summary>
+      private void DoThinkingMain(object sender, DoWorkEventArgs doWorkEventArgs)
+      {
+         Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+         //TODO: Catch exceptions?
+
+         lock (_syncRoot) // Sometimes workers can overlap
+         {
+            var path = new List<IKlopCell>();
+            _distanceMap = BuildEnemyDistanceMap();
+            while (_model.CurrentPlayer == this && _model.Cells.Any(c => c.Available) && !Worker.CancellationPending)
+            {
+               while (path.Count == 0)
+               {
+                  int maxPathLength;
+                  var target = FindNextTarget(out maxPathLength);
+
+                  // Find path FROM target to have correct ordered list
+                  path.AddRange(_pathFinder.FindPath(target.X, target.Y, BasePosX, BasePosY, this).Take(maxPathLength));
+               }
+               var cell = path.First();
+               path.Remove(cell);
+
+               if (!cell.Available)
+               {
+                  // Something went wrong, pathfinder returned unavailable cell. Use simple fallback logic:
+                  // This can happen also when base reached. Need to switch strategy.
+                  cell = _model.Cells.FirstOrDefault(c => c.Available);
+                  path.Clear();
+                  if (cell == null) continue;
+               }
+
+               _model.MakeTurn(cell);
+            }
+         }
       }
 
       #endregion
