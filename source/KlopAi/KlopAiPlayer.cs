@@ -238,21 +238,50 @@ namespace KlopAi
 
 
       /// <summary>
+      /// Finds the nearest enemy cell.
+      /// </summary>
+      /// <param name="player">The player.</param>
+      /// <returns></returns>
+      private IKlopCell FindNearestEnemyCell(IKlopPlayer player)
+      {
+         var flags = new bool[_model.FieldWidth,_model.FieldHeight];
+         
+         // First, mark all own cells with flags.
+         foreach (var cell in _model.Cells.Where(c => c.Owner == player))
+         {
+            flags[cell.X, cell.Y] = true;
+         }
+
+         // Then in each pass mark all flagged cells neighbors with flag until we find an enemy.
+         while (true)
+         {
+            var neighborCells = _model.Cells.Where(c => flags[c.X, c.Y]).SelectMany(c => _model.GetNeighborCells(c)).Where(c => !flags[c.X, c.Y]).ToArray();
+            foreach (var cell in neighborCells)
+            {
+               if (cell.Owner != null && cell.Owner != player)
+               {
+                  // Found foreigner cell - return it
+                  return cell;
+               }
+               flags[cell.X, cell.Y] = true;
+            }
+         }
+      }
+
+
+      /// <summary>
       /// Check whether if enemy is close enough and attacks; in other case generates starting pattern.
       /// </summary>
       private IKlopCell PrepareOrAttack(IKlopPlayer player, out int maxPathLength)
       {
          IKlopCell target;
-         // TODO: Some crafty algorithm to do this faster? Like start marking nearby cells while not hit enemy cell..
 
-         // Find closest enemy cell, compare to available turns, take attack decision (GetEnemyDistance is incorrect here)
-         var closestEnemy = _model.Cells.Where(c => c.Owner != null && c.Owner != player)
-            .Select(c => new Tuple<int, int, int>(_pathFinder.FindPath(player.BasePosX, player.BasePosY, c.X, c.Y, player).Count(cc => cc.Owner != player), c.X, c.Y))
-            .Min();
+         var closestEnemy = FindNearestEnemyCell(player);
+         var minEnemyDistance = _pathFinder.FindPath(player.BasePosX, player.BasePosY, closestEnemy.X, closestEnemy.Y, player).Count(cc => cc.Owner != player);
 
-         if (closestEnemy.Item1 < _model.RemainingKlops*AttackThreshold) //TODO: Constants (AttackThreshold, alias: Aggression)
+         if (minEnemyDistance < _model.RemainingKlops*AttackThreshold)
          {
-            target = _model[closestEnemy.Item2, closestEnemy.Item3];
+            target = closestEnemy;
             maxPathLength = int.MaxValue;
          }
          else
