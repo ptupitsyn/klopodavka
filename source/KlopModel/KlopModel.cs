@@ -22,6 +22,7 @@ namespace KlopModel
       private int _currentPlayerIndex;
       private int _remainingKlops;
       private int _turnLength;
+      private readonly HashSet<IKlopPlayer> _defeatedPlayers = new HashSet<IKlopPlayer>();
 
       #endregion
 
@@ -193,6 +194,15 @@ namespace KlopModel
          }
       }
 
+
+      /// <summary>
+      /// Determines whether specified player is defeated and cannot longer make moves.
+      /// </summary>
+      public bool IsPlayerDefeated(IKlopPlayer player)
+      {
+         return _defeatedPlayers.Contains(player);
+      }
+
       #endregion
 
       #region IKlopModel Members
@@ -291,6 +301,8 @@ namespace KlopModel
       {
          lock (_syncroot)
          {
+            _defeatedPlayers.Clear();
+
             for (int x = 0; x < FieldWidth; x++)
             {
                for (int y = 0; y < FieldHeight; y++)
@@ -353,19 +365,35 @@ namespace KlopModel
             }
 
             RemainingKlops--;
-
-            // Try switching turns while someone still have available cells
-            int availCount;
-            var retryCount = Players.Count + 1;
-            do
-            {
-               SwitchTurn();
-               //TODO: GameOver condition -> Count clops?
-               availCount = FindAvailableCells().Count;
-               //TODO: Mark player as defeated?
-            } while (availCount == 0 && retryCount-- > 0);
+            TrySwitchTurn();
          }
       }
+
+
+      private void TrySwitchTurn()
+      {
+         // Try switching turns while someone still have available cells
+         int availCount;
+         var retryCount = Players.Count + 1;
+         do
+         {
+            SwitchTurn();
+            //TODO: GameOver condition -> Count clops?
+            availCount = FindAvailableCells().Count;
+            DetectDefeatedPlayer(availCount);
+         } while (availCount == 0 && retryCount-- > 0);
+      }
+
+
+      /// <summary>
+      /// Detects the defeated player.
+      /// </summary>
+      private void DetectDefeatedPlayer(int availCount)
+      {
+         // There are remaining clops, but no avaailable cells => player is defeated.
+         if (availCount == 0 && RemainingKlops > 0) _defeatedPlayers.Add(CurrentPlayer);
+      }
+
 
       /// <summary>
       /// Makes the turn to the specified cell.
