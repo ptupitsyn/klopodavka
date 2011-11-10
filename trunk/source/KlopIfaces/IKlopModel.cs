@@ -89,5 +89,11 @@ namespace KlopIfaces
       /// Gets the neighbor cells.
       /// </summary>
       IEnumerable<IKlopCell> GetNeighborCells(IKlopCell cell);
+
+
+      /// <summary>
+      /// Determines whether specified player is defeated and cannot longer make moves.
+      /// </summary>
+      bool IsPlayerDefeated(IKlopPlayer player);
    }
 }

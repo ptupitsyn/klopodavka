@@ -249,8 +249,14 @@ namespace KlopAi
 
       private IKlopCell DoFight()
       {
-         var enemies = _model.Players.Where(p => p != this).ToArray();
-         var enemy = enemies.FirstOrDefault(p => p.Human) ?? enemies.Random();
+         var enemy = GetPreferredEnemy();
+
+         if (enemy == null)
+         {
+            // All enemies have been defeated. Game over.
+            return _model.Cells.Where(c => c.Owner == null).FirstOrDefault();
+         }
+
          var target = _model[enemy.BasePosX, enemy.BasePosY];
          var importantCell = FindMostImportantCell(BasePosX, BasePosY, target.X, target.Y, enemy);
 
@@ -265,6 +271,37 @@ namespace KlopAi
             target = FindCheapestCell(); //TODO: Bug when no good cells to eat - it goes along the border
          }
          return target;
+      }
+
+
+      /// <summary>
+      /// Gets the enemy player which is most suitable to be attacked by us.
+      /// </summary>
+      private IKlopPlayer GetPreferredEnemy()
+      {
+         var enemies = _model.Players.Where(p => p != this && !_model.IsPlayerDefeated(p)).ToArray();
+         var humanPlayers = enemies.Where(p => p.Human).ToArray();
+         
+         // Human enemies are preferred (make the game harder)
+         if (humanPlayers.Length > 0)
+            enemies = humanPlayers;
+
+         if (enemies.Length == 0) return null;
+         if (enemies.Length == 1) return enemies[0];
+         return GetPreferredEnemy(enemies);
+      }
+
+
+      /// <summary>
+      /// Gets the enemy player which is most suitable to be attacked by us.
+      /// </summary>
+      private IKlopPlayer GetPreferredEnemy(IEnumerable<IKlopPlayer> enemies)
+      {
+         // Find the enemy with cheapest path to it's base and attack it
+         // We can also try to find weakest enemy
+         // Or an enemy with closest cells
+         // Or an enemy which attacks us most
+         return enemies.OrderBy(e => _model.Cells.Where(c => c.Owner == e).Count()).FirstOrDefault();
       }
 
 
