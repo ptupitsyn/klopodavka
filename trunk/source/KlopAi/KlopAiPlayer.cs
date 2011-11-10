@@ -447,6 +447,12 @@ namespace KlopAi
                   int maxPathLength;
                   var target = FindNextTarget(out maxPathLength);
 
+                  if (target == null)
+                  {
+                     // Game over or we are defeated
+                     return;
+                  }
+
                   // Find path FROM target to have correct ordered list
                   path.AddRange(_pathFinder.FindPath(target.X, target.Y, BasePosX, BasePosY, this).Take(maxPathLength));
                }
