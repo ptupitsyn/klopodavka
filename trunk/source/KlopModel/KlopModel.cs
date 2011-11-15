@@ -22,6 +22,8 @@ namespace KlopModel
       private int _currentPlayerIndex;
       private int _remainingKlops;
       private int _turnLength;
+      private readonly int _fieldWidth;
+      private readonly int _fieldHeight;
       private readonly HashSet<IKlopPlayer> _defeatedPlayers = new HashSet<IKlopPlayer>();
 
       #endregion
@@ -51,8 +53,8 @@ namespace KlopModel
       /// <param name="turnLenght">The turn lenght.</param>
       public KlopModel(int width, int height, IList<IKlopPlayer> players, int turnLenght)
       {
-         FieldWidth = width;
-         FieldHeight = height;
+         _fieldWidth = width;
+         _fieldHeight = height;
          Players = players;
          TurnLength = turnLenght; 
 
@@ -120,7 +122,7 @@ namespace KlopModel
       /// <returns></returns>
       private bool CheckCoordinates(int x, int y)
       {
-         return x >= 0 && x < FieldWidth && y >= 0 && y < FieldHeight;
+         return x >= 0 && y >= 0 && x < _fieldWidth && y < _fieldHeight;
       }
 
       /// <summary>
@@ -182,15 +184,27 @@ namespace KlopModel
       /// <returns></returns>
       public IEnumerable<IKlopCell> GetNeighborCells(IKlopCell cell)
       {
-         var dx = new[] {-1, -1, -1, 1, 1, 1, 0, 0};
-         var dy = new[] {-1, 0, 1, -1, 0, 1, -1, 1};
+         // This method is called very often. Here is fastest implementation for now:
+         var cx = cell.X;
+         var cy = cell.Y;
+         var xNotMin = cx != 0;
+         var xNotMax = cx < _fieldWidth - 1;
 
-         for (int i = 0; i < dx.Length; i++)
+         if (cy != 0)
          {
-            var x = cell.X + dx[i];
-            var y = cell.Y + dy[i];
-            if (CheckCoordinates(x, y))
-               yield return _cells[x, y];
+            if (xNotMin) yield return _cells[cx - 1, cy - 1];
+            yield return _cells[cx, cy - 1];
+            if (xNotMax) yield return _cells[cx + 1, cy - 1];
+         }
+
+         if (xNotMin) yield return _cells[cx - 1, cy];
+         if (xNotMax) yield return _cells[cx + 1, cy];
+
+         if (cy != _fieldHeight - 1)
+         {
+            if (xNotMin) yield return _cells[cx - 1, cy + 1];
+            yield return _cells[cx, cy + 1];
+            if (xNotMax) yield return _cells[cx + 1, cy + 1];
          }
       }
 
@@ -207,18 +221,23 @@ namespace KlopModel
 
       #region IKlopModel Members
 
-
       /// <summary>
       /// Gets or sets the width of the field.
       /// </summary>
       /// <value>The width of the field.</value>
-      public int FieldWidth { get; private set; }
+      public int FieldWidth
+      {
+         get { return _fieldWidth; }
+      }
 
       /// <summary>
       /// Gets the height of the field.
       /// </summary>
       /// <value>The height of the field.</value>
-      public int FieldHeight { get; private set; }
+      public int FieldHeight
+      {
+         get { return _fieldHeight; }
+      }
 
       /// <summary>
       /// Gets the players.
@@ -271,7 +290,7 @@ namespace KlopModel
       {
          get
          {
-            return CheckCoordinates(x, y) ? _cells[x, y] : null;
+            return _cells[x, y];
          }
       }
 
@@ -283,10 +302,9 @@ namespace KlopModel
       {
          get
          {
-            //return _cells.OfType<IKlopCell>();
-            for (int y = 0; y < FieldHeight; y++)
+            for (int y = 0; y < _fieldHeight; y++)
             {
-               for (int x = 0; x < FieldWidth; x++)
+               for (int x = 0; x < _fieldWidth; x++)
                {
                   yield return _cells[x, y];
                }
