@@ -74,8 +74,8 @@ namespace KlopViewWpf.Converters
          if (ClopBrushes.ContainsKey(key))
             return ClopBrushes[key];
 
-         FrameworkElement image = new KlopImage {KlopColor = color};
-         if (ClopBrushes.Count%2 == 0)
+         FrameworkElement image = new KlopImage { KlopColor = color };
+         if (ClopBrushes.Count % 2 == 0)
          {
             //Nice hack to orientate enemy image
             image.RenderTransform = new RotateTransform(180);
@@ -89,8 +89,9 @@ namespace KlopViewWpf.Converters
          }
          else
          {
-            brush = new VisualBrush {Visual = image};
+            brush = new VisualBrush { Visual = image };
          }
+         //var brush = dead ? new SolidColorBrush(color){Opacity = 1} : new SolidColorBrush(color) {Opacity = 0.5};
          ClopBrushes[key] = brush;
 
          return brush;
