@@ -19,7 +19,7 @@ namespace KlopAi
    {
       #region Fields and Constants
 
-      private const decimal AttackThreshold = 0.5M;
+      private const decimal AttackThreshold = 0.4M;
       private readonly object _syncRoot = new object();
       private int[,] _distanceMap;
       private IKlopModel _model;
