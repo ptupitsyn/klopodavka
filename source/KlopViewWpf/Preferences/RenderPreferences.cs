@@ -12,14 +12,14 @@ namespace KlopViewWpf.Preferences
 
       public bool UseCachedBrush
       {
-         get { return (bool) Settings.Default["UseCachedBrush"]; }
-         set { Settings.Default["UseCachedBrush"] = value; }
+         get { return Settings.Default.UseCachedBrush; }
+         set { Settings.Default.UseCachedBrush = value; }
       }
 
       public bool DisableAnimation
       {
-         get { return (bool) Settings.Default["DisableAnimation"]; }
-         set { Settings.Default["DisableAnimation"] = value; }
+         get { return Settings.Default.DisableAnimation; }
+         set { Settings.Default.DisableAnimation = value; }
       }
 
       #endregion

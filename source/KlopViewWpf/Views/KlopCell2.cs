@@ -25,7 +25,7 @@ namespace KlopViewWpf.Views
    {
       #region Fields and Constants
 
-      private const int AnimationQueueLimit = 100;
+      private const int AnimationQueueLimit = 30;
       private const int DesiredFramerate = 60;
       private static readonly Queue<Action> ActionQueue = new Queue<Action>();
       private static readonly Brush AvailableBrush;

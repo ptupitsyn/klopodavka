@@ -9,20 +9,26 @@ namespace KlopViewWpf.Preferences
 
       public int GameFieldSize
       {
-         get { return (int) Settings.Default["GameFieldSize"]; }
-         set { Settings.Default["GameFieldSize"] = value; }
+         get { return Settings.Default.GameFieldSize; }
+         set { Settings.Default.GameFieldSize = value; }
       }
 
       public int GameTurnLength
       {
-         get { return (int) Settings.Default["GameTurnLength"]; }
-         set { Settings.Default["GameTurnLength"] = value; }
+         get { return Settings.Default.GameTurnLength; }
+         set { Settings.Default.GameTurnLength = value; }
       }
 
       public int GameBaseDistance
       {
-         get { return (int) Settings.Default["GameBaseDistance"]; }
-         set { Settings.Default["GameBaseDistance"] = value; }
+         get { return Settings.Default.GameBaseDistance; }
+         set { Settings.Default.GameBaseDistance = value; }
+      }
+
+      public int PlayerCount
+      {
+         get { return Settings.Default.PlayerCount; }
+         set { Settings.Default.PlayerCount = value; }
       }
 
       #endregion
