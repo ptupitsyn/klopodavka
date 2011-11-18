@@ -55,10 +55,11 @@ namespace KlopViewWpf.ViewModels
             {
                var players = new List<IKlopPlayer>
                                 {
+                                   new KlopPlayer   {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"},
+                                   new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
                                    new KlopAiPlayer {BasePosX = _baseDist, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"},
                                    new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3"},
-                                   new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
-                                   new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Name = "Луноход 4"}
+                                   //new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Name = "Луноход 4"}
                                 };
                //var players = new List<IKlopPlayer>
                //                 {
@@ -70,7 +71,10 @@ namespace KlopViewWpf.ViewModels
                //                    new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
                //                    new KlopPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"}
                //                 };
-               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players, _turnLength);
+
+               var playerCount = PreferencesManager.Instance.GamePreferences.PlayerCount;
+               if (playerCount < 2) playerCount = 2;
+               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players.Take(playerCount), _turnLength);
             }
             return _klopModel;
          }

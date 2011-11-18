@@ -18,6 +18,7 @@ namespace KlopModel
 
       private readonly KlopCell[,] _cells;
       private readonly Stack<KlopCell> _history;
+      private readonly IKlopPlayer[] _players;
       private readonly object _syncroot = new object();
       private int _currentPlayerIndex;
       private int _remainingKlops;
@@ -51,11 +52,11 @@ namespace KlopModel
       /// <param name="height">The height.</param>
       /// <param name="players">The players.</param>
       /// <param name="turnLenght">The turn lenght.</param>
-      public KlopModel(int width, int height, IList<IKlopPlayer> players, int turnLenght)
+      public KlopModel(int width, int height, IEnumerable<IKlopPlayer> players, int turnLenght)
       {
          _fieldWidth = width;
          _fieldHeight = height;
-         Players = players;
+         _players = players.ToArray();
          TurnLength = turnLenght; 
 
          if (width < 10 || height < 10)
@@ -63,7 +64,7 @@ namespace KlopModel
             throw new ArgumentException("Width and height must be greater than 9");
          }
 
-         if (players == null || players.Count < 2)
+         if (players == null || _players.Length < 2)
          {
             throw new ArgumentException("Need two or more players");
          }
@@ -95,7 +96,7 @@ namespace KlopModel
          {
             RemainingKlops = TurnLength;
 
-            if (CurrentPlayerIndex == Players.Count - 1)
+            if (CurrentPlayerIndex == _players.Length - 1)
             {
                CurrentPlayerIndex = 0;
             }
@@ -243,7 +244,10 @@ namespace KlopModel
       /// Gets the players.
       /// </summary>
       /// <value>The players.</value>
-      public IList<IKlopPlayer> Players { get; private set; }
+      public IEnumerable<IKlopPlayer> Players
+      {
+         get { return _players; }
+      }
 
       /// <summary>
       /// Gets the current player.
@@ -251,7 +255,7 @@ namespace KlopModel
       /// <value>The current player.</value>
       public IKlopPlayer CurrentPlayer
       {
-         get { return Players[CurrentPlayerIndex]; }
+         get { return _players[CurrentPlayerIndex]; }
       }
 
       /// <summary>
@@ -392,7 +396,7 @@ namespace KlopModel
       {
          // Try switching turns while someone still have available cells
          int availCount;
-         var retryCount = Players.Count + 1;
+         var retryCount = _players.Length + 1;
          do
          {
             SwitchTurn();

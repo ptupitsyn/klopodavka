@@ -29,7 +29,7 @@ namespace KlopIfaces
       /// Gets the players.
       /// </summary>
       /// <value>The players.</value>
-      IList<IKlopPlayer> Players { get; }
+      IEnumerable<IKlopPlayer> Players { get; }
 
       /// <summary>
       /// Gets the current player.
