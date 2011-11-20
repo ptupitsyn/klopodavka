@@ -23,7 +23,7 @@ namespace KlopAi
       public const double TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
       public const double TurnEmptyCost = 100; // Цена хода в пустую клетку
       public const double TurnNearEnemyBaseCost = 5000; // Цена хода около чужой базы
-      public const double TurnNearEnemyEmptyCost = 140; // Цена хода в пустую клетку рядом с врагом
+      public const double TurnNearEnemyEmptyCost = 130; // Цена хода в пустую клетку рядом с врагом
       public const double TurnNearOwnBaseCost = 2000; // Цена хода около своей базы
 
       private static readonly Dictionary<Tuple<IKlopPlayer, IKlopCell>, Tuple<double, ECellState>> CellValueCache =
