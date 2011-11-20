@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -261,16 +262,27 @@ namespace KlopAi
          var importantCell = FindMostImportantCell(BasePosX, BasePosY, target.X, target.Y, enemy);
 
          //TODO: Find most important reacheble cell!
-         if (importantCell != null && importantCell.Item2 > KlopCellEvaluator.TurnEmptyCost*2)
+         if (importantCell != null /* && importantCell.Item2 > KlopCellEvaluator.TurnEmptyCost*2*/)
          {
             //TODO: FindMostImportantCell should return list of cells, filter it and use.
             target = importantCell.Item1;
          }
-         // No good cells to eat - seems like we've been disconnected - Let's rush to enemy base
-         //else
-         //{
-         //   //target = FindCheapestCell(); //TODO: Bug when no good cells to eat - it goes along the border
-         //}
+         else
+         {
+            // No good cells to eat - seems like we've been disconnected
+            var pathToBase = _pathFinder.FindPath(target.X, target.Y, BasePosX, BasePosY, this);
+            // 0) Try to rush to base if there are available cells on the path
+            // 1) Seek for available alive enemy
+            // 2) Seek for next-to-available alive enemy
+            // 3) Seek for any available enemy
+            // 4) Seek for any available cell
+            target = pathToBase.FirstOrDefault(c => c.Available) ??
+                     _model.Cells.Where(c => c.Available && c.Owner != this).FirstOrDefault() ??
+                     _model.Cells.Where(c => c.Owner != this && c.State == ECellState.Alive && _model.GetNeighborCells(c).Any(cc => cc.Available)).
+                        FirstOrDefault() ??
+                     _model.Cells.Where(c => c.Owner != this && c.State == ECellState.Alive).FirstOrDefault() ??
+                     _model.Cells.Where(c => c.Available).Random();
+         }
 
          return target;
       }
@@ -303,7 +315,7 @@ namespace KlopAi
          // We can also try to find weakest enemy
          // Or an enemy with closest cells
          // Or an enemy which attacks us most
-         return enemies.OrderBy(e => _model.Cells.Where(c => c.Owner == e).Count()).FirstOrDefault();
+         return enemies.OrderByDescending(e => _model.Cells.Where(c => c.Owner == e && c.State == ECellState.Alive).Count()).FirstOrDefault();
       }
 
 
@@ -465,6 +477,8 @@ namespace KlopAi
                {
                   // Something went wrong, pathfinder returned unavailable cell. Use simple fallback logic:
                   // This can happen also when base reached. Need to switch strategy.
+                  //TODO!!
+                  //Debug.Assert(false, "PathFinder returned unavailable cell!");
                   cell = _model.Cells.FirstOrDefault(c => c.Available);
                   path.Clear();
                   if (cell == null) continue;
