@@ -24,7 +24,7 @@
     <Grid>
         <Border Background="Gray" Opacity="0.7" />
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel">
-            <Button Margin="20,0,20,0" Command="{Binding NewGameCommand}">
+            <Button Margin="20,0,20,0" Command="{Binding NewGameCommand}" Click="Button_Click">
                 <StackPanel Orientation="Vertical">
                     <Image Source="..\Images\clop.ico" Height="64" HorizontalAlignment="Center" Margin="10" />
                     <TextBlock HorizontalAlignment="Center" Text="New Game" FontWeight="Bold" Margin="10" />

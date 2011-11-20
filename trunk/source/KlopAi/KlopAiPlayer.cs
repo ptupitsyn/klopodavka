@@ -266,10 +266,12 @@ namespace KlopAi
             //TODO: FindMostImportantCell should return list of cells, filter it and use.
             target = importantCell.Item1;
          }
-         else
-         {
-            target = FindCheapestCell(); //TODO: Bug when no good cells to eat - it goes along the border
-         }
+         // No good cells to eat - seems like we've been disconnected - Let's rush to enemy base
+         //else
+         //{
+         //   //target = FindCheapestCell(); //TODO: Bug when no good cells to eat - it goes along the border
+         //}
+
          return target;
       }
 
