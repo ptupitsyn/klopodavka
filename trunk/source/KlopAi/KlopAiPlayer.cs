@@ -3,16 +3,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Media;
-using KlopAi.algo;
 using KlopAi.Extentions;
+using KlopAi.algo;
 using KlopIfaces;
 
 #endregion
+
 
 namespace KlopAi
 {
@@ -29,6 +29,7 @@ namespace KlopAi
 
       #endregion
 
+
       #region IKlopPlayer implementation
 
       public string Name { get; set; }
@@ -42,6 +43,7 @@ namespace KlopAi
       }
 
       public Color Color { get; set; }
+
 
       /// <summary>
       /// Sets the model. Must be called to activate CPU player.
@@ -57,13 +59,37 @@ namespace KlopAi
 
       #endregion
 
-      #region Public methods
+
+      #region Private and protected properties and indexers
+
+      /// <summary>
+      /// Gets the worker.
+      /// </summary>
+      /// <value>The worker.</value>
+      private BackgroundWorker Worker
+      {
+         get
+         {
+            if (_worker == null)
+            {
+               _worker = new BackgroundWorker {WorkerSupportsCancellation = true, WorkerReportsProgress = true};
+               _worker.DoWork += DoThinkingMain;
+               _worker.ProgressChanged += DoTurn;
+            }
+            return _worker;
+         }
+      }
+
+      #endregion
+
+
+      #region Private and protected methods
 
       /// <summary>
       /// Finds the most important cell: cell which most of all affects total path cost.
       /// </summary>
       /// <returns>Tuple of most important cell and path cost difference.</returns>
-      public Tuple<IKlopCell, double> FindMostImportantCell(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
+      private Tuple<IKlopCell, double> FindMostImportantCell(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
       {
          var startN = _pathFinder.GetNodeByCoordinates(startX, startY);
          var finishN = _pathFinder.GetNodeByCoordinates(finishX, finishY);
@@ -91,39 +117,6 @@ namespace KlopAi
       }
 
 
-      public IKlopCell FindCheapestCell()
-      {
-         _pathFinder.EvaluateCells(this);
-         return _model.Cells.Where(c => c.Owner != this)
-            .Select(c => new {c, node = _pathFinder.GetNodeByCoordinates(c.X, c.Y)}).Highest(c => -c.node.Cost).c;
-      }
-
-      #endregion
-
-      #region Private and protected properties and indexers
-
-      /// <summary>
-      /// Gets the worker.
-      /// </summary>
-      /// <value>The worker.</value>
-      private BackgroundWorker Worker
-      {
-         get
-         {
-            if (_worker == null)
-            {
-               _worker = new BackgroundWorker {WorkerSupportsCancellation = true, WorkerReportsProgress = true};
-               _worker.DoWork += DoThinkingMain;
-               _worker.ProgressChanged += DoTurn;
-            }
-            return _worker;
-         }
-      }
-
-      #endregion
-
-      #region Private and protected methods
-
       /// <summary>
       /// Starts the worker.
       /// </summary>
@@ -138,6 +131,7 @@ namespace KlopAi
          }
          Worker.RunWorkerAsync();
       }
+
 
       private void StopWorker()
       {
@@ -295,7 +289,7 @@ namespace KlopAi
       {
          var enemies = _model.Players.Where(p => p != this && !_model.IsPlayerDefeated(p)).ToArray();
          var humanPlayers = enemies.Where(p => p.Human).ToArray();
-         
+
          // Human enemies are preferred (make the game harder)
          if (humanPlayers.Length > 0)
             enemies = humanPlayers;
@@ -380,6 +374,7 @@ namespace KlopAi
          return distanceMap;
       }
 
+
       /// <summary>
       /// Gets the distance to the nearest enemy cell.
       /// </summary>
@@ -389,6 +384,7 @@ namespace KlopAi
          return _model.Cells.Where(c => c.Available).Select(c => _distanceMap[c.X, c.Y]).Min();
       }
 
+
       /// <summary>
       /// Visualizes the distance map.
       /// Just for debugging.
@@ -397,9 +393,9 @@ namespace KlopAi
       {
          //TODO: Make an extension method; or better - allow on-screen visualization with some overlay.
          var sb = new StringBuilder();
-         for (int y = 0; y < _model.FieldHeight; y++)
+         for (var y = 0; y < _model.FieldHeight; y++)
          {
-            for (int x = 0; x < _model.FieldWidth; x++)
+            for (var x = 0; x < _model.FieldWidth; x++)
             {
                sb.Append(distanceMap[x, y].ToString().PadRight(4));
             }
@@ -409,6 +405,7 @@ namespace KlopAi
       }
 
       #endregion
+
 
       #region Event handlers
 
@@ -420,6 +417,7 @@ namespace KlopAi
             _model.MakeTurn(cell);
          }
       }
+
 
       /// <summary>
       /// Handles the PropertyChanged event of the model.
