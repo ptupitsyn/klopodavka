@@ -62,6 +62,24 @@ namespace KlopAi.Extentions
 
 
       /// <summary>
+      /// Get the highest ranked element, judging by comparer results.
+      /// Element E1 is considered higher than element E2 when comparer(E1,E2) returns true.
+      /// </summary>
+      public static T Highest<T>(this IEnumerable<T> enumerable, Func<T, T, bool> comparer) where T : class 
+      {
+         T result = null;
+         foreach (var o in enumerable)
+         {
+            if (result == null || comparer(o, result))
+            {
+               result = o;
+            }
+         }
+         return result;
+      }
+
+
+      /// <summary>
       /// Adds the range of elements to the collection.
       /// </summary>
       /// <typeparam name="T"></typeparam>
