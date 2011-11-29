@@ -13,10 +13,15 @@ namespace KlopViewWpf.ViewModels
       #region Fields and Constants
 
       private RelayCommand _continueGameCommand;
+      private RelayCommand _customGameCommand;
       private KlopGameViewModel _gameViewModel;
 
       private bool _isMenuVisible;
-      private RelayCommand _newGameCommand;
+      private RelayCommand _quickGameAgainstHumanCommand;
+      private RelayCommand _quickGameAgainstOneCommand;
+      private RelayCommand _quickGameAgainstTwoCommand;
+      private RelayCommand _restartGameCommand;
+      private RelayCommand _showDemoCommand;
       private RelayCommand _showMenuCommand;
 
       #endregion
@@ -25,7 +30,6 @@ namespace KlopViewWpf.ViewModels
 
       public MainViewModel()
       {
-         //GameViewModel = new KlopGameViewModel();
          IsMenuVisible = true;
       }
 
@@ -41,6 +45,7 @@ namespace KlopViewWpf.ViewModels
             _gameViewModel = value;
             RaisePropertyChanged("GameViewModel");
             ContinueGameCommand.RaiseCanExecuteChanged();
+            RestartGameCommand.RaiseCanExecuteChanged();
          }
       }
 
@@ -54,9 +59,9 @@ namespace KlopViewWpf.ViewModels
          }
       }
 
-      public RelayCommand NewGameCommand
+      public RelayCommand RestartGameCommand
       {
-         get { return _newGameCommand ?? (_newGameCommand = new RelayCommand(NewGame)); }
+         get { return _restartGameCommand ?? (_restartGameCommand = new RelayCommand(RestartGame, CanRestartGame)); }
       }
 
       public RelayCommand ContinueGameCommand
@@ -64,20 +69,78 @@ namespace KlopViewWpf.ViewModels
          get { return _continueGameCommand ?? (_continueGameCommand = new RelayCommand(ContinueGame, CanContinueGame)); }
       }
 
-      private bool CanContinueGame()
-      {
-         // TODO: Check if game finished.
-         return GameViewModel != null;
-      }
-
       public RelayCommand ShowMenuCommand
       {
          get { return _showMenuCommand ?? (_showMenuCommand = new RelayCommand(ShowMenu)); }
       }
 
+      public RelayCommand QuickGameAgainstOneCommand
+      {
+         get { return _quickGameAgainstOneCommand ?? (_quickGameAgainstOneCommand = new RelayCommand(QuickGameAgainstOne)); }
+      }
+
+      public RelayCommand QuickGameAgainstTwoCommand
+      {
+         get { return _quickGameAgainstTwoCommand ?? (_quickGameAgainstTwoCommand = new RelayCommand(QuickGameAgainstTwo)); }
+      }
+
+      public RelayCommand QuickGameAgainstHumanCommand
+      {
+         get { return _quickGameAgainstHumanCommand ?? (_quickGameAgainstHumanCommand = new RelayCommand(QuickGameAgainstHuman)); }
+      }
+
+      public RelayCommand CustomGameCommand
+      {
+         get { return _customGameCommand ?? (_customGameCommand = new RelayCommand(CustomGame)); }
+      }
+
+      public RelayCommand ShowDemoCommand
+      {
+         get { return _showDemoCommand ?? (_showDemoCommand = new RelayCommand(ShowDemo)); }
+      }
+
       #endregion
 
       #region Private and protected methods
+
+      private void QuickGameAgainstHuman()
+      {
+         throw new NotImplementedException();
+      }
+
+      private bool CanRestartGame()
+      {
+         return CanContinueGame();
+      }
+
+      private void QuickGameAgainstOne()
+      {
+         GameViewModel = new KlopGameViewModel();
+         IsMenuVisible = false;
+      }
+
+      private void QuickGameAgainstTwo()
+      {
+         throw new NotImplementedException();
+         IsMenuVisible = false;
+      }
+
+      private void CustomGame()
+      {
+         throw new NotImplementedException();
+      }
+
+      private void ShowDemo()
+      {
+         throw new NotImplementedException();
+         IsMenuVisible = false;
+      }
+
+      private bool CanContinueGame()
+      {
+         // TODO: Check if game finished.
+         return GameViewModel != null;
+      }
 
       private void ShowMenu()
       {
@@ -89,16 +152,9 @@ namespace KlopViewWpf.ViewModels
          IsMenuVisible = false;
       }
 
-      private void NewGame()
+      private void RestartGame()
       {
-         if (GameViewModel == null)
-         {
-            GameViewModel = new KlopGameViewModel();
-         }
-         else
-         {
-            GameViewModel.ResetCommand.Execute();
-         }
+         GameViewModel.ResetCommand.Execute();
          IsMenuVisible = false;
       }
 

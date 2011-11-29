@@ -140,6 +140,7 @@
     <Compile Include="Controls\HintPathHighlighter.cs" />
     <Compile Include="Converters\ObjectToVisibilityConverter.cs" />
     <Compile Include="Effects\ReflectionEffect.cs" />
+    <Compile Include="Models\ItemDescriptor.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\GameField.xaml.cs">
       <DependentUpon>GameField.xaml</DependentUpon>
@@ -243,6 +244,7 @@
   <ItemGroup>
     <Resource Include="Images\Bedbug.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
