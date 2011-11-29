@@ -53,7 +53,7 @@
                 <Models:ItemDescriptor Text="Quick Game vs Two" Icon="..\Images\clop.ico" 
                                        Description="Quick Game versus two CPU players" />
             </Button>
-            <Button Command="{Binding QuickGameAgainstHumanCommand}" IsEnabled="False" Click="Button_Click">
+            <Button Command="{Binding QuickGameAgainstHumanCommand}" Click="Button_Click">
                 <Models:ItemDescriptor Text="Hot Seat Game" Icon="..\Images\clop.ico" 
                                        Description="Human versus human game" />
             </Button>
