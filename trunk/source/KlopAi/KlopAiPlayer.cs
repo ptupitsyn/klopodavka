@@ -165,45 +165,48 @@ namespace KlopAi
 
 
       /// <summary>
-      /// Finds the nearest enemy cell.
+      /// Finds enemy cell(s) which are closest to specified cell, or to any player cell if targetCell is null.
       /// if targetCell is not specified, all player-owned cells are used as targets.
       /// </summary>
       /// <returns></returns>
-      private IKlopCell FindNearestEnemyCell(IKlopCell targetCell = null)
+      private IEnumerable<IKlopCell> FindNearestEnemyCells(IKlopCell targetCell = null)
       {
-         // TODO: This method is slow, need to use existing distance map.
-
-         var flags = new bool[_model.FieldWidth,_model.FieldHeight];
-
-         if (targetCell != null)
+         if (targetCell == null)
          {
-            // Starting cell specified.
-            flags[targetCell.X, targetCell.Y] = true;
+            var availableCellsWithDistances = _model.Cells.Where(c => c.Available).Select(c => new { c, d = _distanceMap[c.X, c.Y] }).ToArray();
+            var minDistance = availableCellsWithDistances.Select(c => c.d).Min();
+            // Go over all available cells with the same minimum distance
+            foreach (var c in availableCellsWithDistances.Where(c => c.d == minDistance).SelectMany(c => FindNearestEnemyCells(c.c)))
+            {
+               yield return c;
+            }
+            yield break;
+         }
+
+
+         var cell = targetCell;
+         var cellDistance = _distanceMap[cell.X, cell.Y];
+         if (cellDistance == 0)
+         {
+            // End of recursion, we have found enemy cell.
+            yield return cell;
          }
          else
          {
-            // Starting cell not specified - mark all own cells with flags.
-            foreach (var cell in _model.Cells.Where(c => c.Owner == this))
+            foreach (var c in _model.GetNeighborCells(cell).Where(c => _distanceMap[c.X, c.Y] < cellDistance).SelectMany(FindNearestEnemyCells))
             {
-               flags[cell.X, cell.Y] = true;
+               yield return c;
             }
          }
+      }
 
-         // Then in each pass mark all flagged cells neighbors with flag until we find an enemy.
-         while (true)
-         {
-            var neighborCells = _model.Cells.Where(c => flags[c.X, c.Y]).SelectMany(c => _model.GetNeighborCells(c)).Where(c => !flags[c.X, c.Y]).ToArray();
-            foreach (var cell in neighborCells)
-            {
-               //THERE could be BUG: some cells visited more than once! Check this.
-               if (cell.Owner != null && cell.Owner != this)
-               {
-                  // Found foreigner cell - return it
-                  return cell;
-               }
-               flags[cell.X, cell.Y] = true;
-            }
-         }
+
+      private IKlopCell FindEnemyCellToAttack(IKlopCell targetCell = null)
+      {
+         var nearestEnemyCells = FindNearestEnemyCells(targetCell);
+         // There could be several enemy cells with equal distances. Find the one closer to enemy base!
+         var pathLengths = nearestEnemyCells.Select(c => new {c, pathLength = _pathFinder.FindPath(c.X, c.Y, c.Owner.BasePosX, c.Owner.BasePosY, this).Count});
+         return pathLengths.Highest((c1, c2) => c1.pathLength < c2.pathLength).c;
       }
 
 
@@ -215,7 +218,7 @@ namespace KlopAi
          if (GetMinEnemyDistance() < _model.RemainingKlops*AttackThreshold)
          {
             maxPathLength = int.MaxValue;
-            return FindNearestEnemyCell();
+            return FindEnemyCellToAttack();
          }
 
          // Fight not started, generate pattern
