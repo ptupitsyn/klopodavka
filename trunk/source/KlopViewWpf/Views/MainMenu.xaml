@@ -49,15 +49,15 @@
                 <Models:ItemDescriptor Text="Quick Game vs One" Icon="..\Images\clop.ico"
                                        Description="Quick Game versus single CPU player" />
             </Button>
-            <Button Command="{Binding QuickGameAgainstTwoCommand}" IsEnabled="False">
+            <Button Command="{Binding QuickGameAgainstTwoCommand}" Click="Button_Click">
                 <Models:ItemDescriptor Text="Quick Game vs Two" Icon="..\Images\clop.ico" 
                                        Description="Quick Game versus two CPU players" />
             </Button>
-            <Button Command="{Binding QuickGameAgainstHumanCommand}" IsEnabled="False">
+            <Button Command="{Binding QuickGameAgainstHumanCommand}" IsEnabled="False" Click="Button_Click">
                 <Models:ItemDescriptor Text="Hot Seat Game" Icon="..\Images\clop.ico" 
                                        Description="Human versus human game" />
             </Button>
-            <Button Command="{Binding CustomGameCommand}" IsEnabled="False">
+            <Button Command="{Binding CustomGameCommand}" IsEnabled="False" Click="Button_Click">
                 <Models:ItemDescriptor Text="Custom Game" Icon="..\Images\clop.ico" 
                                        Description="Create customized game: specify number of players, field size, base positions, etc." />
             </Button>
@@ -69,7 +69,7 @@
                 <Models:ItemDescriptor Text="Restart Game" Icon="..\Images\clop.ico" 
                                        Description="Restart current game with same settings" />
             </Button>
-            <Button Command="{Binding ShowDemoCommand}" IsEnabled="False">
+            <Button Command="{Binding ShowDemoCommand}" Click="Button_Click">
                 <Models:ItemDescriptor Text="Show Demo" Icon="..\Images\clop.ico" 
                                        Description="Show demo: CPU vs CPU game" />
             </Button>

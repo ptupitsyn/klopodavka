@@ -1,8 +1,14 @@
 ﻿#region Usings
 
 using System;
+using System.Collections.Generic;
+using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using KlopAi;
+using KlopIfaces;
+using KlopModel;
+using KlopViewWpf.Preferences;
 
 #endregion
 
@@ -115,13 +121,37 @@ namespace KlopViewWpf.ViewModels
 
       private void QuickGameAgainstOne()
       {
-         GameViewModel = new KlopGameViewModel();
+         var fieldSize = PreferencesManager.Instance.GamePreferences.GameFieldSize;
+         var baseDist = PreferencesManager.Instance.GamePreferences.GameBaseDistance;
+         var turnLength = PreferencesManager.Instance.GamePreferences.GameTurnLength;
+         var players = new List<IKlopPlayer>
+                                {
+                                   new KlopPlayer   {BasePosX = fieldSize - baseDist - 1, BasePosY = baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"},
+                                   new KlopAiPlayer {BasePosX = baseDist, BasePosY = fieldSize - baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
+                                   //new KlopAiPlayer {BasePosX = baseDist, BasePosY = baseDist, Color = Colors.Green, Name = "Луноход 2"},
+                                   //new KlopAiPlayer {BasePosX = fieldSize - baseDist - 1, BasePosY = fieldSize - baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3"},
+                                   //new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Name = "Луноход 4"}
+                                };
+
+         GameViewModel = new KlopGameViewModel(fieldSize, fieldSize, players, turnLength);
          IsMenuVisible = false;
       }
 
       private void QuickGameAgainstTwo()
       {
-         throw new NotImplementedException();
+         var fieldSize = PreferencesManager.Instance.GamePreferences.GameFieldSize;
+         var baseDist = PreferencesManager.Instance.GamePreferences.GameBaseDistance;
+         var turnLength = PreferencesManager.Instance.GamePreferences.GameTurnLength;
+         var players = new List<IKlopPlayer>
+                                {
+                                   new KlopPlayer   {BasePosX = fieldSize - baseDist - 1, BasePosY = baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"},
+                                   new KlopAiPlayer {BasePosX = baseDist, BasePosY = fieldSize - baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
+                                   new KlopAiPlayer {BasePosX = baseDist, BasePosY = baseDist, Color = Colors.Green, Name = "Луноход 2"},
+                                   //new KlopAiPlayer {BasePosX = fieldSize - baseDist - 1, BasePosY = fieldSize - baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3"},
+                                   //new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Name = "Луноход 4"}
+                                };
+
+         GameViewModel = new KlopGameViewModel(fieldSize, fieldSize, players, turnLength);
          IsMenuVisible = false;
       }
 
@@ -132,7 +162,18 @@ namespace KlopViewWpf.ViewModels
 
       private void ShowDemo()
       {
-         throw new NotImplementedException();
+         var fieldSize = PreferencesManager.Instance.GamePreferences.GameFieldSize;
+         var baseDist = PreferencesManager.Instance.GamePreferences.GameBaseDistance;
+         var turnLength = PreferencesManager.Instance.GamePreferences.GameTurnLength;
+         var players = new List<IKlopPlayer>
+                                {
+                                   new KlopAiPlayer {BasePosX = baseDist, BasePosY = fieldSize - baseDist - 1, Color = Colors.Red, Name = "Луноход 1", TurnDelay = TimeSpan.FromSeconds(0.3)},
+                                   //new KlopAiPlayer {BasePosX = baseDist, BasePosY = baseDist, Color = Colors.Green, Name = "Луноход 2"},
+                                   //new KlopAiPlayer {BasePosX = fieldSize - baseDist - 1, BasePosY = fieldSize - baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3"},
+                                   new KlopAiPlayer {BasePosX = fieldSize - baseDist - 1, BasePosY = baseDist, Color = Colors.Blue, Name = "Луноход 4", TurnDelay = TimeSpan.FromSeconds(0.3)}
+                                };
+
+         GameViewModel = new KlopGameViewModel(fieldSize, fieldSize, players, turnLength);
          IsMenuVisible = false;
       }
 

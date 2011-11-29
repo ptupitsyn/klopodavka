@@ -2,13 +2,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 using Common.Commands;
-using KlopAi;
 using KlopIfaces;
-using KlopModel;
 using KlopViewWpf.Controls;
-using KlopViewWpf.Preferences;
 
 #endregion
 
@@ -18,24 +14,20 @@ namespace KlopViewWpf.ViewModels
    {
       #region Fields and Constants
 
-      private readonly int _turnLength;
-      private IKlopModel _klopModel;
+      private readonly IKlopModel _klopModel;
       private DelegateCommand<IKlopCell> _makeTurnCommand;
       private HintPathHighlighter _pathHighlighter;
       private DelegateCommand<IKlopCell> _setCurrentCellCommand;
       private DelegateCommand _undoCommand;
-      private readonly int _baseDist;
       private DelegateCommand _resetCommand;
 
       #endregion
 
       #region Constructors
 
-      public KlopGameViewModel()
+      public KlopGameViewModel(int fieldWidth, int fieldHeight, IEnumerable<IKlopPlayer> players, int turnLength)
       {
-         FieldHeight = FieldWidth = PreferencesManager.Instance.GamePreferences.GameFieldSize;
-         _turnLength = PreferencesManager.Instance.GamePreferences.GameTurnLength;
-         _baseDist = PreferencesManager.Instance.GamePreferences.GameBaseDistance;
+         _klopModel = new KlopModel.KlopModel(fieldWidth, fieldHeight, players, turnLength);
       }
 
       #endregion
@@ -51,31 +43,6 @@ namespace KlopViewWpf.ViewModels
       {
          get
          {
-            if (_klopModel == null)
-            {
-               var players = new List<IKlopPlayer>
-                                {
-                                   new KlopPlayer   {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"},
-                                   new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
-                                   new KlopAiPlayer {BasePosX = _baseDist, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"},
-                                   new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3"},
-                                   //new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Name = "Луноход 4"}
-                                };
-               //var players = new List<IKlopPlayer>
-               //                 {
-               //                    new KlopAiPlayer {BasePosX = _baseDist, BasePosY = _baseDist, Color = Colors.Green, Name = "Луноход 2"},
-               //                    new KlopAiPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Yellow, Name = "Луноход 3"}
-               //                 };
-               //var players = new List<IKlopPlayer>
-               //                 {
-               //                    new KlopAiPlayer {BasePosX = _baseDist, BasePosY = FieldHeight - _baseDist - 1, Color = Colors.Red, Name = "Луноход 1"},
-               //                    new KlopPlayer {BasePosX = FieldWidth - _baseDist - 1, BasePosY = _baseDist, Color = Colors.Blue, Human = true, Name = "Player 1"}
-               //                 };
-
-               var playerCount = PreferencesManager.Instance.GamePreferences.PlayerCount;
-               if (playerCount < 2) playerCount = 2;
-               _klopModel = new KlopModel.KlopModel(FieldWidth, FieldHeight, players.Take(playerCount), _turnLength);
-            }
             return _klopModel;
          }
       }
@@ -109,13 +76,6 @@ namespace KlopViewWpf.ViewModels
             return _resetCommand ?? (_resetCommand = new DelegateCommand(() => Model.Reset()));
          }
       }
-
-      #endregion
-
-      #region Private and protected properties and indexers
-
-      private int FieldWidth { get; set; }
-      private int FieldHeight { get; set; }
 
       #endregion
 

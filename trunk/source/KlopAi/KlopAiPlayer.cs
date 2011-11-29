@@ -44,6 +44,11 @@ namespace KlopAi
 
       public Color Color { get; set; }
 
+      /// <summary>
+      /// Gets or sets the turn delay. No delay when null. Can be used for demo purposes.
+      /// </summary>
+      public TimeSpan? TurnDelay { get; set; }
+
 
       /// <summary>
       /// Sets the model. Must be called to activate CPU player.
@@ -485,8 +490,20 @@ namespace KlopAi
                   if (cell == null) continue;
                }
 
+               DoDelay();
                _model.MakeTurn(cell);
             }
+         }
+      }
+
+      /// <summary>
+      /// Delays processing if TurnDelay is not null.
+      /// </summary>
+      private void DoDelay()
+      {
+         if (TurnDelay != null)
+         {
+            Thread.Sleep(TurnDelay.Value);
          }
       }
 
