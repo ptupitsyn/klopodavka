@@ -264,6 +264,7 @@ namespace KlopAi
          var importantCell = FindMostImportantCell(BasePosX, BasePosY, target.X, target.Y, enemy);
 
          //TODO: Find most important reacheble cell!
+         // Need to find a set of most important reachable cells, so the sum of their values will be maximum.
          if (importantCell != null /* && importantCell.Item2 > KlopCellEvaluator.TurnEmptyCost*2*/)
          {
             //TODO: FindMostImportantCell should return list of cells, filter it and use.
