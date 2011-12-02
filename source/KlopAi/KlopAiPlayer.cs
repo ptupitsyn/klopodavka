@@ -123,6 +123,27 @@ namespace KlopAi
 
 
       /// <summary>
+      /// Finds the important cells: cells which affect path cost for the specified player.
+      /// Second tuple value is path cost difference.
+      /// </summary>
+      private IEnumerable<Tuple<IKlopCell, double>> FindImportantCells(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
+      {
+         var startN = _pathFinder.GetNodeByCoordinates(startX, startY);
+         var finishN = _pathFinder.GetNodeByCoordinates(finishX, finishY);
+         var initialCost = _pathFinder.FindPath(startN, finishN, klopPlayer, false).Sum(n => n.Cost);
+         foreach (var node in _model.Cells.Where(c => c.Owner == klopPlayer && c.State == ECellState.Alive).Select(c => _pathFinder.GetNodeByCoordinates(c.X, c.Y)))
+         {
+            var oldCost = node.Cost;
+            node.Cost = KlopCellEvaluator.TurnBlockedCost;
+            var cost = _pathFinder.FindPath(startN, finishN, klopPlayer, false, true).Sum(n => n.Cost);
+            // If cell affects path cost - return it.
+            if (cost > initialCost) yield return new Tuple<IKlopCell, double>(_model[node.X, node.Y], cost - initialCost);
+            node.Cost = oldCost;
+         }
+      }
+
+
+      /// <summary>
       /// Starts the worker.
       /// </summary>
       private void StartWorker()
