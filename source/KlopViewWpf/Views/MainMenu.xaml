@@ -46,35 +46,35 @@
     
         <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4">
             <Button Command="{Binding QuickGameAgainstOneCommand}" Click="Button_Click">
-                <Models:ItemDescriptor Text="Quick Game vs One" Icon="..\Images\clop.ico"
+                <Models:ItemDescriptor Text="Quick Game vs One" Icon="..\Images\human_vs_cpu.png"
                                        Description="Quick Game versus single CPU player" />
             </Button>
             <Button Command="{Binding QuickGameAgainstTwoCommand}" Click="Button_Click">
-                <Models:ItemDescriptor Text="Quick Game vs Two" Icon="..\Images\clop.ico" 
+                <Models:ItemDescriptor Text="Quick Game vs Two" Icon="..\Images\human_vs_2cpu.png" 
                                        Description="Quick Game versus two CPU players" />
             </Button>
             <Button Command="{Binding QuickGameAgainstHumanCommand}" Click="Button_Click">
-                <Models:ItemDescriptor Text="Hot Seat Game" Icon="..\Images\clop.ico" 
+                <Models:ItemDescriptor Text="Hot Seat Game" Icon="..\Images\human_vs_human.png" 
                                        Description="Human versus human game" />
             </Button>
             <Button Command="{Binding CustomGameCommand}" IsEnabled="False" Click="Button_Click">
-                <Models:ItemDescriptor Text="Custom Game" Icon="..\Images\clop.ico" 
+                <Models:ItemDescriptor Text="Custom Game" Icon="..\Images\wrench_custom.png" 
                                        Description="Create customized game: specify number of players, field size, base positions, etc." />
             </Button>
             <Button Command="{Binding ContinueGameCommand}">
-                <Models:ItemDescriptor Text="Continue Game" Icon="..\Images\clop.ico" 
+                <Models:ItemDescriptor Text="Continue Game" Icon="..\Images\demo_play.png" 
                                        Description="Continue existing game" />
             </Button>
             <Button Command="{Binding RestartGameCommand}">
-                <Models:ItemDescriptor Text="Restart Game" Icon="..\Images\clop.ico" 
+                <Models:ItemDescriptor Text="Restart Game" Icon="..\Images\restart.png" 
                                        Description="Restart current game with same settings" />
             </Button>
             <Button Command="{Binding ShowDemoCommand}" Click="Button_Click">
-                <Models:ItemDescriptor Text="Show Demo" Icon="..\Images\clop.ico" 
+                <Models:ItemDescriptor Text="Show Demo" Icon="..\Images\cpu_vs_cpu.png" 
                                        Description="Show demo: CPU vs CPU game" />
             </Button>
             <Button Command="{Binding SettingsCommand}" IsEnabled="False">
-                <Models:ItemDescriptor Text="Settings" Icon="..\Images\clop.ico" />
+                <Models:ItemDescriptor Text="Settings" Icon="..\Images\settings.png" />
             </Button>
         </UniformGrid>
     
