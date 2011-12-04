@@ -24,7 +24,8 @@
     <UserControl.Resources>
         <DataTemplate x:Key="buttonTemplate" DataType="{x:Type Models:ItemDescriptor}">
             <StackPanel Orientation="Vertical" ToolTip="{Binding Description}" Background="Transparent">
-                <Image Source="{Binding Icon}" Height="64" HorizontalAlignment="Center" Margin="10" />
+                <Image Source="{Binding Icon}" Height="64" HorizontalAlignment="Center" Margin="10"
+                       RenderOptions.BitmapScalingMode="Fant"/>
                 <TextBlock HorizontalAlignment="Center" Text="{Binding Text}" FontWeight="Bold" Margin="10" />
             </StackPanel>
         </DataTemplate>
@@ -42,42 +43,51 @@
     </UserControl.Resources>
 
     <Grid>
-        <Border Background="Gray" Opacity="0.7" />
-    
-        <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4">
-            <Button Command="{Binding QuickGameAgainstOneCommand}" Click="Button_Click">
-                <Models:ItemDescriptor Text="Quick Game vs One" Icon="..\Images\human_vs_cpu.png"
+        <Border Background="White" Opacity="0.9" />
+
+        <Grid VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Image Source="..\Images\splash_screen.png" Grid.Row="0" Margin="20" Width="721" />
+
+            <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4" Grid.Row="1">
+                <Button Command="{Binding QuickGameAgainstOneCommand}" Click="Button_Click">
+                    <Models:ItemDescriptor Text="Quick Game vs One" Icon="..\Images\human_vs_cpu.png"
                                        Description="Quick Game versus single CPU player" />
-            </Button>
-            <Button Command="{Binding QuickGameAgainstTwoCommand}" Click="Button_Click">
-                <Models:ItemDescriptor Text="Quick Game vs Two" Icon="..\Images\human_vs_2cpu.png" 
+                </Button>
+                <Button Command="{Binding QuickGameAgainstTwoCommand}" Click="Button_Click">
+                    <Models:ItemDescriptor Text="Quick Game vs Two" Icon="..\Images\human_vs_2cpu.png" 
                                        Description="Quick Game versus two CPU players" />
-            </Button>
-            <Button Command="{Binding QuickGameAgainstHumanCommand}" Click="Button_Click">
-                <Models:ItemDescriptor Text="Hot Seat Game" Icon="..\Images\human_vs_human.png" 
+                </Button>
+                <Button Command="{Binding QuickGameAgainstHumanCommand}" Click="Button_Click">
+                    <Models:ItemDescriptor Text="Hot Seat Game" Icon="..\Images\human_vs_human.png" 
                                        Description="Human versus human game" />
-            </Button>
-            <Button Command="{Binding CustomGameCommand}" IsEnabled="False" Click="Button_Click">
-                <Models:ItemDescriptor Text="Custom Game" Icon="..\Images\wrench_custom.png" 
+                </Button>
+                <Button Command="{Binding CustomGameCommand}" IsEnabled="False" Click="Button_Click">
+                    <Models:ItemDescriptor Text="Custom Game" Icon="..\Images\wrench_custom.png" 
                                        Description="Create customized game: specify number of players, field size, base positions, etc." />
-            </Button>
-            <Button Command="{Binding ContinueGameCommand}">
-                <Models:ItemDescriptor Text="Continue Game" Icon="..\Images\demo_play.png" 
+                </Button>
+                <Button Command="{Binding ContinueGameCommand}">
+                    <Models:ItemDescriptor Text="Continue Game" Icon="..\Images\demo_play.png" 
                                        Description="Continue existing game" />
-            </Button>
-            <Button Command="{Binding RestartGameCommand}">
-                <Models:ItemDescriptor Text="Restart Game" Icon="..\Images\restart.png" 
+                </Button>
+                <Button Command="{Binding RestartGameCommand}">
+                    <Models:ItemDescriptor Text="Restart Game" Icon="..\Images\restart.png" 
                                        Description="Restart current game with same settings" />
-            </Button>
-            <Button Command="{Binding ShowDemoCommand}" Click="Button_Click">
-                <Models:ItemDescriptor Text="Show Demo" Icon="..\Images\cpu_vs_cpu.png" 
+                </Button>
+                <Button Command="{Binding ShowDemoCommand}" Click="Button_Click">
+                    <Models:ItemDescriptor Text="Show Demo" Icon="..\Images\cpu_vs_cpu.png" 
                                        Description="Show demo: CPU vs CPU game" />
-            </Button>
-            <Button Command="{Binding SettingsCommand}" IsEnabled="False">
-                <Models:ItemDescriptor Text="Settings" Icon="..\Images\settings.png" />
-            </Button>
-        </UniformGrid>
-    
+                </Button>
+                <Button Command="{Binding SettingsCommand}" IsEnabled="False">
+                    <Models:ItemDescriptor Text="Settings" Icon="..\Images\settings.png" />
+                </Button>
+            </UniformGrid>
+
+        </Grid>
     </Grid>
-    
+
 </UserControl>
