@@ -66,9 +66,16 @@
 
     <Grid>
         <!-- TODO: Khaki -->
-        <Border Background="LightBlue" Opacity="0.7" />
+      <Border Opacity="0.7">
+         <Border.Background>
+            <LinearGradientBrush Opacity="0.8" StartPoint="0,0" EndPoint="0,1">
+               <GradientStop Offset="0" Color="LightGreen" />
+               <GradientStop Offset="1" Color="DarkGreen" />
+            </LinearGradientBrush>
+         </Border.Background>
+      </Border>
 
-        <Grid VerticalAlignment="Center">
+         <Grid VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
