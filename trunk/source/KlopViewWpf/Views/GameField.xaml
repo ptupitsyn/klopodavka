@@ -7,25 +7,36 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <Converters:ClopGridWidthConverter x:Key="_clopGridWidthConverter" />
-            <ResourceDictionary.MergedDictionaries>
+         <Style TargetType="Views:PlayerInfo">
+            <Setter Property="Effect">
+               <Setter.Value>
+                  <DropShadowEffect BlurRadius="10" ShadowDepth="0" />
+               </Setter.Value>
+            </Setter>
+         </Style>
+         <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Themes\Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0.1,1">
+            <!--<LinearGradientBrush StartPoint="0,0" EndPoint="0.1,1">
                 <GradientStop Color="White" Offset="0" />
                 <GradientStop Color="LightGray" Offset="1" />
-            </LinearGradientBrush>
-        </Grid.Background>
+            </LinearGradientBrush>-->
+         <ImageBrush ImageSource="../Images/khaki_texture.jpg" TileMode="Tile" Stretch="None"
+                        Viewport="0,0,512,512" ViewportUnits="Absolute">
+            <ImageBrush.Transform>
+               <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
+            </ImageBrush.Transform>
+         </ImageBrush>
+      </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
-        <!-- TODO: Popup-based game menu! Center-screen, called by ESC or some button.. with blackjack and hookers -->
 
         <!-- Player Information -->
         <StackPanel Grid.Column="0">
@@ -38,8 +49,21 @@
             <Views:PlayerInfo Player="{Binding Model.Players[3]}" Model="{Binding Model}" Margin="10" />
         </StackPanel>
 
-        <!-- Game Field -->
-        <Border BorderBrush="Gray" BorderThickness="2" Name="gridBorder" Grid.Column="1" CornerRadius="8" Controls1:ClippingHelper.ToBounds="True" Margin="0,10,0,10">
+      <!-- Game Field shadow: use this workaround instead of DropShadowEffect for performance -->
+       <Border BorderThickness="10" BorderBrush="Black" Grid.Column="1" CornerRadius="4" Margin="0,9,0,10" Background="Transparent" Opacity="1">
+         <Border.Width>
+            <MultiBinding Converter="{StaticResource _clopGridWidthConverter}">
+               <Binding RelativeSource="{RelativeSource Self}" Path="ActualHeight" />
+               <Binding Path="Model" />
+            </MultiBinding>
+         </Border.Width>
+         <Border.Effect>
+            <BlurEffect Radius="10" />
+         </Border.Effect>
+      </Border>
+
+      <!-- Game Field -->
+        <Border BorderBrush="Gray" BorderThickness="2" Name="gridBorder" Grid.Column="1" CornerRadius="8" Controls1:ClippingHelper.ToBounds="True" Margin="0,9,0,10">
             <Border.Width>
                 <MultiBinding Converter="{StaticResource _clopGridWidthConverter}">
                     <Binding RelativeSource="{RelativeSource Self}" Path="ActualHeight" />
@@ -47,13 +71,14 @@
                 </MultiBinding>
             </Border.Width>
             <Border.Background>
-                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0" Opacity="0.1">
+            <SolidColorBrush Color="White" Opacity="0.87" />
+            <!--<LinearGradientBrush StartPoint="0,1" EndPoint="1,0" Opacity="0.1">
                     <LinearGradientBrush.GradientStops>
                         <GradientStop Color="#FF0000" Offset="0" />
                         <GradientStop Color="White" Offset="0.5" />
                         <GradientStop Color="#0000FF" Offset="1" />
                     </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
+                </LinearGradientBrush>-->
             </Border.Background>
             <ItemsControl ItemsSource="{Binding Model.Cells, IsAsync=True}" AttachedCommandBehavior:CommandBehavior.Event="MouseRightButtonDown" AttachedCommandBehavior:CommandBehavior.Command="{Binding UndoCommand}">
                 <ItemsControl.ItemsPanel>

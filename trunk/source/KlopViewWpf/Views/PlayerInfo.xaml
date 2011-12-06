@@ -31,13 +31,10 @@
             <UniformGrid Columns="5"/>
         </ItemsPanelTemplate>
     </UserControl.Resources>
-    <UserControl.Effect>
-        <Effects:ReflectionEffect SourceElement="{Binding ElementName=controlRoot}" ReflectionHeight="0.08" />
-    </UserControl.Effect>
     
     <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="8" Visibility="{Binding ElementName=controlRoot, Path=Player, Converter={StaticResource _objectToVisibility}}">
       <Border.Background>
-         <LinearGradientBrush StartPoint="0,0" EndPoint="0.1,1">
+         <LinearGradientBrush StartPoint="0,0" EndPoint="0.1,1" Opacity="0.5">
             <GradientStop Color="White" Offset="0" />
             <GradientStop Color="LightGray" Offset="1" />
          </LinearGradientBrush>
