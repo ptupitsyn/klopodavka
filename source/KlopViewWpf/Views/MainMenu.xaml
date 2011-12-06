@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Effects="clr-namespace:KlopViewWpf.Effects" xmlns:Models="clr-namespace:KlopViewWpf.Models" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
              Opacity="0"
-             x:Name="menuRoot">
+             x:Name="menuRoot" CacheMode="BitmapCache" Background="DarkGreen">
     <UserControl.Style>
         <Style TargetType="UserControl">
             <Style.Triggers>
@@ -13,7 +13,7 @@
                     <Trigger.EnterActions>
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5" SpeedRatio="5" />
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.EnterActions>
@@ -35,9 +35,9 @@
             </Border>
             <Viewbox Margin="5,5,5,10" Grid.Row="1">
                <TextBlock Text="{Binding Text}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center">
-                    <!--<TextBlock.Effect>
+                    <TextBlock.Effect>
                         <DropShadowEffect Opacity="1" ShadowDepth="0" BlurRadius="10" />
-                    </TextBlock.Effect>-->
+                    </TextBlock.Effect>
                </TextBlock>
             </Viewbox>
          </Grid>
@@ -102,7 +102,6 @@
     </UserControl.Resources>
 
     <Grid>
-      <Rectangle Opacity="0.8" Fill="DarkGreen" />
       <Rectangle Opacity="0.6">
          <Rectangle.Fill>
             <ImageBrush ImageSource="../Images/khaki_texture.jpg" TileMode="Tile" Stretch="None"
@@ -130,7 +129,7 @@
                 </Image.Effect>-->
             </Image>
 
-            <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4" Grid.Row="1" Margin="20,5,20,20">
+            <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4" Grid.Row="1" Margin="40,10,40,40">
                 <Button Command="{Binding QuickGameAgainstOneCommand}" Click="Button_Click">
                     <Models:ItemDescriptor Text="Quick Game" Icon="..\Images\human_vs_cpu.png"
                                        Description="Quick Game versus single CPU player" />
