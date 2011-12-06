@@ -57,16 +57,18 @@
             </Border>
             
             <!-- Player Name & Picture -->
-            <StackPanel Orientation="Vertical">
-                <!-- TODO: Human/CPU/Network icon -->
+            <StackPanel Orientation="Vertical" DataContext="{Binding ElementName=controlRoot, Path=Player}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-                    <Image Source="..\Images\person.png" Height="24" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant"  />
-                    <TextBlock Text="{Binding ElementName=controlRoot, Path=Player.Name}" FontSize="16" FontWeight="Bold" Margin="0,0,10,0" />
+                    <Image Source="..\Images\chip.png" Height="32" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" VerticalAlignment="Center"
+                           Visibility="{Binding Human, Converter={StaticResource _objectToVisibility}, ConverterParameter=invert}"/>
+                    <Image Source="..\Images\person.png" Height="32" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" VerticalAlignment="Center"
+                           Visibility="{Binding Human, Converter={StaticResource _objectToVisibility}}" />
+                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <!-- Big clop icon -->
                 <Viewbox Margin="15,5,15,5">
-                    <Views:KlopImage KlopColor="{Binding ElementName=controlRoot, Path=Player.Color}" />
+                    <Views:KlopImage KlopColor="{Binding Color}" />
                 </Viewbox>
                 <!--<Border Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}" Margin="10" MaxWidth="40" x:Name="bigClop"
                         Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" >
