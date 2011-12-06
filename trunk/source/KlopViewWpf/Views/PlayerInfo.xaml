@@ -115,6 +115,17 @@
                 </Grid>
 
             </StackPanel>
-        </Grid>
+
+         <Border Name="defeatedBorder">
+            <Viewbox>
+               <Border BorderThickness="2" BorderBrush="Red" Margin="15" RenderTransformOrigin="0.5,0.5">
+                  <TextBlock Text="Defeated" Foreground="Red" Margin="5" FontWeight="Black" />
+                  <Border.RenderTransform>
+                     <RotateTransform Angle="-40"/>
+                  </Border.RenderTransform>
+               </Border>
+            </Viewbox>
+         </Border>
+      </Grid>
     </Border>
 </UserControl>
