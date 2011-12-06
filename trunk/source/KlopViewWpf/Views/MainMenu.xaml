@@ -22,33 +22,57 @@
         </Style>
     </UserControl.Style>
     <UserControl.Resources>
-        <DataTemplate x:Key="buttonTemplate" DataType="{x:Type Models:ItemDescriptor}">
-            <StackPanel Orientation="Vertical" ToolTip="{Binding Description}" Background="Transparent">
+        
+       <DataTemplate x:Key="buttonTemplate" DataType="{x:Type Models:ItemDescriptor}">
+            <StackPanel Orientation="Vertical" ToolTip="{Binding Description}" Background="Transparent" ToolTipService.BetweenShowDelay="2000" ToolTipService.InitialShowDelay="2000">
                 <Image Source="{Binding Icon}" Height="64" HorizontalAlignment="Center" Margin="0,5,0,0"
                        RenderOptions.BitmapScalingMode="Fant"/>
-                <TextBlock HorizontalAlignment="Center" Text="{Binding Text}" FontWeight="Bold" Margin="5">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Text}" FontWeight="Bold" Margin="5" Foreground="White">
                     <TextBlock.Effect>
-                        <DropShadowEffect Opacity="0.7" ShadowDepth="0" BlurRadius="10" />
+                        <DropShadowEffect Opacity="1" ShadowDepth="0" BlurRadius="10" />
                     </TextBlock.Effect>
                 </TextBlock>
             </StackPanel>
         </DataTemplate>
+       
         <Style TargetType="Button">
             <Setter Property="Margin" Value="20, 20, 20, 40" />
             <Setter Property="Width" Value="150" />
             <Setter Property="Height" Value="150" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="ContentTemplate" Value="{StaticResource buttonTemplate}" />
-            <!--<Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Image Source="..\Images\bug1_red.png" Opacity="0.1" />
-                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>-->
+            <Setter Property="Template">
+            <Setter.Value>
+               <ControlTemplate TargetType="Button">
+                  <Grid>
+                     
+                     <Grid.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                           <BeginStoryboard>
+                              <Storyboard Duration="0:0:0.5">
+                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="bgClop" To="0.7" />
+                              </Storyboard>
+                           </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                           <BeginStoryboard>
+                              <Storyboard Duration="0:0:2" >
+                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="bgClop" To="0.1" />
+                              </Storyboard>
+                           </BeginStoryboard>
+                        </EventTrigger>
+                     </Grid.Triggers>
+                     
+                     <Image Source="..\Images\bug1_red.png" Opacity="0.1" x:Name="bgClop" />
+                     <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <ContentPresenter.Effect>
+                           <DropShadowEffect x:Name="dropShadow" ShadowDepth="0" BlurRadius="20" Color="White" Opacity="1" />
+                        </ContentPresenter.Effect>
+                     </ContentPresenter>
+                  </Grid>
+               </ControlTemplate>
+            </Setter.Value>
+         </Setter>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Trigger.Setters>
@@ -60,20 +84,26 @@
                         </Setter>
                     </Trigger.Setters>
                 </Trigger>
-            </Style.Triggers>
+         </Style.Triggers>
         </Style>
+       
     </UserControl.Resources>
 
     <Grid>
-        <!-- TODO: Khaki -->
-      <Border Opacity="0.7">
-         <Border.Background>
-            <LinearGradientBrush Opacity="0.8" StartPoint="0,0" EndPoint="0,1">
+      <Rectangle Opacity="0.9">
+         <Rectangle.Fill>
+            <ImageBrush ImageSource="../Images/khaki_texture.jpg" TileMode="Tile" Stretch="None"
+                        Viewport="0,0,512,512" ViewportUnits="Absolute">
+               <ImageBrush.Transform>
+                  <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
+               </ImageBrush.Transform>
+            </ImageBrush>
+            <!--<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                <GradientStop Offset="0" Color="LightGreen" />
                <GradientStop Offset="1" Color="DarkGreen" />
-            </LinearGradientBrush>
-         </Border.Background>
-      </Border>
+            </LinearGradientBrush>-->
+         </Rectangle.Fill>
+      </Rectangle>
 
          <Grid VerticalAlignment="Center">
             <Grid.RowDefinitions>
@@ -89,7 +119,7 @@
 
             <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4" Grid.Row="1">
                 <Button Command="{Binding QuickGameAgainstOneCommand}" Click="Button_Click">
-                    <Models:ItemDescriptor Text="Quick Game vs One" Icon="..\Images\human_vs_cpu.png"
+                    <Models:ItemDescriptor Text="Quick Game" Icon="..\Images\human_vs_cpu.png"
                                        Description="Quick Game versus single CPU player" />
                 </Button>
                 <Button Command="{Binding QuickGameAgainstTwoCommand}" Click="Button_Click">
