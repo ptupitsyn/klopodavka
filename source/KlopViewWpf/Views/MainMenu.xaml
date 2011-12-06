@@ -36,7 +36,7 @@
             <Viewbox Margin="5,5,5,10" Grid.Row="1">
                <TextBlock Text="{Binding Text}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center">
                     <TextBlock.Effect>
-                        <DropShadowEffect Opacity="1" ShadowDepth="0" BlurRadius="10" />
+                        <DropShadowEffect Opacity="1" ShadowDepth="0" BlurRadius="4" />
                     </TextBlock.Effect>
                </TextBlock>
             </Viewbox>
@@ -77,9 +77,9 @@
                         <Image Source="..\Images\bug1_red.png" Opacity="0.6" Margin="2"  />
                      </Border>
                      <ContentPresenter VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <ContentPresenter.Effect>
+                        <!--<ContentPresenter.Effect>
                            <DropShadowEffect x:Name="dropShadow" ShadowDepth="0" BlurRadius="20" Color="White" Opacity="1" />
-                        </ContentPresenter.Effect>
+                        </ContentPresenter.Effect>-->
                      </ContentPresenter>
                   </Grid>
                </ControlTemplate>
