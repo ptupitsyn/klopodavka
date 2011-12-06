@@ -24,23 +24,32 @@
     <UserControl.Resources>
         
        <DataTemplate x:Key="buttonTemplate" DataType="{x:Type Models:ItemDescriptor}">
-            <StackPanel Orientation="Vertical" ToolTip="{Binding Description}" Background="Transparent" ToolTipService.BetweenShowDelay="2000" ToolTipService.InitialShowDelay="2000">
-                <Image Source="{Binding Icon}" Height="64" HorizontalAlignment="Center" Margin="0,5,0,0"
-                       RenderOptions.BitmapScalingMode="Fant"/>
-                <TextBlock HorizontalAlignment="Center" Text="{Binding Text}" FontWeight="Bold" Margin="5" Foreground="White">
+         <Grid ToolTip="{Binding Description}" Background="Transparent" ToolTipService.BetweenShowDelay="2000" ToolTipService.InitialShowDelay="2000"
+               VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+               <RowDefinition Height="*" />
+               <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0">
+               <Image Source="{Binding Icon}" Margin="0,5,0,0" RenderOptions.BitmapScalingMode="Fant"/>
+            </Border>
+            <TextBlock Text="{Binding Text}" FontWeight="Bold" Margin="5,5,5,10" Foreground="White" HorizontalAlignment="Center" 
+                       Grid.Row="1" VerticalAlignment="Bottom" FontSize="14" >
                     <TextBlock.Effect>
                         <DropShadowEffect Opacity="1" ShadowDepth="0" BlurRadius="10" />
                     </TextBlock.Effect>
-                </TextBlock>
-            </StackPanel>
-        </DataTemplate>
+            </TextBlock>
+         </Grid>
+      </DataTemplate>
        
         <Style TargetType="Button">
             <Setter Property="Margin" Value="20, 20, 20, 40" />
-            <Setter Property="Width" Value="150" />
-            <Setter Property="Height" Value="150" />
+            <!--<Setter Property="Width" Value="150" />
+            <Setter Property="Height" Value="150" />-->
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="ContentTemplate" Value="{StaticResource buttonTemplate}" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Template">
             <Setter.Value>
                <ControlTemplate TargetType="Button">
@@ -49,22 +58,24 @@
                      <Grid.Triggers>
                         <EventTrigger RoutedEvent="MouseEnter">
                            <BeginStoryboard>
-                              <Storyboard Duration="0:0:0.5">
-                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="bgClop" To="0.7" />
+                              <Storyboard Duration="0:0:2">
+                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="bgClop" To="1" SpeedRatio="7" />
                               </Storyboard>
                            </BeginStoryboard>
                         </EventTrigger>
                         <EventTrigger RoutedEvent="MouseLeave">
                            <BeginStoryboard>
                               <Storyboard Duration="0:0:2" >
-                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="bgClop" To="0.1" />
+                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="bgClop" To="0" SpeedRatio="3" />
                               </Storyboard>
                            </BeginStoryboard>
                         </EventTrigger>
                      </Grid.Triggers>
-                     
-                     <Image Source="..\Images\bug1_red.png" Opacity="0.1" x:Name="bgClop" />
-                     <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                     <Border x:Name="bgClop" CornerRadius="10" BorderBrush="White" BorderThickness="2" Opacity="0">
+                        <Image Source="..\Images\bug1_red.png" Opacity="0.6" Margin="2"  />
+                     </Border>
+                     <ContentPresenter VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <ContentPresenter.Effect>
                            <DropShadowEffect x:Name="dropShadow" ShadowDepth="0" BlurRadius="20" Color="White" Opacity="1" />
                         </ContentPresenter.Effect>
@@ -90,7 +101,8 @@
     </UserControl.Resources>
 
     <Grid>
-      <Rectangle Opacity="0.9">
+      <Rectangle Opacity="0.8" Fill="DarkGreen" />
+      <Rectangle Opacity="0.6">
          <Rectangle.Fill>
             <ImageBrush ImageSource="../Images/khaki_texture.jpg" TileMode="Tile" Stretch="None"
                         Viewport="0,0,512,512" ViewportUnits="Absolute">
@@ -105,10 +117,10 @@
          </Rectangle.Fill>
       </Rectangle>
 
-         <Grid VerticalAlignment="Center">
-            <Grid.RowDefinitions>
+      <Grid>
+         <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Image Source="..\Images\splash_screen.png" Grid.Row="0" Margin="20" Width="721" x:Name="titleImage">
@@ -117,7 +129,7 @@
                 </Image.Effect>-->
             </Image>
 
-            <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4" Grid.Row="1">
+            <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4" Grid.Row="1" Margin="20,5,20,20">
                 <Button Command="{Binding QuickGameAgainstOneCommand}" Click="Button_Click">
                     <Models:ItemDescriptor Text="Quick Game" Icon="..\Images\human_vs_cpu.png"
                                        Description="Quick Game versus single CPU player" />
