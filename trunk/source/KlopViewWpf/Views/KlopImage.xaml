@@ -2,7 +2,7 @@
     <UserControl.Resources>
         <SolidColorBrush x:Key="ClopColorBrush" Color="{Binding ElementName=UserControl, Path=KlopColor}" />
     </UserControl.Resources>
-    <Canvas>
+    <Grid>
         <!-- Layer 1/<Path> -->
         <Path Fill="#ffffa54c" Data=" M 206.029,80.528 L 196.008,96.945 L 207.206,111.592 L 217.438,90.015 L 206.029,80.528 L 206.029,80.528 L 206.029,80.528 Z" />
 
@@ -161,5 +161,5 @@
         <!-- Layer 1/<Path> -->
         <Path Fill="#ff000000" Data=" M 207.336,255.775 L 200.957,273.658 L 205.940,301.137 L 197.664,304.444 L 199.273,297.450 L 192.617,296.791 L 197.323,285.478 L 190.447,284.453 L 194.994,275.695 L 194.569,267.998 L 203.261,254.106 L 207.336,255.775 L 207.336,255.775 L 207.336,255.775 Z" />
 
-    </Canvas>
+    </Grid>
 </UserControl>
