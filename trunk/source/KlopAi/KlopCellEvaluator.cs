@@ -18,12 +18,12 @@ namespace KlopAi
       #region Fields and Constants
 
       public const double TurnBlockedCost = int.MaxValue; // Цена хода в запрещенную клетку (->inf)
-      public const double TurnEatCost = 35; // Цена хода в занятую клетку
+      public const double TurnEatCost = 70; // Цена хода в занятую клетку
       public const double TurnEatEnemyBaseCost = 8; // Цена съедания клопа около вражеской базы
       public const double TurnEatOwnbaseCost = 5; // Цена съедания клопа около своей базы
       public const double TurnEmptyCost = 100; // Цена хода в пустую клетку
-      public const double TurnNearEnemyBaseCost = 5000; // Цена хода около чужой базы
-      public const double TurnNearEnemyEmptyCost = 130; // Цена хода в пустую клетку рядом с врагом
+      public const double TurnNearEnemyBaseCost = 15000; // Цена хода около чужой базы
+      public const double TurnNearEnemyEmptyCostAddition = 30; // Цена хода в пустую клетку рядом с врагом (additive to TurnEmptyCost)
       public const double TurnNearOwnBaseCost = 2000; // Цена хода около своей базы
 
       private static readonly Dictionary<Tuple<IKlopPlayer, IKlopCell>, Tuple<double, ECellState>> CellValueCache =
@@ -131,7 +131,7 @@ namespace KlopAi
             return TurnNearOwnBaseCost;
          }
 
-         var neighbors = _klopModel.GetNeighborCells(cell);
+         var neighbors = _klopModel.GetNeighborCells(cell).ToArray();
          if (neighbors.Any(c => c.State == ECellState.Base))
          {
             return TurnNearEnemyBaseCost;
@@ -140,7 +140,8 @@ namespace KlopAi
          var enemyCount = neighbors.Count(c => c.Owner != null && c.Owner != klopPlayer);
          if (enemyCount > 0)
          {
-            return TurnNearEnemyEmptyCost*(1 + (double) enemyCount/2); // Turn near enemy klop costs a bit more.
+            //return TurnNearEnemyEmptyCost*(1 + (double) enemyCount/2); // Turn near enemy klop costs a bit more.
+            return TurnEmptyCost + TurnNearEnemyEmptyCostAddition*enemyCount;
          }
 
          var neighborCount = neighbors.Count(c => c.Owner != null);

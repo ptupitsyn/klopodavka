@@ -24,7 +24,7 @@
     <UserControl.Resources>
         
        <DataTemplate x:Key="buttonTemplate" DataType="{x:Type Models:ItemDescriptor}">
-         <Grid ToolTip="{Binding Description}" Background="Transparent" ToolTipService.BetweenShowDelay="2000" ToolTipService.InitialShowDelay="2000"
+         <Grid Background="Transparent" ToolTipService.BetweenShowDelay="2000" ToolTipService.InitialShowDelay="2000"
                VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>
                <RowDefinition Height="3*" />
