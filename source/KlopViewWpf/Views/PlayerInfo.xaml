@@ -9,6 +9,7 @@
         <Converters:NumberToArrayConverter x:Key="_numberToArray" />
         <Converters:ObjectToVisibilityConverter x:Key="_objectToVisibility" />
       <Converters:DefeatedPlayerVisibilityConverter x:Key="_defeatedPlayerVisibilityConverter" />
+      <Converters:MultiplicationConverter x:Key="_multiplicationConverter" />
       <DataTemplate x:Key="_klopTemplate">
             <Border Margin="1" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}" Name="_klop"
                     Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}">
@@ -33,7 +34,8 @@
         </ItemsPanelTemplate>
     </UserControl.Resources>
     
-    <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="8" Visibility="{Binding ElementName=controlRoot, Path=Player, Converter={StaticResource _objectToVisibility}}">
+    <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="8" Visibility="{Binding ElementName=controlRoot, Path=Player, Converter={StaticResource _objectToVisibility}}"
+            MaxHeight="{Binding ActualHeight, Converter={StaticResource _multiplicationConverter}, ConverterParameter=0.4, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
       <Border.Background>
          <LinearGradientBrush StartPoint="0,0" EndPoint="0.1,1" Opacity="0.5">
             <GradientStop Color="White" Offset="0" />
@@ -58,8 +60,13 @@
             </Border>
             
             <!-- Player Name & Picture -->
-            <StackPanel Orientation="Vertical" DataContext="{Binding ElementName=controlRoot, Path=Player}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Grid DataContext="{Binding ElementName=controlRoot, Path=Player}">
+            <Grid.RowDefinitions>
+               <RowDefinition Height="Auto" />
+               <RowDefinition Height="*" />
+               <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+               <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="0">
                     <Image Source="..\Images\chip.png" Height="32" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" VerticalAlignment="Center"
                            Visibility="{Binding Human, Converter={StaticResource _objectToVisibility}, ConverterParameter=invert}"/>
                     <Image Source="..\Images\person.png" Height="32" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" VerticalAlignment="Center"
@@ -68,46 +75,11 @@
                 </StackPanel>
 
                 <!-- Big clop icon -->
-                <Viewbox Margin="15,5,15,5">
+                <Viewbox Margin="15,5,15,5" Grid.Row="1">
                     <Views:KlopImage KlopColor="{Binding Color}" />
                 </Viewbox>
-                <!--<Border Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}" Margin="10" MaxWidth="40" x:Name="bigClop"
-                        Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}" >
-                    <Border.Effect>
-                        <DropShadowEffect ShadowDepth="0" />
-                    </Border.Effect>
-                    <Border.RenderTransform>
-                        <ScaleTransform ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Mode=Self}}"  />
-                    </Border.RenderTransform>
-                    <Border.Style>
-                        <Style>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=currentBorder, Path=Visibility}" Value="Visible">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
-                                                                 From="1" To="0.9" Duration="0:0:1" RepeatBehavior="Forever" AutoReverse="True" >
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                    <DataTrigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard FillBehavior="Stop">
-                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
-                                                                 To="1" Duration="0:0:1"  />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.ExitActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                </Border>-->
-
                 <!-- Remaining clops -->
-                <Grid>
+                <Grid Grid.Row="2">
                     <ItemsControl ItemsSource="{Binding ElementName=controlRoot, Path=Model.RemainingKlops, Converter={StaticResource _numberToArray}}"
                               Margin="10" VerticalAlignment="Top" ItemTemplate="{StaticResource _klopTemplate}" ItemsPanel="{StaticResource _klopPanelTemplate}">
                         <ItemsControl.Visibility>
@@ -121,7 +93,7 @@
                               Margin="10" Opacity="0.2" ItemTemplate="{StaticResource _klopTemplate}" ItemsPanel="{StaticResource _klopPanelTemplate}" />
                 </Grid>
 
-            </StackPanel>
+            </Grid>
 
          <Border Name="defeatedBorder">
             <Viewbox>
