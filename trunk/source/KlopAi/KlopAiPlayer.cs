@@ -317,7 +317,7 @@ namespace KlopAi
       /// </summary>
       private IKlopPlayer GetPreferredEnemy()
       {
-         var enemies = _model.Players.Where(p => p != this && !_model.IsPlayerDefeated(p)).ToArray();
+         var enemies = _model.Players.Where(p => p != this).Except(_model.DefeatedPlayers).ToArray();
          var humanPlayers = enemies.Where(p => p.Human).ToArray();
 
          // Human enemies are preferred (make the game harder)
