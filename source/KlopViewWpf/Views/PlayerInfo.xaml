@@ -8,7 +8,8 @@
         <Converters:EqualityToVisibilityConverter x:Key="_equalityToVisibility" />
         <Converters:NumberToArrayConverter x:Key="_numberToArray" />
         <Converters:ObjectToVisibilityConverter x:Key="_objectToVisibility" />
-        <DataTemplate x:Key="_klopTemplate">
+      <Converters:DefeatedPlayerVisibilityConverter x:Key="_defeatedPlayerVisibilityConverter" />
+      <DataTemplate x:Key="_klopTemplate">
             <Border Margin="1" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}" Name="_klop"
                     Background="{Binding ElementName=controlRoot, Path=Player.Color, Converter={StaticResource _colorToKlopBrushConverter}}">
                 <Border.Triggers>
@@ -122,29 +123,25 @@
 
             </StackPanel>
 
-            <Border Name="defeatedBorder">
-                <Viewbox>
-                    <!-- Nice hackL use itemscontrol to determine whether current player is defeated -->
-                    <ItemsControl ItemsSource="{Binding ElementName=controlRoot, Path=Model.DefeatedPlayers}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderThickness="2" BorderBrush="Red" Margin="15" RenderTransformOrigin="0.5,0.5">
-                                    <Border.Visibility>
-                                        <MultiBinding Converter="{StaticResource _equalityToVisibility}">
-                                            <Binding ElementName="controlRoot" Path="Player" />
-                                            <Binding />
-                                        </MultiBinding>
-                                    </Border.Visibility>
-                                    <TextBlock Text="Defeated" Foreground="Red" Margin="5" FontWeight="Black" />
-                                    <Border.RenderTransform>
-                                        <RotateTransform Angle="-40"/>
-                                    </Border.RenderTransform>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Viewbox>
-            </Border>
-        </Grid>
+         <Border Name="defeatedBorder">
+            <Viewbox>
+               <Border BorderThickness="2" BorderBrush="Red" Margin="15" RenderTransformOrigin="0.5,0.5">
+                  <Border.Background>
+                     <SolidColorBrush Color="Black" Opacity="0.5" />
+                  </Border.Background>
+                  <Border.Visibility>
+                     <MultiBinding Converter="{StaticResource _defeatedPlayerVisibilityConverter}">
+                        <Binding ElementName="controlRoot" Path="Player" />
+                        <Binding ElementName="controlRoot" Path="Model.DefeatedPlayers" />
+                     </MultiBinding>
+                  </Border.Visibility>
+                  <TextBlock Text="Defeated" Foreground="Red" Margin="5" FontWeight="Black" />
+                  <Border.RenderTransform>
+                     <RotateTransform Angle="-40"/>
+                  </Border.RenderTransform>
+               </Border>
+            </Viewbox>
+         </Border>
+      </Grid>
     </Border>
 </UserControl>

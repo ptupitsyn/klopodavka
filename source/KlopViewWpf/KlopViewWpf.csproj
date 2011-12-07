@@ -139,6 +139,7 @@
     <Compile Include="Controls\ClippingHelper.cs" />
     <Compile Include="Converters\ClopGridWidthConverter.cs" />
     <Compile Include="Converters\ColorToKlopBrushConverter.cs" />
+    <Compile Include="Converters\DefeatedPlayerVisibilityConverter.cs" />
     <Compile Include="Converters\EqualityToVisibilityConverter.cs" />
     <Compile Include="Converters\NumberToArrayConverter.cs" />
     <Compile Include="Controls\HintPathHighlighter.cs" />
