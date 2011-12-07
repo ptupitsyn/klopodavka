@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 #endregion
@@ -90,10 +91,9 @@ namespace KlopIfaces
       /// </summary>
       IEnumerable<IKlopCell> GetNeighborCells(IKlopCell cell);
 
-
       /// <summary>
-      /// Determines whether specified player is defeated and cannot longer make moves.
+      /// Gets the defeated players which can no longer make moves.
       /// </summary>
-      bool IsPlayerDefeated(IKlopPlayer player);
+      IEnumerable<IKlopPlayer> DefeatedPlayers { get; }
    }
 }

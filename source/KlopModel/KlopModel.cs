@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using KlopIfaces;
 
@@ -25,7 +26,7 @@ namespace KlopModel
       private int _turnLength;
       private readonly int _fieldWidth;
       private readonly int _fieldHeight;
-      private readonly HashSet<IKlopPlayer> _defeatedPlayers = new HashSet<IKlopPlayer>();
+      private readonly ObservableCollection<IKlopPlayer> _defeatedPlayers = new ObservableCollection<IKlopPlayer>();
 
       #endregion
 
@@ -54,6 +55,7 @@ namespace KlopModel
       /// <param name="turnLenght">The turn lenght.</param>
       public KlopModel(int width, int height, IEnumerable<IKlopPlayer> players, int turnLenght)
       {
+         DefeatedPlayers = new ReadOnlyObservableCollection<IKlopPlayer>(_defeatedPlayers);
          _fieldWidth = width;
          _fieldHeight = height;
          _players = players.ToArray();
@@ -207,6 +209,11 @@ namespace KlopModel
             yield return _cells[cx, cy + 1];
             if (xNotMax) yield return _cells[cx + 1, cy + 1];
          }
+      }
+
+      public ReadOnlyObservableCollection<IKlopPlayer> DefeatedPlayers
+      {
+         get; private set;
       }
 
 
@@ -413,6 +420,7 @@ namespace KlopModel
       private void DetectDefeatedPlayer(int availCount)
       {
          // There are remaining clops, but no avaailable cells => player is defeated.
+         //TODO: Cross-thread access error here!!
          if (availCount == 0 && RemainingKlops > 0) _defeatedPlayers.Add(CurrentPlayer);
       }
 
