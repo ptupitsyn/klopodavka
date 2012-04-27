@@ -199,6 +199,7 @@
       <SubType>Designer</SubType>
     </None>
     <Resource Include="Effects\Reflection.ps" />
+    <None Include="Effects\reflection.fx" />
     <None Include="Images\bug1_red.psd" />
     <None Include="Images\cpu_vs_cpu.psd" />
     <None Include="Images\human_vs_2cpu.psd" />
