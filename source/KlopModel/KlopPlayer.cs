@@ -1,6 +1,5 @@
 ﻿#region Usings
 
-using System;
 using System.Windows.Media;
 using KlopIfaces;
 

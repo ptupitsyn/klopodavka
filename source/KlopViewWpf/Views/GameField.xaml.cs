@@ -21,9 +21,9 @@ namespace KlopViewWpf.Views
 
       #endregion
 
-      #region Public properties and indexers
+      #region Private properties and indexers
 
-      public KlopGameViewModel ViewModel
+      private KlopGameViewModel ViewModel
       {
          get { return (KlopGameViewModel) DataContext; }
       }
