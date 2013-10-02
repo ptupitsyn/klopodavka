@@ -2,10 +2,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Markup;
 using System.Windows;
 using System.Windows.Input;
 
@@ -51,7 +47,7 @@ namespace AttachedCommandBehavior
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.RegisterAttached("Command", typeof(ICommand), typeof(CommandBehavior),
                 new FrameworkPropertyMetadata((ICommand)null,
-                    new PropertyChangedCallback(OnCommandChanged)));
+                    OnCommandChanged));
 
         /// <summary>
         /// Gets the Command property.  

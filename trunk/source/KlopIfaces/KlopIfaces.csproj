@@ -59,7 +59,6 @@
     <Compile Include="IKlopCell.cs" />
     <Compile Include="IKlopModel.cs" />
     <Compile Include="IKlopPlayer.cs" />
-    <Compile Include="IKlopView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,8 +15,8 @@ namespace KlopAi.algo
    {
       #region Fields and Constants
 
-      private static readonly int[] Dx = new[] {-1, -1, -1, 1, 1, 1, 0, 0};
-      private static readonly int[] Dy = new[] {-1, 0, 1, -1, 0, 1, -1, 1};
+      private static readonly int[] Dx = {-1, -1, -1, 1, 1, 1, 0, 0};
+      private static readonly int[] Dy = {-1, 0, 1, -1, 0, 1, -1, 1};
       private double _gdist;
       private double _hdist;
 
@@ -32,10 +32,6 @@ namespace KlopAi.algo
          Cost = 0;
          X = x;
          Y = y;
-      }
-
-      public Node() : this(0, 0)
-      {
       }
 
       #endregion
@@ -107,31 +103,9 @@ namespace KlopAi.algo
 
       #region Public methods
 
-      public Node Clone()
-      {
-         return new Node(X, Y)
-                   {
-                      Parent = Parent,
-                      Hdist = Hdist,
-                      Gdist = Gdist,
-                      Cost = Cost,
-                   };
-      }
-
-      public IEnumerable<Tuple<int, int>> GetNeighborCoordinates()
-      {
-         return Dx.Select((t, i) => new Tuple<int, int>(X + Dx[i], Y + Dy[i]));
-      }
-
-
       public IEnumerable<Node> GetNeighborNodes(Func<int, int, Node> getNodeByXy)
       {
          return Dx.Select((t, i) => getNodeByXy(X + Dx[i], Y + Dy[i]));
-      }
-
-      public static IEnumerable<Tuple<int, int>> GetNeighborCoordinates(int x, int y)
-      {
-         return Dx.Select((t, i) => new Tuple<int, int>(x + Dx[i], y + Dy[i]));
       }
 
       public void Reset()

@@ -278,7 +278,7 @@ namespace KlopAi
          if (enemy == null)
          {
             // All enemies have been defeated. Game over.
-            return _model.Cells.Where(c => c.Owner == null).FirstOrDefault();
+            return _model.Cells.FirstOrDefault(c => c.Owner == null);
          }
 
          var target = _model[enemy.BasePosX, enemy.BasePosY];
@@ -301,10 +301,9 @@ namespace KlopAi
             // 3) Seek for any available enemy
             // 4) Seek for any available cell
             target = pathToBase.FirstOrDefault(c => c.Available) ??
-                     _model.Cells.Where(c => c.Available && c.Owner != this).FirstOrDefault() ??
-                     _model.Cells.Where(c => c.Owner != this && c.State == ECellState.Alive && _model.GetNeighborCells(c).Any(cc => cc.Available)).
-                        FirstOrDefault() ??
-                     _model.Cells.Where(c => c.Owner != this && c.State == ECellState.Alive).FirstOrDefault() ??
+                     _model.Cells.FirstOrDefault(c => c.Available && c.Owner != this) ??
+                     _model.Cells.FirstOrDefault(c => c.Owner != this && c.State == ECellState.Alive && _model.GetNeighborCells(c).Any(cc => cc.Available)) ??
+                     _model.Cells.FirstOrDefault(c => c.Owner != this && c.State == ECellState.Alive) ??
                      _model.Cells.Where(c => c.Available).Random();
          }
 
@@ -339,7 +338,7 @@ namespace KlopAi
          // We can also try to find weakest enemy
          // Or an enemy with closest cells
          // Or an enemy which attacks us most
-         return enemies.OrderByDescending(e => _model.Cells.Where(c => c.Owner == e && c.State == ECellState.Alive).Count()).FirstOrDefault();
+         return enemies.OrderByDescending(e => _model.Cells.Count(c => c.Owner == e && c.State == ECellState.Alive)).FirstOrDefault();
       }
 
 

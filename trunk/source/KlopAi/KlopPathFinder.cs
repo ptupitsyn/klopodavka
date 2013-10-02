@@ -43,57 +43,39 @@ namespace KlopAi
 
       #region Public methods
 
-      /// <summary>
+       /// <summary>
       /// Finds the path betweed specified nodes for specified player.
       /// </summary>
-      public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer)
-      {
-         return FindPath(startX, startY, finishX, finishY, klopPlayer, false);
-      }
-
-      /// <summary>
-      /// Finds the path betweed specified nodes for specified player.
-      /// </summary>
-      public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer, bool inverted)
+      public List<IKlopCell> FindPath(int startX, int startY, int finishX, int finishY, IKlopPlayer klopPlayer, bool inverted = false)
       {
          return FindPath(GetNodeByCoordinates(startX, startY), GetNodeByCoordinates(finishX, finishY), klopPlayer, inverted)
             .Select(n => _klopModel[n.X, n.Y]).Where(c => c.Owner != klopPlayer).ToList();
       }
 
 
-      /// <summary>
-      /// Finds the path between two nodes.
-      /// </summary>
-      public List<Node> FindPath(Node startNode, Node finishNode, IKlopPlayer klopPlayer, bool inverted)
-      {
-         return FindPath(startNode, finishNode, klopPlayer, inverted, false);
-      }
+       /// <summary>
+       /// Finds the path between two nodes.
+       /// </summary>
+       public IEnumerable<Node> FindPath(Node startNode, Node finishNode, IKlopPlayer klopPlayer, bool inverted, bool skipEvaluate = false)
+       {
+           // Init field
+           if (!skipEvaluate) EvaluateCells(klopPlayer);
 
-      /// <summary>
-      /// Finds the path between two nodes.
-      /// </summary>
-      public List<Node> FindPath(Node startNode, Node finishNode, IKlopPlayer klopPlayer, bool inverted, bool skipEvaluate)
-      {
-         // Init field
-         if (!skipEvaluate) EvaluateCells(klopPlayer);
+           // Get result
+           var lastNode = _aStar.FindPath(startNode, finishNode, GetDistance, GetNodeByCoordinates, inverted);
 
-         // Get result
-         var lastNode = _aStar.FindPath(startNode, finishNode, GetDistance, GetNodeByCoordinates, inverted);
-
-         var result = new List<Node>();
-         while (lastNode != null)
-         {
-            result.Add(lastNode);
-            lastNode = lastNode.Parent;
-         }
-         return result;
-      }
+           while (lastNode != null)
+           {
+               yield return lastNode;
+               lastNode = lastNode.Parent;
+           }
+       }
 
 
-      /// <summary>
+       /// <summary>
       /// Gets the distance between two nodes.
       /// </summary>
-      public static double GetDistance(Node n1, Node n2)
+      private static double GetDistance(Node n1, Node n2)
       {
          return GetDistance(n1.X, n1.Y, n2.X, n2.Y);
       }
@@ -101,15 +83,7 @@ namespace KlopAi
       /// <summary>
       /// Gets the distance between two nodes.
       /// </summary>
-      public static double GetDistance(IKlopCell cell1, IKlopCell cell2)
-      {
-         return GetDistance(cell1.X, cell1.Y, cell2.X, cell2.Y);
-      }
-
-      /// <summary>
-      /// Gets the distance between two nodes.
-      /// </summary>
-      public static double GetDistance(int x1, int y1, int x2, int y2)
+      private static double GetDistance(int x1, int y1, int x2, int y2)
       {
          var dx = x1 - x2;
          var dy = y1 - y2;
@@ -142,7 +116,7 @@ namespace KlopAi
       /// Evaluates the cells for specified player.
       /// </summary>
       /// <param name="klopPlayer">The klop player.</param>
-      internal void EvaluateCells(IKlopPlayer klopPlayer)
+      private void EvaluateCells(IKlopPlayer klopPlayer)
       {
          _cellEvaluator.EvaluateCells(klopPlayer, (cell, cost) =>
                                                      {
