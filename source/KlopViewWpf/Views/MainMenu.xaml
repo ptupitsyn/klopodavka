@@ -2,10 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Effects="clr-namespace:KlopViewWpf.Effects" xmlns:Models="clr-namespace:KlopViewWpf.Models" mc:Ignorable="d" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Models="clr-namespace:KlopViewWpf.Models"
+             xmlns:viewModels="clr-namespace:KlopViewWpf.ViewModels"
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
              Opacity="0"
-             x:Name="menuRoot" CacheMode="BitmapCache" Background="DarkGreen">
+             x:Name="menuRoot" CacheMode="BitmapCache" Background="DarkGreen" d:DataContext="{d:DesignInstance viewModels:MainViewModel}">
     <UserControl.Style>
         <Style TargetType="UserControl">
             <Style.Triggers>
@@ -123,13 +126,13 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Image Source="..\Images\splash_screen.png" Grid.Row="0" Margin="20" Width="721" x:Name="titleImage">
+            <Image Source="..\Images\splash_screen.png" Grid.Row="0" Margin="20" Width="721">
                 <!--<Image.Effect>
                     <Effects:ReflectionEffect Spacing="95" ReflectionHeight="0.2" />
                 </Image.Effect>-->
             </Image>
 
-            <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="buttonsPanel" Columns="4" Grid.Row="1" Margin="40,10,40,40">
+            <UniformGrid VerticalAlignment="Center" HorizontalAlignment="Center" Columns="4" Grid.Row="1" Margin="40,10,40,40">
                 <Button Command="{Binding QuickGameAgainstOneCommand}" Click="Button_Click">
                     <Models:ItemDescriptor Text="Quick Game" Icon="..\Images\human_vs_cpu.png"
                                        Description="Quick Game versus single CPU player" />

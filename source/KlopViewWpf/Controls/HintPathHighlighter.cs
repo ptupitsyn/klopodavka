@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using KlopAi;
+using KlopAi.DefaultRules;
 using KlopIfaces;
 
 #endregion
