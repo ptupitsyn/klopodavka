@@ -13,7 +13,7 @@ namespace KlopAi.DefaultRules
     /// <summary>
     /// Cell cost provider.
     /// </summary>
-    internal class KlopCellEvaluator
+    internal class KlopCellEvaluator : IKlopCellEvaluator
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="KlopCellEvaluator"/> class.
