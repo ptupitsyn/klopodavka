@@ -70,6 +70,8 @@
     <Compile Include="DisposableHelper.cs" />
     <Compile Include="KlopCell.cs" />
     <Compile Include="KlopModel.cs" />
+    <Compile Include="KlopModelAllowDisconnected.cs" />
+    <Compile Include="KlopModelBase.cs" />
     <Compile Include="KlopPlayer.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
