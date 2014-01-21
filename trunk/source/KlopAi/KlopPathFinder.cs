@@ -4,22 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KlopAi.algo;
+using KlopAi.DefaultRules;
 using KlopIfaces;
 
 #endregion
 
-namespace KlopAi.DefaultRules
+namespace KlopAi
 {
     public class KlopPathFinder
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="KlopPathFinder"/> class.
         /// </summary>
-        /// <param name="model">The model.</param>
-        public KlopPathFinder(IKlopModel model)
+        public KlopPathFinder(IKlopModel model, IKlopCellEvaluator cellEvaluator = null)
         {
             _klopModel = model;
-            _cellEvaluator = new KlopCellEvaluator(model);
+            _cellEvaluator = cellEvaluator ?? new KlopCellEvaluator(model);
             _aStar = new AStar();
             _field = new Node[model.FieldWidth, model.FieldHeight];
             foreach (IKlopCell cell in _klopModel.Cells)
@@ -110,7 +110,7 @@ namespace KlopAi.DefaultRules
         }
 
         private readonly AStar _aStar;
-        private readonly KlopCellEvaluator _cellEvaluator;
+        private readonly IKlopCellEvaluator _cellEvaluator;
         private readonly Node[,] _field;
         private readonly IKlopModel _klopModel;
     }

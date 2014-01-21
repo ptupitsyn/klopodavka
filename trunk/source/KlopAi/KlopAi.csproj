@@ -44,11 +44,12 @@
     <Compile Include="algo\AStar.cs" />
     <Compile Include="algo\Node.cs" />
     <Compile Include="algo\PriorityQueue.cs" />
+    <Compile Include="IKlopCellEvaluator.cs" />
     <Compile Include="Extentions\EnumerableExtensions.cs" />
     <Compile Include="DefaultRules\KlopAiPlayer.cs" />
     <Compile Include="AllowDisconnectedRules\KlopAiPlayerAllowDisconnected.cs" />
     <Compile Include="DefaultRules\KlopCellEvaluator.cs" />
-    <Compile Include="DefaultRules\KlopPathFinder.cs" />
+    <Compile Include="KlopPathFinder.cs" />
     <Compile Include="Extentions\ModelExtensions.cs" />
     <Compile Include="KlopAiPlayerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

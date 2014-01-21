@@ -17,6 +17,7 @@ namespace KlopAi.AllowDisconnectedRules
                     // TODO: kill kill kill
                 }
 
+                // TODO: Our own cell evaluator
                 //Model.MakeTurn(Model.GenerateStartingPattern(this, c => double.MaxValue));
                 Model.MakeTurn(Model.Cells.Where(c => c.Available).Random());
             }
