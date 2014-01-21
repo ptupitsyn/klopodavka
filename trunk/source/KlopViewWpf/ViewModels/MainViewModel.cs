@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using KlopAi.AllowDisconnectedRules;
 using KlopAi.DefaultRules;
 using KlopIfaces;
 using KlopModel;
@@ -144,7 +145,7 @@ namespace KlopViewWpf.ViewModels
                     Human = true,
                     Name = "You"
                 },
-                new KlopAiPlayer
+                new KlopAiPlayerAllowDisconnected
                 {
                     BasePosX = fieldSize - baseDist - 1,
                     BasePosY = baseDist,
@@ -172,14 +173,14 @@ namespace KlopViewWpf.ViewModels
                     Human = true,
                     Name = "You"
                 },
-                new KlopAiPlayer
+                new KlopAiPlayerAllowDisconnected
                 {
                     BasePosX = fieldSize - baseDist - 1,
                     BasePosY = baseDist,
                     Color = Colors.Red,
                     Name = "Луноход 1"
                 },
-                new KlopAiPlayer
+                new KlopAiPlayerAllowDisconnected
                 {
                     BasePosX = fieldSize - baseDist - 1,
                     BasePosY = fieldSize - baseDist - 1,

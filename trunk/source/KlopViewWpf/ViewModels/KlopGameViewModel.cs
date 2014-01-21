@@ -10,8 +10,8 @@ namespace KlopViewWpf.ViewModels
     {
         public KlopGameViewModel(int fieldWidth, int fieldHeight, IEnumerable<IKlopPlayer> players, int turnLength)
         {
-            //_klopModel = new KlopModel.KlopModelAllowDisconnected(fieldWidth, fieldHeight, players, turnLength);
-            _klopModel = new KlopModel.KlopModel(fieldWidth, fieldHeight, players, turnLength);
+            _klopModel = new KlopModel.KlopModelAllowDisconnected(fieldWidth, fieldHeight, players, turnLength);
+            //_klopModel = new KlopModel.KlopModel(fieldWidth, fieldHeight, players, turnLength);
         }
 
         public IKlopCell ActiveCell

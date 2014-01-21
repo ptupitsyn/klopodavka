@@ -14,6 +14,9 @@ using KlopIfaces;
 
 namespace KlopAi.DefaultRules
 {
+    /// <summary>
+    /// AI player for default rules (must be connected to the base).
+    /// </summary>
     public class KlopAiPlayer : KlopAiPlayerBase
     {
         /// <summary>
@@ -276,7 +279,7 @@ namespace KlopAi.DefaultRules
         /// </summary>
         private IKlopCell FindNextTarget(out int maxPathLength)
         {
-            if (IsFightStarted())
+            if (Model.IsFightStarted())
             {
                 // Fight started, rush to base
                 maxPathLength = 1;
@@ -284,23 +287,6 @@ namespace KlopAi.DefaultRules
             }
 
             return PrepareOrAttack(out maxPathLength);
-        }
-
-        private IKlopCell GenerateStartingPattern()
-        {
-            // TODO: Target sometimes falls behing enemy cells, and, however, target cell is not close to enemy, the path is.
-            // TODO: "Safe path"?? "Safe evaluator".. or SafePathFinder. How to build safe cells map fast?
-            return Model.Cells
-                .Where(c =>
-                {
-                    if (c.X < 1 || c.Y < 1 || c.X >= Model.FieldWidth - 2 || c.Y >= Model.FieldHeight - 2) return false;
-                    if (Model.GetNeighborCells(c).Any(cc => cc.Owner != null)) return false;
-                    var dx1 = Math.Abs(c.X - BasePosX);
-                    var dy1 = Math.Abs(c.Y - BasePosY);
-                    return dx1 > 1 && dy1 > 1
-                           && ((dx1*dx1 + dy1*dy1) < (Math.Pow(Model.FieldHeight, 2) + Math.Pow(Model.FieldWidth, 2))/3)
-                           && (GetEnemyDistance(c) > Model.TurnLength/1.7);
-                }).Random() ?? Model.Cells.Where(c => c.Owner == null).Random();
         }
 
         /// <summary>
@@ -351,14 +337,6 @@ namespace KlopAi.DefaultRules
         }
 
         /// <summary>
-        /// Determines whether fight is started - there are dead clops on the field.
-        /// </summary>
-        private bool IsFightStarted()
-        {
-            return Model.Cells.Any(c => c.State == ECellState.Dead /*|| _model.Cells.Count(c => c.Owner != null) > _model.FieldHeight*_model.FieldWidth/8*/);
-        }
-
-        /// <summary>
         /// Check whether if enemy is close enough and attacks; in other case generates starting pattern.
         /// </summary>
         private IKlopCell PrepareOrAttack(out int maxPathLength)
@@ -371,7 +349,7 @@ namespace KlopAi.DefaultRules
 
             // Fight not started, generate pattern
             maxPathLength = 2; // _model.TurnLength / 3;
-            return GenerateStartingPattern();
+            return Model.GenerateStartingPattern(this, GetEnemyDistance);
         }
 
         private const decimal AttackThreshold = 0.4M;

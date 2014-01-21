@@ -49,6 +49,7 @@
     <Compile Include="AllowDisconnectedRules\KlopAiPlayerAllowDisconnected.cs" />
     <Compile Include="DefaultRules\KlopCellEvaluator.cs" />
     <Compile Include="DefaultRules\KlopPathFinder.cs" />
+    <Compile Include="Extentions\ModelExtensions.cs" />
     <Compile Include="KlopAiPlayerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
