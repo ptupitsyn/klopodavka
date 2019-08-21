@@ -1,11 +1,11 @@
 namespace Klopodavka.Game
 
-type Player = { Name: string; Id: uint16; }
+type Player = Red | Blue
 
-type BoardTile =
+type Tile =
     | Empty
     | Base of player: Player
     | Alive of player: Player
     | Squashed of player: Player
 
-
+type Board = Tile[,]
