@@ -7,7 +7,7 @@ namespace Klopodavka.BlazorUi
     {
         static void Main(string[] args)
         {
-            var p = new Player("Player 1", 1);
+            var p = Player.Red;
             Console.WriteLine(p);
         }
     }
