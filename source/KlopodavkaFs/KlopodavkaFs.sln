@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3479B111
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Klopodavka.Game.Tests", "tests\Klopodavka.Game.Tests\Klopodavka.Game.Tests.fsproj", "{EF5F21AE-4AAA-48D1-B35A-AE5D1384238A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klopodavka.BlazorUi", "src\Klopodavka.BlazorUi\Klopodavka.BlazorUi.csproj", "{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,9 +50,22 @@ Global
 		{EF5F21AE-4AAA-48D1-B35A-AE5D1384238A}.Release|x64.Build.0 = Release|Any CPU
 		{EF5F21AE-4AAA-48D1-B35A-AE5D1384238A}.Release|x86.ActiveCfg = Release|Any CPU
 		{EF5F21AE-4AAA-48D1-B35A-AE5D1384238A}.Release|x86.Build.0 = Release|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Debug|x64.Build.0 = Debug|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Debug|x86.Build.0 = Debug|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Release|x64.ActiveCfg = Release|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Release|x64.Build.0 = Release|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F1D5B18F-FF5E-4E31-986A-660BA91CB8A2} = {274DD28D-5B60-460D-ADD2-A954D31487F2}
 		{EF5F21AE-4AAA-48D1-B35A-AE5D1384238A} = {3479B111-3FFF-419B-892F-14D37855096F}
+		{39B4838F-61C2-44F8-B877-CEEF33A5B1E0} = {274DD28D-5B60-460D-ADD2-A954D31487F2}
 	EndGlobalSection
 EndGlobal
