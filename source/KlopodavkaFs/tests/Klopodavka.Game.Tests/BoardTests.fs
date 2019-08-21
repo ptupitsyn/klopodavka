@@ -58,12 +58,15 @@ let tests =
             for i = 1 to 5 do
                 t.[bx - i, by + i] <- if i % 2 = 0 then Alive Red else Squashed Red
 
+            let isRed (x, y) = match (tile board x y) with
+                                                        | Alive Red | Squashed Red | Base Red -> true
+                                                        | _ -> false
+
+            let hasNeighbor (x, y) = neighbors w h x y |> Seq.exists isRed
+
             let expected = Seq.allPairs (seq { 0..w - 1 }) (seq { 0..h - 1 })
-                           |> Seq.where (fun (x, y) -> neighbors w h x y
-                                                       |> Seq.exists (fun (a, b) ->
-                                                           match (tile board a b) with
-                                                           | Alive Red | Squashed Red | Base Red -> true
-                                                           | _ -> false))
+                           |> Seq.where hasNeighbor
+                           |> Seq.where (fun (x, y) -> tile board x y = Empty)
                            |> Seq.sort
 
             let actual = moves board Red |> Seq.sort
