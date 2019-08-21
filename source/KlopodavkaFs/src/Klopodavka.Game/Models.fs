@@ -8,4 +8,4 @@ type Tile =
     | Alive of player: Player
     | Squashed of player: Player
 
-type Board = Board of Tile[,]
+type Tiles = Tiles of Tile[,]
