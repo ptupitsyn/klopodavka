@@ -34,9 +34,8 @@ let createBoard =
 
     arr |> Tiles
 
-let neighbors board x y =
+let neighbors w h x y =
     let offs = [ -1; 0; 1 ]
-    let w, h = size board
     Seq.allPairs offs offs
     |> Seq.except [ (0, 0) ]
     |> Seq.map (fun (a, b) -> (x + a, y + b))
@@ -55,10 +54,11 @@ let moves board player =
             | false ->
                 visited.[x, y] <- true
                 let t = tile board x y
-                let loopNeighbors () = loop (neighbors board x y)
+                let loopNeighbors () = loop (neighbors w h x y)
 
                 match t with
                 | Empty -> yield pos
+                | Base p when p = player -> yield! loopNeighbors()
                 | Alive p when p = player -> yield! loopNeighbors()
                 | Squashed p when p = player -> yield! loopNeighbors()
                 | _ -> ()
