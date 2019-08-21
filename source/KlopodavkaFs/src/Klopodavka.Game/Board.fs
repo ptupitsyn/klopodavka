@@ -45,21 +45,17 @@ let neighbors w h x y =
 
     let offs = [ -1; 0; 1 ]
     Seq.allPairs offs offs
-    |> Seq.except [ (0, 0) ]
     |> Seq.map (fun (a, b) -> (x + a, y + b))
-    |> Seq.where (fun (a, b) -> a >= 0 && b >= 0 && a < w && b < h)
+    |> Seq.where (fun (a, b) -> a >= 0 && b >= 0 && a < w && b < h && (a, b) <> (x, y))
 
 let moves board player =
     let w, h = size board
-    let bx, by = basePosition player w h
     let visited = Array2D.create w h false
 
-    let rec loop (tiles: seq<int * int>) = seq {
+    let rec loop tiles = seq {
         for pos in tiles do
             let x, y = pos
-            match visited.[x, y] with
-            | true -> ()
-            | false ->
+            if not visited.[x, y] then
                 visited.[x, y] <- true
                 let t = tile board x y
                 let loopNeighbors () = loop (neighbors w h x y)
@@ -73,5 +69,6 @@ let moves board player =
 
     }
 
+    let bx, by = basePosition player w h
     loop [bx, by]
 
