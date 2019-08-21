@@ -10,6 +10,9 @@ let DefaultHeight = 40
 [<Literal>]
 let BaseOffset = 5
 
+[<Literal>]
+let MinSize = 20
+
 let tiles (Tiles board) = board
 
 let tile board x y = (tiles board).[x, y]
@@ -35,6 +38,11 @@ let createBoard =
     arr |> Tiles
 
 let neighbors w h x y =
+    if w < MinSize then invalidArg "w" "out of range"
+    if h < MinSize then invalidArg "h" "out of range"
+    if x < 0 || x >= w then invalidArg "x" "out of range"
+    if y < 0 || y >= h then invalidArg "x" "out of range"
+
     let offs = [ -1; 0; 1 ]
     Seq.allPairs offs offs
     |> Seq.except [ (0, 0) ]
