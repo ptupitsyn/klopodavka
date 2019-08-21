@@ -6,7 +6,7 @@ open Klopodavka.Game.Board
 
 [<Tests>]
 let tests =
-    testList "Game module tests" [
+    testList "Board tests" [
 
         testCase "createBoard returns board of correct size" <| fun _ ->
             let board = createBoard
