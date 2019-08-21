@@ -22,7 +22,7 @@ let tests =
             let board = createBoard
             let tiles =
                 Seq.allPairs (seq {0 .. width board - 1}) (seq {0 .. height board - 1})
-                |> Seq.map (fun coord -> tile board (fst coord) (snd coord))
+                |> Seq.map (fun (x, y) -> tile board x y)
                 |> Seq.except [Base Blue; Base Red]
             Expect.allEqual tiles Empty "All tiles are empty except bases"
 

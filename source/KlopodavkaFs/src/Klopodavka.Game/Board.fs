@@ -10,10 +10,20 @@ let DefaultHeight = 40
 [<Literal>]
 let BaseOffset = 5
 
+let getBasePos player width height =
+    match player with
+        | Red -> (width - BaseOffset, BaseOffset)
+        | Blue -> (BaseOffset, height - BaseOffset)
+
 let createBoard =
     let arr = Array2D.create DefaultWidth DefaultHeight Empty
-    arr.[DefaultWidth - BaseOffset, BaseOffset] <- Base Red
-    arr.[BaseOffset, DefaultHeight - BaseOffset] <- Base Blue
+
+    let redX, redY = getBasePos Red DefaultWidth DefaultHeight
+    arr.[redX, redY] <- Base Red
+
+    let blueX, blueY = getBasePos Blue DefaultWidth DefaultHeight
+    arr.[blueX, blueY] <- Base Blue
+
     arr |> Tiles
 
 let tiles (Tiles board) = board
