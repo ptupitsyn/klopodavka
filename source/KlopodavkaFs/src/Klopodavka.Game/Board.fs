@@ -26,7 +26,7 @@ let basePosition player width height =
         | Red -> (width - BaseOffset, BaseOffset)
         | Blue -> (BaseOffset, height - BaseOffset)
 
-let createBoard =
+let createBoard() =
     let arr = Array2D.create DefaultWidth DefaultHeight Empty
 
     let redX, redY = basePosition Red DefaultWidth DefaultHeight
