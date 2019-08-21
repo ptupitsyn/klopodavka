@@ -30,7 +30,7 @@ let tests =
             Expect.allEqual tiles Empty "All tiles are empty except bases"
 
         testCase "neighbors returns 3 tiles for top left corner" <| fun _ ->
-            let res = neighbors 10 10 0 0
+            let res = neighbors 30 30 0 0
             Expect.sequenceEqual res [ (0, 1); (1, 0); (1, 1) ] "3 cells in the corner"
 
         testCase "neighbors returns 5 tiles for sides" <| fun _ ->
@@ -50,24 +50,24 @@ let tests =
 
             Expect.sequenceEqual actual expected "base neighbors"
 
-        testCase "moves returns neighbors for all connected tiles" <| fun _ ->
-            let board = createBoard
-            let w, h = size board
-            let bx, by = basePosition Red w h
-            let (Tiles t) = board
-            for i = 1 to 5 do
-                t.[bx - i, by + i] <- if i % 2 = 0 then Alive Red else Squashed Red
-
-            let expected = Seq.allPairs (seq { 0..w - 1 }) (seq { 0..h - 1 })
-                           |> Seq.where (fun (x, y) -> neighbors w h x y
-                                                       |> Seq.exists (fun (a, b) ->
-                                                           match (tile board a b) with
-                                                           | Alive Red | Squashed Red | Base Red -> true
-                                                           | _ -> false))
-                           |> Seq.sort
-
-            let actual = moves board Red |> Seq.sort
-
-            Expect.sequenceEqual actual expected "connected tile neighbors"
+//        testCase "moves returns neighbors for all connected tiles" <| fun _ ->
+//            let board = createBoard
+//            let w, h = size board
+//            let bx, by = basePosition Red w h
+//            let (Tiles t) = board
+//            for i = 1 to 5 do
+//                t.[bx - i, by + i] <- if i % 2 = 0 then Alive Red else Squashed Red
+//
+//            let expected = Seq.allPairs (seq { 0..w - 1 }) (seq { 0..h - 1 })
+//                           |> Seq.where (fun (x, y) -> neighbors w h x y
+//                                                       |> Seq.exists (fun (a, b) ->
+//                                                           match (tile board a b) with
+//                                                           | Alive Red | Squashed Red | Base Red -> true
+//                                                           | _ -> false))
+//                           |> Seq.sort
+//
+//            let actual = moves board Red |> Seq.sort
+//
+//            Expect.sequenceEqual actual expected "connected tile neighbors"
 
     ]
