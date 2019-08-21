@@ -1,6 +1,8 @@
-﻿module Klopodavka.Game.Tests
+﻿namespace Klopodavka.Game.Tests
+
 open Expecto
 
-[<EntryPoint>]
-let main argv =
-    Tests.runTestsInAssembly defaultConfig argv
+module Main =
+    [<EntryPoint>]
+    let main argv =
+        Tests.runTestsInAssembly defaultConfig argv
