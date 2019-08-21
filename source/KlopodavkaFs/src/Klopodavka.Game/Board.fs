@@ -18,7 +18,7 @@ let size board =
     let arr = tiles board
     (arr.GetLength(0), arr.GetLength(1))
 
-let basePos player width height =
+let basePosition player width height =
     match player with
         | Red -> (width - BaseOffset, BaseOffset)
         | Blue -> (BaseOffset, height - BaseOffset)
@@ -26,10 +26,10 @@ let basePos player width height =
 let createBoard =
     let arr = Array2D.create DefaultWidth DefaultHeight Empty
 
-    let redX, redY = basePos Red DefaultWidth DefaultHeight
+    let redX, redY = basePosition Red DefaultWidth DefaultHeight
     arr.[redX, redY] <- Base Red
 
-    let blueX, blueY = basePos Blue DefaultWidth DefaultHeight
+    let blueX, blueY = basePosition Blue DefaultWidth DefaultHeight
     arr.[blueX, blueY] <- Base Blue
 
     arr |> Tiles
@@ -44,6 +44,6 @@ let neighbors board x y =
 
 let moves board player =
     let w, h = size board
-    let bx, by = basePos player w h
+    let bx, by = basePosition player w h
     [(bx, by)]
 
