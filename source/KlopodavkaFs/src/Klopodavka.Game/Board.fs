@@ -77,7 +77,9 @@ let validateMove board player x y =
     Seq.contains (x, y) validMoves
     
 let makeMove board player x y =
-    let newBoard = Array2D.copy (tiles board)
-    newBoard.[x, y] <- Alive player
-    Tiles newBoard
+    if validateMove board player x y then
+        let newBoard = Array2D.copy (tiles board)
+        newBoard.[x, y] <- Alive player
+        Some (Tiles newBoard)
+    else None
     
