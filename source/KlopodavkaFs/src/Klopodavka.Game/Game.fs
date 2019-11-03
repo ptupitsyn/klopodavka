@@ -1,6 +1,3 @@
 ﻿module Klopodavka.Game.Game
-
-    // let get
-
-    // let getMoves Board Player =
+    // TODO: functions for game management - create new, track current turn, victory conditions
 
