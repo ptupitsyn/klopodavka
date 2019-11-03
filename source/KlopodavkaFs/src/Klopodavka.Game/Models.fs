@@ -9,3 +9,11 @@ type Tile =
     | Squashed of player: Player
 
 type Tiles = Tiles of Tile[,]
+
+type GameState = {
+    Board: Tiles;
+    CurrentPlayer: Player;
+    ClopsPerTurn: int32;
+    ClopsLeft: int32;
+}
+    
