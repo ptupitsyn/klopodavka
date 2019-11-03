@@ -15,7 +15,6 @@ let createGame(): GameState =
 let otherPlayer player =
     if (player = Red) then Blue else Red
 
-
 let makeMove game x y =
     let nextClop game =
         let lastClop = game.ClopsLeft = 1
