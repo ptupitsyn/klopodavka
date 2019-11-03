@@ -1,6 +1,5 @@
 module Klopodavka.Game.Board
 open Klopodavka.Game
-open Klopodavka.Game
 
 [<Literal>]
 let DefaultWidth = 34
