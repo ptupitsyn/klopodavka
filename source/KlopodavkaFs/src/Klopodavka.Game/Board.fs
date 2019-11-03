@@ -80,5 +80,5 @@ let validateMove board player x y =
 let makeMove board player x y =
     let newBoard = Array2D.copy (tiles board)
     newBoard.[x, y] <- Alive player
-    newBoard
+    Tiles newBoard
     
