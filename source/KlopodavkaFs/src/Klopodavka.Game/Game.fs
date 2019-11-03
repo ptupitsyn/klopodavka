@@ -25,7 +25,6 @@ let makeMove game x y =
         
     let board = Board.makeMove game.Board game.CurrentPlayer x y
     
-    // TODO: How to railway here?
     match board with
         | Some(tiles) -> Some({ (nextClop game) with Board = tiles  })
         | _ -> None
