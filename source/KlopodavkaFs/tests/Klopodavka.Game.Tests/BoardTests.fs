@@ -72,5 +72,19 @@ let tests =
             let actual = moves board Red |> Seq.sort
 
             Expect.sequenceEqual actual expected "connected tile neighbors"
+            
+        testCase "validateMove returns true for neighbors of connected tiles" <| fun _ ->
+            let board = createBoard()
+            let w, h = size board
+            let bx, by = basePosition Red w h
+            let validMove = validateMove board Red bx (by + 1)
+            Expect.equal true validMove "Base tile neighbor is a valid move"
 
+        testCase "validateMove returns false for base tile" <| fun _ ->
+            let board = createBoard()
+            let w, h = size board
+            let bx, by = basePosition Red w h
+            let validMove = validateMove board Red bx by
+            Expect.isFalse validMove "Base tile is not a valid move"
+            
     ]
