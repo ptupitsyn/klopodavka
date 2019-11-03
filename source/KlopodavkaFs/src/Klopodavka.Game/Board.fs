@@ -1,5 +1,6 @@
 module Klopodavka.Game.Board
 open Klopodavka.Game
+open Klopodavka.Game
 
 [<Literal>]
 let DefaultWidth = 34
@@ -72,3 +73,12 @@ let moves board player =
     let bx, by = basePosition player w h
     loop [bx, by]
 
+let validateMove board player x y =
+    let validMoves = moves board player
+    Seq.contains (x, y) validMoves
+    
+let makeMove board player x y =
+    let newBoard = Array2D.copy (tiles board)
+    newBoard.[x, y] <- Alive player
+    newBoard
+    
