@@ -87,4 +87,10 @@ let tests =
             let validMove = validateMove board Red bx by
             Expect.isFalse validMove "Base tile is not a valid move"
             
+        testCase "makeMove returns None for invalid move" <| fun _ ->
+            Expect.isTrue false "TODO"
+            
+        testCase "makeMove returns new Tiles for valid move" <| fun _ ->
+            Expect.isTrue false "TODO"
+            
     ]
