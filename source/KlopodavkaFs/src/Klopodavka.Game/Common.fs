@@ -1,16 +1,15 @@
 ﻿module Klopodavka.Game.Common
 
-type Result<'T> =
-    | Success of 'T
-    | Failure of string
-    
-let succeed x =
-    Success x
-    
-let fail message =
-    Failure message
-    
 let bind fn res =
     match res with
-        | Success x -> fn x
-        | Failure err -> Failure err
+        | Some x -> fn x
+        | _ -> None
+  
+let apply fn res =
+    match res with
+    | Some(res) -> fn res |> Some
+    | _ -> None
+
+let lift fn res =
+    apply fn res
+    
