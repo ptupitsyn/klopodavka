@@ -69,12 +69,12 @@ let cellSize = 20
 let renderTile tile avail =
     let (text, style) =
         match tile with
-            | Base Red -> "🏠", "background-color: red"
-            | Base Blue -> "🏠", "background-color: blue"
-            | Alive Red -> "", "background-color: red"
-            | Alive Blue -> "", "background-color: blue"
-            | Squashed Red -> "X", "background-color: red"
-            | Squashed Blue -> "X", "background-color: blue"
+            | Base Red -> "🏠", "background-color: #ff9999"
+            | Base Blue -> "🏠", "background-color: #80b3ff"
+            | Alive Red -> "", "background-color: #ff9999"
+            | Alive Blue -> "", "background-color: #80b3ff"
+            | Squashed Red -> "💀", "background-color: #cc0000"
+            | Squashed Blue -> "💀", "background-color: #005ce6"
             | Empty -> "", ""
             
     if (avail) then ("·", style + "; cursor: pointer") else (text, style)

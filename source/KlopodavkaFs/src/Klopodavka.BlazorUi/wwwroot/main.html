@@ -5,10 +5,12 @@ ${Body}
 </div>
 
 <template id="Home">
-    <p>
-        <button onclick="${NewGame}" class="button" style="float: right">New Game</button>
-        <span>${GameInfo}</span>
-    </p>
+    <div style="float: right">
+        <button onclick="${NewGame}" class="button">New Game</button>
+    </div>
+
+    <div>${GameInfo}</div>
+    
     <p>${GameBoard}</p>
 </template>
 
