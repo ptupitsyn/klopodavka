@@ -73,6 +73,25 @@ let router = Router.infer SetPage (fun model -> model.page)
 
 type Main = Template<"wwwroot/main.html">
 
+let getSymbol (tile: Tile) =
+    match tile with
+        | Base _ -> text "🏠"
+        | Alive _ -> text "O"
+        | Squashed _ -> text "X"
+        | Empty -> text ""
+        
+let getColor (tile: Tile) =
+    let player = match tile with
+                    | Base player -> Some player
+                    | Alive player -> Some player
+                    | Squashed player -> Some player
+                    | Empty -> None
+    
+    match player with
+        | Some Red -> "red"
+        | Some Blue -> "blue"
+        | _ -> ""
+
 let homePage model dispatch =
     Main.Home()
         .NewGame(fun _ -> dispatch NewGame)
@@ -80,8 +99,8 @@ let homePage model dispatch =
         .GameBoard(table [] [
             forEach (Board.rows model.gameState.Board) <| fun row ->
                 tr [] [
-                    forEach row <| fun cell ->
-                        td [] [textf "%O" cell]
+                    forEach row <| fun tile ->
+                        td [] [getSymbol tile]
                 ]
         ])
         .Elt()

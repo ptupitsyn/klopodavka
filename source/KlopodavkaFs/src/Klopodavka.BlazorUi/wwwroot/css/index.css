@@ -38,3 +38,21 @@ body {
   margin-right: auto;
   margin-bottom: 5px;
 }
+
+table {
+  border: 0;
+}
+
+tr {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+td {
+  border: 1px solid #dbdbdb;
+  padding: 0;
+  margin: 0;
+  width: 20px;
+  height: 20px;
+}
