@@ -81,16 +81,14 @@ let getSymbol (tile: Tile) =
         | Empty -> text ""
         
 let getColor (tile: Tile) =
-    let player = match tile with
-                    | Base player -> Some player
-                    | Alive player -> Some player
-                    | Squashed player -> Some player
-                    | Empty -> None
-    
-    match player with
-        | Some Red -> "red"
-        | Some Blue -> "blue"
-        | _ -> ""
+    match tile with
+        | Base Red -> "red"
+        | Base Blue -> "blue"
+        | Alive Red -> "red"
+        | Alive Blue -> "blue"
+        | Squashed Red -> "red"
+        | Squashed Blue -> "blue"
+        | Empty -> "#dbdbdb"
 
 let homePage model dispatch =
     Main.Home()
@@ -100,7 +98,11 @@ let homePage model dispatch =
             forEach (Board.rows model.gameState.Board) <| fun row ->
                 tr [] [
                     forEach row <| fun tile ->
-                        td [] [getSymbol tile]
+                        td [
+                            attr.style (sprintf "background-color: %s" (getColor tile))
+                        ] [
+                            getSymbol tile
+                        ]
                 ]
         ])
         .Elt()
