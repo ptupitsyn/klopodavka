@@ -10,13 +10,11 @@ open Klopodavka.Game
 /// Routing endpoints definition.
 type Page =
     | [<EndPoint "/">] Home
-    | [<EndPoint "/counter">] Counter
 
 /// The Elmish application's model.
 type Model =
     {
         page: Page
-        counter: int
         error: string option
         username: string
         password: string
@@ -29,7 +27,6 @@ type Model =
 let initModel =
     {
         page = Home
-        counter = 0
         error = None
         username = ""
         password = ""
@@ -53,13 +50,6 @@ let update message model =
     | SetPage page ->
         { model with page = page }, Cmd.none
 
-    | Increment ->
-        { model with counter = model.counter + 1 }, Cmd.none
-    | Decrement ->
-        { model with counter = model.counter - 1 }, Cmd.none
-    | SetCounter value ->
-        { model with counter = value }, Cmd.none
-        
     | NewGame ->
         { model with gameState = Game.createGame() }, Cmd.none
 
@@ -88,7 +78,7 @@ let getColor (tile: Tile) =
         | Alive Blue -> "blue"
         | Squashed Red -> "red"
         | Squashed Blue -> "blue"
-        | Empty -> "#dbdbdb"
+        | Empty -> "#fbfbfb"
 
 let homePage model dispatch =
     Main.Home()
@@ -107,30 +97,11 @@ let homePage model dispatch =
         ])
         .Elt()
 
-let counterPage model dispatch =
-    Main.Counter()
-        .Decrement(fun _ -> dispatch Decrement)
-        .Increment(fun _ -> dispatch Increment)
-        .Value(model.counter, fun v -> dispatch (SetCounter v))
-        .Elt()
-
-let menuItem (model: Model) (page: Page) (text: string) =
-    Main.MenuItem()
-        .Active(if model.page = page then "is-active" else "")
-        .Url(router.Link page)
-        .Text(text)
-        .Elt()
-
 let view model dispatch =
     Main()
-        .Menu(concat [
-            menuItem model Home "Home"
-            menuItem model Counter "Counter"
-        ])
         .Body(
             cond model.page <| function
             | Home -> homePage model dispatch
-            | Counter -> counterPage model dispatch
         )
         .Error(
             cond model.error <| function
