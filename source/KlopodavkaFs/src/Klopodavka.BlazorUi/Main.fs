@@ -76,6 +76,7 @@ type Main = Template<"wwwroot/main.html">
 let homePage model dispatch =
     Main.Home()
         .NewGame(fun _ -> dispatch NewGame)
+        .GameInfo(b [] [text (sprintf "Player: %O, Clicks left: %O" model.gameState.CurrentPlayer model.gameState.ClopsLeft)])
         .Elt()
 
 let counterPage model dispatch =
