@@ -51,6 +51,7 @@ let update message model =
     | NewGame ->
         { model with gameState = Game.createGame() }, Cmd.none
     | MakeMove (x, y) ->
+        printf "Move: %i %i" x y
         let newState = Game.makeMove model.gameState x y
         match newState with
             | Some state -> { model with gameState = state }, Cmd.none
@@ -66,6 +67,8 @@ let router = Router.infer SetPage (fun model -> model.page)
 
 type Main = Template<"wwwroot/main.html">
 
+let cellSize = 20
+
 let renderTile (tile: Tile) =
     match tile with
         | Base Red -> "🏠", "red"
@@ -74,7 +77,7 @@ let renderTile (tile: Tile) =
         | Alive Blue -> "·", "blue"
         | Squashed Red -> "X", "red"
         | Squashed Blue -> "X", "blue"
-        | Empty -> "", "#fbfbfb"
+        | Empty -> "", ""
 
 let homePage model dispatch =
     Main.Home()
@@ -117,6 +120,7 @@ type MyApp() =
 
     override this.Program =
         Program.mkProgram (fun _ -> initModel, Cmd.none) update view
+        // |> Program.withConsoleTrace        
         |> Program.withRouter router
 #if DEBUG
         |> Program.withHotReload
