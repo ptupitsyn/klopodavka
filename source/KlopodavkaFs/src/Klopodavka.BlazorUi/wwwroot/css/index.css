@@ -3,26 +3,8 @@ html, body {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-}
-
-#main {
-  flex: 1;
-}
-
-#main > .columns {
-  min-height: 100%;
-}
-
-.sidebar {
-  width: 250px;
-  background: whitesmoke;
-  min-height: 100%;
-}
-
-#counter {
-  width: 80px;
+  margin: auto;
+  width: 640px;
 }
 
 #notification-area {
@@ -54,8 +36,8 @@ td {
   border: 1px solid #dbdbdb;
   padding: 0;
   margin: 0;
-  width: 20px;
-  height: 20px;
+  width: 21px;
+  height: 21px;
   background-color: #fafafa;
   vertical-align: middle;
   text-align: center;
