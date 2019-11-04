@@ -71,8 +71,8 @@ let renderTile tile avail =
         match tile with
             | Base Red -> "🏠", "background-color: #ff9999"
             | Base Blue -> "🏠", "background-color: #80b3ff"
-            | Alive Red -> "🐞", "background-color: #ff9999"
-            | Alive Blue -> "🦠", "background-color: #80b3ff"
+            | Alive Red -> "", "background-color: #ff9999"
+            | Alive Blue -> "", "background-color: #80b3ff"
             | Squashed Red -> "💀", "background-color: #cc0000"
             | Squashed Blue -> "💀", "background-color: #005ce6"
             | Empty -> "", ""
@@ -82,7 +82,7 @@ let renderTile tile avail =
 let homePage model dispatch =
     Main.Home()
         .NewGame(fun _ -> dispatch NewGame)
-        .GameInfo(b [] [text (sprintf "Player: %O, Clicks left: %O" model.gameState.CurrentPlayer model.gameState.ClopsLeft)])
+        .GameInfo(b [] [text (sprintf "Player: %O | Clicks: %O" model.gameState.CurrentPlayer model.gameState.ClopsLeft)])
         .GameBoard(table [] [
             forEach (Game.rows model.gameState) <| fun row ->
                 tr [] [
