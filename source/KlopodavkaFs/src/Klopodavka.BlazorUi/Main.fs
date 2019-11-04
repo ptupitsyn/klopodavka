@@ -77,7 +77,7 @@ let renderTile (tile: Tile) =
         | Alive Blue -> "", "blue"
         | Squashed Red -> "X", "red"
         | Squashed Blue -> "X", "blue"
-        | Available -> ".", ""
+        | Available -> "·", ""
         | Empty -> "", ""
 
 let homePage model dispatch =
