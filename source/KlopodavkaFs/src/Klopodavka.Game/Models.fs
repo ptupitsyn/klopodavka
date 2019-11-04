@@ -4,6 +4,7 @@ type Player = Red | Blue
 
 type Tile =
     | Empty
+    | Available
     | Base of player: Player
     | Alive of player: Player
     | Squashed of player: Player

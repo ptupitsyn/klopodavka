@@ -73,10 +73,11 @@ let renderTile (tile: Tile) =
     match tile with
         | Base Red -> "🏠", "red"
         | Base Blue -> "🏠", "blue"
-        | Alive Red -> "·", "red"
-        | Alive Blue -> "·", "blue"
+        | Alive Red -> "", "red"
+        | Alive Blue -> "", "blue"
         | Squashed Red -> "X", "red"
         | Squashed Blue -> "X", "blue"
+        | Available -> ".", ""
         | Empty -> "", ""
 
 let homePage model dispatch =
