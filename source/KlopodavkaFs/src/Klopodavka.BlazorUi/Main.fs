@@ -71,8 +71,8 @@ let renderTile tile avail =
         match tile with
             | Base Red -> "🏠", "background-color: #ff9999"
             | Base Blue -> "🏠", "background-color: #80b3ff"
-            | Alive Red -> "", "background-color: #ff9999"
-            | Alive Blue -> "", "background-color: #80b3ff"
+            | Alive Red -> "🐞", "background-color: #ff9999"
+            | Alive Blue -> "🦠", "background-color: #80b3ff"
             | Squashed Red -> "💀", "background-color: #cc0000"
             | Squashed Blue -> "💀", "background-color: #005ce6"
             | Empty -> "", ""
