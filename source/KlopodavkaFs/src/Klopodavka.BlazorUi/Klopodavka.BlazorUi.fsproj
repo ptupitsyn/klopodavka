@@ -2,6 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <WarningsAsErrors />
+    <TreatWarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.fs" />
@@ -15,5 +17,8 @@
     <PackageReference Include="Bolero.HotReload" Version="0.7.2-preview*" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0-preview7.*" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0-preview7.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Klopodavka.Game\Klopodavka.Game.fsproj" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ open Bolero
 open Bolero.Html
 open Bolero.Remoting.Client
 open Bolero.Templating.Client
+open Klopodavka.Game
 
 /// Routing endpoints definition.
 type Page =
@@ -21,6 +22,7 @@ type Model =
         password: string
         signedInAs: option<string>
         signInFailed: bool
+        gameState: GameState
     }
 
 
@@ -33,6 +35,7 @@ let initModel =
         password = ""
         signedInAs = None
         signInFailed = false
+        gameState = Game.createGame()        
     }
 
 /// The Elmish application's update messages.
@@ -41,6 +44,7 @@ type Message =
     | Increment
     | Decrement
     | SetCounter of int
+    | NewGame
     | Error of exn
     | ClearError
 
@@ -55,6 +59,9 @@ let update message model =
         { model with counter = model.counter - 1 }, Cmd.none
     | SetCounter value ->
         { model with counter = value }, Cmd.none
+        
+    | NewGame ->
+        { model with gameState = Game.createGame() }, Cmd.none
 
     | Error exn ->
         { model with error = Some exn.Message }, Cmd.none
