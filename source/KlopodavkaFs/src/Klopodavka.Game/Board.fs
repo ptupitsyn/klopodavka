@@ -42,7 +42,7 @@ let rows board =
     let w, h = arr.GetLength(0), arr.GetLength(1)
     { 0 .. h - 1 }|> Seq.map (
                              fun y -> { 0 .. w - 1 } |> Seq.map (
-                                                                fun x -> arr.[x, y]
+                                                                fun x -> (arr.[x, y], x, y)
                                                             )
                          )
 

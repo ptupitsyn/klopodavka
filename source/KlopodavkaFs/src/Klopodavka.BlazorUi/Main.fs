@@ -38,10 +38,8 @@ let initModel =
 /// The Elmish application's update messages.
 type Message =
     | SetPage of Page
-    | Increment
-    | Decrement
-    | SetCounter of int
     | NewGame
+    | MakeMove of int * int
     | Error of exn
     | ClearError
 
@@ -52,6 +50,11 @@ let update message model =
 
     | NewGame ->
         { model with gameState = Game.createGame() }, Cmd.none
+    | MakeMove (x, y) ->
+        let newState = Game.makeMove model.gameState x y
+        match newState with
+            | Some state -> { model with gameState = state }, Cmd.none
+            | _ -> model, Cmd.none
 
     | Error exn ->
         { model with error = Some exn.Message }, Cmd.none
@@ -87,9 +90,10 @@ let homePage model dispatch =
         .GameBoard(table [] [
             forEach (Board.rows model.gameState.Board) <| fun row ->
                 tr [] [
-                    forEach row <| fun tile ->
+                    forEach row <| fun (tile, x, y) ->
                         td [
                             attr.style (sprintf "background-color: %s" (getColor tile))
+                            on.click (fun _ -> dispatch (MakeMove (x, y)))
                         ] [
                             getSymbol tile
                         ]
