@@ -2,10 +2,10 @@ module Klopodavka.Game.Board
 open Klopodavka.Game
 
 [<Literal>]
-let DefaultWidth = 34
+let DefaultWidth = 30
 
 [<Literal>]
-let DefaultHeight = 40
+let DefaultHeight = 30
 
 [<Literal>]
 let BaseOffset = 5

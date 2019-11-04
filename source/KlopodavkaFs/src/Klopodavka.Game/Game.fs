@@ -2,7 +2,7 @@
 open Klopodavka.Game
 
 [<Literal>]
-let DefaultClopsPerTurn = 10
+let DefaultClopsPerTurn = 7
 
 let createGame(): GameState =
     {
