@@ -66,22 +66,15 @@ let router = Router.infer SetPage (fun model -> model.page)
 
 type Main = Template<"wwwroot/main.html">
 
-let getSymbol (tile: Tile) =
+let renderTile (tile: Tile) =
     match tile with
-        | Base _ -> text "🏠"
-        | Alive _ -> text "O"
-        | Squashed _ -> text "X"
-        | Empty -> text ""
-        
-let getColor (tile: Tile) =
-    match tile with
-        | Base Red -> "red"
-        | Base Blue -> "blue"
-        | Alive Red -> "red"
-        | Alive Blue -> "blue"
-        | Squashed Red -> "red"
-        | Squashed Blue -> "blue"
-        | Empty -> "#fbfbfb"
+        | Base Red -> "🏠", "red"
+        | Base Blue -> "🏠", "blue"
+        | Alive Red -> "·", "red"
+        | Alive Blue -> "·", "blue"
+        | Squashed Red -> "X", "red"
+        | Squashed Blue -> "X", "blue"
+        | Empty -> "", "#fbfbfb"
 
 let homePage model dispatch =
     Main.Home()
@@ -91,11 +84,12 @@ let homePage model dispatch =
             forEach (Board.rows model.gameState.Board) <| fun row ->
                 tr [] [
                     forEach row <| fun (tile, x, y) ->
+                        let symbol, color = renderTile tile
                         td [
-                            attr.style (sprintf "background-color: %s" (getColor tile))
+                            attr.style (sprintf "background-color: %s" color)
                             on.click (fun _ -> dispatch (MakeMove (x, y)))
                         ] [
-                            getSymbol tile
+                            text symbol
                         ]
                 ]
         ])
