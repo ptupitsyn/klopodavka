@@ -71,6 +71,7 @@ let moves board player =
 
                 match t with
                 | Empty -> yield pos
+                | Alive p when p <> player -> yield pos
                 | Base p when p = player -> yield! loopNeighbors()
                 | Alive p when p = player -> yield! loopNeighbors()
                 | Squashed p when p = player -> yield! loopNeighbors()
@@ -88,7 +89,8 @@ let validateMove board player x y =
 let makeMove board player x y =
     if validateMove board player x y then
         let newBoard = Array2D.copy (tiles board)
-        newBoard.[x, y] <- Alive player
+        let oldVal = newBoard.[x, y]
+        newBoard.[x, y] <- if oldVal = Empty then Alive player else Squashed player
         Some (Tiles newBoard)
     else None
     
