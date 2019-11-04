@@ -74,7 +74,9 @@ let router = Router.infer SetPage (fun model -> model.page)
 type Main = Template<"wwwroot/main.html">
 
 let homePage model dispatch =
-    Main.Home().Elt()
+    Main.Home()
+        .NewGame(fun _ -> dispatch NewGame)
+        .Elt()
 
 let counterPage model dispatch =
     Main.Counter()
