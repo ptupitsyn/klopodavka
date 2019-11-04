@@ -78,22 +78,11 @@ let homePage model dispatch =
         .NewGame(fun _ -> dispatch NewGame)
         .GameInfo(b [] [text (sprintf "Player: %O, Clicks left: %O" model.gameState.CurrentPlayer model.gameState.ClopsLeft)])
         .GameBoard(table [] [
-            tr [] [
-                td [] [
-                    text "1"
+            forEach (Board.rows model.gameState.Board) <| fun row ->
+                tr [] [
+                    forEach row <| fun cell ->
+                        td [] [textf "%O" cell]
                 ]
-                td [] [
-                    text "2"
-                ]
-            ]
-            tr [] [
-                td [] [
-                    text "3"
-                ]
-                td [] [
-                    text "4"
-                ]
-            ]
         ])
         .Elt()
 
