@@ -77,6 +77,24 @@ let homePage model dispatch =
     Main.Home()
         .NewGame(fun _ -> dispatch NewGame)
         .GameInfo(b [] [text (sprintf "Player: %O, Clicks left: %O" model.gameState.CurrentPlayer model.gameState.ClopsLeft)])
+        .GameBoard(table [] [
+            tr [] [
+                td [] [
+                    text "1"
+                ]
+                td [] [
+                    text "2"
+                ]
+            ]
+            tr [] [
+                td [] [
+                    text "3"
+                ]
+                td [] [
+                    text "4"
+                ]
+            ]
+        ])
         .Elt()
 
 let counterPage model dispatch =
