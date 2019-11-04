@@ -51,11 +51,8 @@ let update message model =
     | NewGame ->
         { model with gameState = Game.createGame() }, Cmd.none
     | MakeMove (x, y) ->
-        printf "Move: %i %i" x y
         let newState = Game.makeMove model.gameState x y
-        match newState with
-            | Some state -> { model with gameState = state }, Cmd.none
-            | _ -> model, Cmd.none
+        { model with gameState = newState }, Cmd.none
 
     | Error exn ->
         { model with error = Some exn.Message }, Cmd.none
@@ -71,13 +68,13 @@ let cellSize = 20
 
 let renderTile (tile: Tile) =
     match tile with
-        | Base Red -> "🏠", "red"
-        | Base Blue -> "🏠", "blue"
-        | Alive Red -> "", "red"
-        | Alive Blue -> "", "blue"
-        | Squashed Red -> "X", "red"
-        | Squashed Blue -> "X", "blue"
-        | Available -> "·", ""
+        | Base Red -> "🏠", "background-color: red"
+        | Base Blue -> "🏠", "background-color: blue"
+        | Alive Red -> "", "background-color: red"
+        | Alive Blue -> "", "background-color: blue"
+        | Squashed Red -> "X", "background-color: red"
+        | Squashed Blue -> "X", "background-color: blue"
+        | Available -> "·", "cursor: pointer"
         | Empty -> "", ""
 
 let homePage model dispatch =
@@ -88,10 +85,10 @@ let homePage model dispatch =
             forEach (Game.rows model.gameState) <| fun row ->
                 tr [] [
                     forEach row <| fun (tile, x, y) ->
-                        let symbol, color = renderTile tile
+                        let symbol, style = renderTile tile
                         td [
-                            attr.style (sprintf "background-color: %s" color)
-                            on.click (fun _ -> dispatch (MakeMove (x, y)))
+                            attr.style style
+                            on.click (fun _ -> if (tile = Available) then (dispatch (MakeMove (x, y))) else ())
                         ] [
                             text symbol
                         ]

@@ -22,11 +22,8 @@ let makeMove game x y =
         let player = if lastClop then otherPlayer(game.CurrentPlayer) else game.CurrentPlayer
         { game with CurrentPlayer = player; ClopsLeft = clopsLeft }
         
-    let board = Board.makeMove game.Board game.CurrentPlayer x y
-    
-    match board with
-        | Some(tiles) -> Some({ (nextClop game) with Board = tiles  })
-        | _ -> None
+    let board = Board.makeMove game.Board game.CurrentPlayer x y    
+    { (nextClop game) with Board = board  }
     
 
 let rows gameState =
