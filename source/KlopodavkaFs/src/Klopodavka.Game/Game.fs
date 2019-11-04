@@ -27,13 +27,15 @@ let makeMove game x y =
     
 
 let rows gameState =
-    let arr = Board.tiles gameState.Board |> Array2D.copy
+    let tiles = Board.tiles gameState.Board
+    let w, h = Board.size gameState.Board
+    let avail = Array2D.create w h false
+    
     Board.moves gameState.Board gameState.CurrentPlayer
-        |> Seq.iter  (fun (x, y) -> arr.[x, y] <- Available)
+        |> Seq.iter (fun (x, y) -> avail.[x, y] <- true)
         
-    let w, h = arr.GetLength(0), arr.GetLength(1)
     { 0 .. h - 1 }|> Seq.map (
                              fun y -> { 0 .. w - 1 } |> Seq.map (
-                                                                fun x -> (arr.[x, y], x, y)
+                                                                fun x -> (x, y, tiles.[x, y], avail.[x, y])
                                                             )
                          )

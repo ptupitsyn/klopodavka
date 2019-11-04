@@ -66,16 +66,18 @@ type Main = Template<"wwwroot/main.html">
 
 let cellSize = 20
 
-let renderTile (tile: Tile) =
-    match tile with
-        | Base Red -> "🏠", "background-color: red"
-        | Base Blue -> "🏠", "background-color: blue"
-        | Alive Red -> "", "background-color: red"
-        | Alive Blue -> "", "background-color: blue"
-        | Squashed Red -> "X", "background-color: red"
-        | Squashed Blue -> "X", "background-color: blue"
-        | Available -> "·", "cursor: pointer"
-        | Empty -> "", ""
+let renderTile tile avail =
+    let (text, style) =
+        match tile with
+            | Base Red -> "🏠", "background-color: red"
+            | Base Blue -> "🏠", "background-color: blue"
+            | Alive Red -> "", "background-color: red"
+            | Alive Blue -> "", "background-color: blue"
+            | Squashed Red -> "X", "background-color: red"
+            | Squashed Blue -> "X", "background-color: blue"
+            | Empty -> "", ""
+            
+    if (avail) then ("·", style + "; cursor: pointer") else (text, style)
 
 let homePage model dispatch =
     Main.Home()
@@ -84,13 +86,13 @@ let homePage model dispatch =
         .GameBoard(table [] [
             forEach (Game.rows model.gameState) <| fun row ->
                 tr [] [
-                    forEach row <| fun (tile, x, y) ->
-                        let symbol, style = renderTile tile
+                    forEach row <| fun (x, y, tile, avail) ->
+                        let txt, style = renderTile tile avail
                         td [
                             attr.style style
-                            on.click (fun _ -> if (tile = Available) then (dispatch (MakeMove (x, y))) else ())
+                            on.click (fun _ -> if avail then (dispatch (MakeMove (x, y))) else ())
                         ] [
-                            text symbol
+                            text txt
                         ]
                 ]
         ])
