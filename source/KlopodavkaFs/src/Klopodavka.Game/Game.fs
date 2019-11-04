@@ -29,3 +29,14 @@ let makeMove game x y =
         | _ -> None
     
 
+let rows gameState =
+    let arr = Board.tiles gameState.Board |> Array2D.copy
+    Board.moves gameState.Board gameState.CurrentPlayer
+        |> Seq.iter  (fun (x, y) -> arr.[x, y] <- Available)
+        
+    let w, h = arr.GetLength(0), arr.GetLength(1)
+    { 0 .. h - 1 }|> Seq.map (
+                             fun y -> { 0 .. w - 1 } |> Seq.map (
+                                                                fun x -> (arr.[x, y], x, y)
+                                                            )
+                         )

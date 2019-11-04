@@ -36,15 +36,6 @@ let createBoard() =
     arr.[blueX, blueY] <- Base Blue
 
     arr |> Tiles
-    
-let rows board =
-    let arr = tiles board
-    let w, h = arr.GetLength(0), arr.GetLength(1)
-    { 0 .. h - 1 }|> Seq.map (
-                             fun y -> { 0 .. w - 1 } |> Seq.map (
-                                                                fun x -> (arr.[x, y], x, y)
-                                                            )
-                         )
 
 let neighbors w h x y =
     if w < MinSize then invalidArg "w" "out of range"

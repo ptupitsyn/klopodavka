@@ -85,7 +85,7 @@ let homePage model dispatch =
         .NewGame(fun _ -> dispatch NewGame)
         .GameInfo(b [] [text (sprintf "Player: %O, Clicks left: %O" model.gameState.CurrentPlayer model.gameState.ClopsLeft)])
         .GameBoard(table [] [
-            forEach (Board.rows model.gameState.Board) <| fun row ->
+            forEach (Game.rows model.gameState) <| fun row ->
                 tr [] [
                     forEach row <| fun (tile, x, y) ->
                         let symbol, color = renderTile tile
